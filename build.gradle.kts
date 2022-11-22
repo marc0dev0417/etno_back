@@ -27,6 +27,14 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
 
+	// Security with JWT
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	implementation("org.apache.commons:commons-lang3:3.12.0")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+	testImplementation("org.springframework.security:spring-security-test")
 
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")

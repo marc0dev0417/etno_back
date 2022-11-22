@@ -1,4 +1,4 @@
-package com.etno.microservice.config
+package com.etno.microservice.configuration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

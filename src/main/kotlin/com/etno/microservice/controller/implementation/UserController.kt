@@ -15,6 +15,10 @@ class UserController(
     }
 
     override fun saveUser(userDTO: UserDTO): ResponseEntity<UserDTO>? {
-        return ResponseEntity.ok().body(userService.saveUser(userDTO))
+        return ResponseEntity.ok().body(userService.SignUp(userDTO))
+    }
+
+    override fun login(username: String, password: String): ResponseEntity<*> {
+        return userService.login(username, password)
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 interface UserControllerInterface {
@@ -53,10 +54,34 @@ interface UserControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/users"],
+        value = ["/register"],
         consumes = ["application/json"],
         produces = ["application/json"],
         method = [RequestMethod.POST]
     )
     fun saveUser(@RequestBody userDTO: UserDTO): ResponseEntity<UserDTO>?
+
+    @ApiOperation(
+        value = "Login a user",
+        nickname = "login",
+        notes = "Login a user to get a token",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/login"],
+        produces = ["application/json"],
+        method = [RequestMethod.GET],
+        params = ["username", "password"]
+    )
+    fun login(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "password", required = true) password: String):ResponseEntity<*>?
 }
