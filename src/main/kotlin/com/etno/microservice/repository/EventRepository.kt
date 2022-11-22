@@ -1,11 +1,10 @@
 package com.etno.microservice.repository
 
-import com.etno.microservice.model.User
+import com.etno.microservice.model.Event
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import java.util.UUID
+import java.util.*
 
 @Repository
-interface UserRepository: JpaRepository<User, UUID> {
-    fun findByUsername(username: String): User
+interface EventRepository: JpaRepository<Event, UUID> {
 }

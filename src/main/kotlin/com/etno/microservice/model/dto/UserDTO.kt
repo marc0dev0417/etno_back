@@ -10,5 +10,7 @@ data class UserDTO(
 
     @JsonProperty("password") val password: String? = null,
 
-    @JsonProperty("role") val role: String? = null
+    @JsonProperty("role") val role: String? = null,
+
+    //@JsonProperty("list") val list: MutableList<EventDTO>? = mutableListOf()
 )

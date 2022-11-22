@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.text.DateFormat
 import java.util.*
+import javax.xml.crypto.Data
 
 @Service
 class UserService(
@@ -30,7 +31,7 @@ class UserService(
     }
 
     override fun SignUp(userDTO: UserDTO): UserDTO? {
-        val userItem = DataConverter.userFromDto(userDTO)
+        val userItem = DataConverter.userFromDTO(userDTO)
         userItem.id = UUID.randomUUID()
         userItem.password = BCryptPasswordEncoder().encode(userItem.password)
         val userToSave = userRepository.save(userItem)
@@ -56,7 +57,7 @@ class UserService(
                 responseMap["token"] = token
                 responseMap["token_expired"] = jwtTokenUtil.isTokenExpired(token).toString()
                 responseMap["expired_date"] = dataFormatMedium.format(jwtTokenUtil.getExpirationDateFromToken(token)).toString()
-                responseMap["user"] = user
+                responseMap["user"] = DataConverter.userToDTO(user)
                 return ResponseEntity.ok(responseMap)
             } else {
                 responseMap["error"] = true
