@@ -1,4 +1,4 @@
-package com.etno.microservice.service.implementation
+package com.etno.microservice.service.implementation.jwt
 
 import com.etno.microservice.repository.UserRepository
 import org.springframework.security.core.userdetails.User

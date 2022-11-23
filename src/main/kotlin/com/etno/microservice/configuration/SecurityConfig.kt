@@ -1,7 +1,7 @@
 package com.etno.microservice.configuration
 
 import com.etno.microservice.security.JwtRequestFilter
-import com.etno.microservice.service.implementation.JwtUserDetailsService
+import com.etno.microservice.service.implementation.jwt.JwtUserDetailsService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean

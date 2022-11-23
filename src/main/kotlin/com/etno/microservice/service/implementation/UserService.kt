@@ -1,12 +1,11 @@
 package com.etno.microservice.service.implementation
 
-import com.etno.microservice.model.Event
-import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.UserDTO
 import com.etno.microservice.repository.EventRepository
 import com.etno.microservice.repository.UserRepository
 import com.etno.microservice.security.JwtTokenUtil
 import com.etno.microservice.service.UserServiceInterface
+import com.etno.microservice.service.implementation.jwt.JwtUserDetailsService
 import com.etno.microservice.util.DataConverter
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager

@@ -14,7 +14,7 @@ class EventController(
         return ResponseEntity.ok().body(eventService.getEvents())
     }
 
-    override fun saveEvent(eventoDTO: EventDTO): ResponseEntity<EventDTO>? {
-        return ResponseEntity.ok().body(eventService.saveEvents(eventoDTO))
+    override fun saveEvent(eventDTO: EventDTO): ResponseEntity<EventDTO>? {
+        return ResponseEntity.ok().body(eventService.saveEvents(eventDTO))
     }
 }
