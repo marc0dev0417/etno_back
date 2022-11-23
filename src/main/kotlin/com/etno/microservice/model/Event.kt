@@ -1,16 +1,16 @@
 package com.etno.microservice.model
 
+import org.hibernate.annotations.Type
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
+
 
 @Entity
-@Table(name = "events")
+@Table(name = "eventos")
 data class Event(
     @Id
-    var id: UUID = UUID.randomUUID(),
+    @Type(type = "uuid-char")
+    var idEvent: UUID = UUID.randomUUID(),
 
     @Column(name = "title")
     var title: String? = null

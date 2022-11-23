@@ -1,6 +1,7 @@
 package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
+import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.UserDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -84,4 +85,28 @@ interface UserControllerInterface {
         params = ["username", "password"]
     )
     fun login(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "password", required = true) password: String):ResponseEntity<*>?
+
+    @ApiOperation(
+        value = "add a event to User",
+        nickname = "addEventToUser",
+        notes = "Add event to User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/userAddEvent"],
+        produces = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["username", "title"]
+    )
+    fun addEventToUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<UserDTO>?
 }

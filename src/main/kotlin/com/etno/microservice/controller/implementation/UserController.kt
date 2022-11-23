@@ -1,6 +1,7 @@
 package com.etno.microservice.controller.implementation
 
 import com.etno.microservice.controller.UserControllerInterface
+import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.UserDTO
 import com.etno.microservice.service.implementation.UserService
 import org.springframework.http.ResponseEntity
@@ -15,10 +16,14 @@ class UserController(
     }
 
     override fun saveUser(userDTO: UserDTO): ResponseEntity<UserDTO>? {
-        return ResponseEntity.ok().body(userService.SignUp(userDTO))
+        return ResponseEntity.ok().body(userService.signUp(userDTO))
     }
 
-    override fun login(username: String, password: String): ResponseEntity<*> {
+    override fun login(username: String, password: String): ResponseEntity<*>? {
         return userService.login(username, password)
+    }
+
+    override fun addEventToUser(username: String, title: String): ResponseEntity<UserDTO>? {
+        return ResponseEntity.ok().body(userService.addEventToUser(username, title))
     }
 }

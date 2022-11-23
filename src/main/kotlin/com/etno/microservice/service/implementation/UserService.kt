@@ -1,6 +1,9 @@
 package com.etno.microservice.service.implementation
 
+import com.etno.microservice.model.Event
+import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.UserDTO
+import com.etno.microservice.repository.EventRepository
 import com.etno.microservice.repository.UserRepository
 import com.etno.microservice.security.JwtTokenUtil
 import com.etno.microservice.service.UserServiceInterface
@@ -16,11 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.text.DateFormat
 import java.util.*
-import javax.xml.crypto.Data
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
+    private val eventRepository: EventRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -30,17 +33,18 @@ class UserService(
         return userRepository.findAll().map { DataConverter.userToDTO(it) }
     }
 
-    override fun SignUp(userDTO: UserDTO): UserDTO? {
-        val userItem = DataConverter.userFromDTO(userDTO)
-        userItem.id = UUID.randomUUID()
-        userItem.password = BCryptPasswordEncoder().encode(userItem.password)
-        val userToSave = userRepository.save(userItem)
-        return DataConverter.userToDTO(userToSave)
+    override fun signUp(userDTO: UserDTO): UserDTO? {
+            val userItem = DataConverter.userFromDTO(userDTO)
+            userItem.idUser = UUID.randomUUID()
+            userItem.password = BCryptPasswordEncoder().encode(userItem.password)
+            val userToSave = userRepository.save(userItem)
+            return DataConverter.userToDTO(userToSave)
+
     }
 
     override fun login(username: String, password: String): ResponseEntity<*> {
         val responseMap: MutableMap<String, Any> = mutableMapOf()
-        val user = userRepository.findByUsername(username)
+        val user = userRepository.findUserByUsername(username)
         val dataFormatMedium = DateFormat.getDateInstance(DateFormat.MEDIUM)
 
         try {
@@ -57,7 +61,8 @@ class UserService(
                 responseMap["token"] = token
                 responseMap["token_expired"] = jwtTokenUtil.isTokenExpired(token).toString()
                 responseMap["expired_date"] = dataFormatMedium.format(jwtTokenUtil.getExpirationDateFromToken(token)).toString()
-                responseMap["user"] = DataConverter.userToDTO(user)
+                responseMap["user"] = user
+
                 return ResponseEntity.ok(responseMap)
             } else {
                 responseMap["error"] = true
@@ -80,5 +85,14 @@ class UserService(
             responseMap["message"] = "Something went wrong";
             return ResponseEntity.status(500).body(responseMap);
         }
+    }
+
+    override fun addEventToUser(username: String, title: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemEvent = eventRepository.findByTitle(title)
+
+        val itemUserDTO = userRepository.save(itemUser)
+
+        return DataConverter.userToDTO(itemUserDTO)
     }
 }

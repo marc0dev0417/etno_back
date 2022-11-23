@@ -1,10 +1,11 @@
 package com.etno.microservice.model.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
 data class UserDTO(
-    @JsonProperty("id") var id: UUID = UUID.randomUUID(),
+    @JsonProperty("idUser") var idUser: UUID? = UUID.randomUUID(),
 
     @JsonProperty("username") val username: String? = null,
 
@@ -12,5 +13,5 @@ data class UserDTO(
 
     @JsonProperty("role") val role: String? = null,
 
-    //@JsonProperty("list") val list: MutableList<EventDTO>? = mutableListOf()
+    @JsonProperty("events") val events: MutableList<EventDTO>? = mutableListOf()
 )
