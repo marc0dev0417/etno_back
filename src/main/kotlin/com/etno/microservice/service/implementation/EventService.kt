@@ -17,8 +17,8 @@ class EventService(
         return eventRepository.findAll().map { DataConverter.eventToDTO(it) }
     }
 
-    override fun saveEvents(eventoDTO: EventDTO): EventDTO? {
-        val eventItem = DataConverter.eventFromDTO(eventoDTO)
+    override fun saveEvents(eventDTO: EventDTO): EventDTO? {
+        val eventItem = DataConverter.eventFromDTO(eventDTO)
         eventItem.idEvent = UUID.randomUUID()
         val eventToSave = eventRepository.save(eventItem)
         return DataConverter.eventToDTO(eventToSave)
