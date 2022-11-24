@@ -10,6 +10,6 @@ interface UserServiceInterface {
     fun getUsers(): List<UserDTO>?
     fun signUp(userDTO: UserDTO): UserDTO?
     fun login(username: String, password: String): ResponseEntity<*>
-    fun addEventToUser(username: String, title: String): UserDTO?
+    fun updateUser(username: String, userDTO: UserDTO): UserDTO?
 
 }

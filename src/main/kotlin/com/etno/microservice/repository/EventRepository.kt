@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface EventRepository: JpaRepository<Event, Int> {
+interface EventRepository: JpaRepository<Event, UUID> {
     fun findByTitle(title: String): Event
 }

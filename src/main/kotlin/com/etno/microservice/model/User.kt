@@ -10,7 +10,7 @@ import javax.persistence.*
 data class User(
     @Id
     @Type(type = "uuid-char")
-    var idUser:UUID = UUID.randomUUID(),
+    var idUser:UUID? = UUID.randomUUID(),
 
     @Column(name = "username", unique = true, nullable = false)
     var username: String? = null,

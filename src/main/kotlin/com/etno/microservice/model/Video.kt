@@ -12,7 +12,7 @@ import javax.persistence.Table
 data class Video(
     @Id
     @Type(type = "uuid-char")
-    var idVideo: UUID = UUID.randomUUID(),
+    var idVideo: UUID? = UUID.randomUUID(),
 
     @Column(name = "link")
     var link: String? = null

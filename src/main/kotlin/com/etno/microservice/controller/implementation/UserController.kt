@@ -23,7 +23,9 @@ class UserController(
         return userService.login(username, password)
     }
 
-    override fun addEventToUser(username: String, title: String): ResponseEntity<UserDTO>? {
-        return ResponseEntity.ok().body(userService.addEventToUser(username, title))
+    override fun updateUser(username: String, userDTO: UserDTO): ResponseEntity<UserDTO>? {
+        return ResponseEntity.ok().body(userService.updateUser(username, userDTO))
     }
+
+
 }

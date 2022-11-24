@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.text.DateFormat
 import java.util.*
+import javax.xml.crypto.Data
 
 @Service
 class UserService(
@@ -86,12 +87,16 @@ class UserService(
         }
     }
 
-    override fun addEventToUser(username: String, title: String): UserDTO? {
-        val itemUser = userRepository.findUserByUsername(username)
-        val itemEvent = eventRepository.findByTitle(title)
+    override fun updateUser(username: String, userDTO: UserDTO): UserDTO? {
 
-        val itemUserDTO = userRepository.save(itemUser)
-
-        return DataConverter.userToDTO(itemUserDTO)
+            val itemUser = userRepository.findUserByUsername(username) //DataConverter.userFromDTO(userDTO)
+            //itemUser.password = BCryptPasswordEncoder().encode(userDTO.password)
+            itemUser.username = userDTO.username
+            itemUser.password = BCryptPasswordEncoder().encode(userDTO.password)
+            itemUser.role = userDTO.role
+            itemUser.events = userDTO.events.let { userDTO.events?.map { eventDTO -> DataConverter.eventFromDTO(eventDTO) } }?.toMutableList()
+            userRepository.save(itemUser)
+            return DataConverter.userToDTO(itemUser)
     }
+
 }

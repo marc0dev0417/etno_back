@@ -103,10 +103,10 @@ interface UserControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/userAddEvent"],
+        value = ["/users/update"],
         produces = ["application/json"],
         method = [RequestMethod.PUT],
-        params = ["username", "title"]
+        params = ["username"]
     )
-    fun addEventToUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<UserDTO>?
+    fun updateUser(@RequestParam(name = "username", required = true) username: String, @RequestBody userDTO: UserDTO) : ResponseEntity<UserDTO>?
 }

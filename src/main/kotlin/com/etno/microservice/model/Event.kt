@@ -10,7 +10,7 @@ import javax.persistence.*
 data class Event(
     @Id
     @Type(type = "uuid-char")
-    var idEvent: UUID = UUID.randomUUID(),
+    var idEvent: UUID? = UUID.randomUUID(),
 
     @Column(name = "title")
     var title: String? = null,
@@ -20,6 +20,9 @@ data class Event(
 
     @Column(name = "organization")
     var organization: String? = null,
+
+    @Column(name = "link")
+    var link: String? = null,
 
     @Column(name = "startDate")
     var startDate: Date? = null,

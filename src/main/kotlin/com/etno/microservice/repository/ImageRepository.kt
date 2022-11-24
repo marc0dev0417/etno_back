@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-interface ImageRepository: JpaRepository<Image, Int> {
+interface ImageRepository: JpaRepository<Image, UUID> {
 
 }

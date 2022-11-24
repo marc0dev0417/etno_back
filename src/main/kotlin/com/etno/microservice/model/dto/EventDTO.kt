@@ -10,6 +10,10 @@ data class EventDTO(
 
     @JsonProperty("description") var description: String? = null,
 
+    @JsonProperty("organization") var organization: String? = null,
+
+    @JsonProperty("link") var link: String? = null,
+
     @JsonProperty("startDate") var startDate: Date? = null,
 
     @JsonProperty("endDate") var endDate: Date? = null,

@@ -12,7 +12,7 @@ import javax.persistence.Table
 data class Image(
     @Id
     @Type(type = "uuid-char")
-    var idImage: UUID = UUID.randomUUID(),
+    var idImage: UUID? = UUID.randomUUID(),
 
     @Column(name = "link")
     var link: String? = null

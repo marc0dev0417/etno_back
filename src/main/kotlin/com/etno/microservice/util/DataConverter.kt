@@ -1,13 +1,7 @@
 package com.etno.microservice.util
 
-import com.etno.microservice.model.Event
-import com.etno.microservice.model.Image
-import com.etno.microservice.model.User
-import com.etno.microservice.model.Video
-import com.etno.microservice.model.dto.EventDTO
-import com.etno.microservice.model.dto.ImageDTO
-import com.etno.microservice.model.dto.UserDTO
-import com.etno.microservice.model.dto.VideoDTO
+import com.etno.microservice.model.*
+import com.etno.microservice.model.dto.*
 
 class DataConverter {
     companion object {
@@ -36,6 +30,8 @@ class DataConverter {
                 idEvent = event.idEvent,
                 title = event.title,
                 description = event.description,
+                organization = event.organization,
+                link = event.link,
                 startDate = event.startDate,
                 endDate = event.endDate,
                 publicationDate = event.publicationDate,
@@ -52,6 +48,8 @@ class DataConverter {
                 idEvent = eventDTO.idEvent!!,
                 title = eventDTO.title,
                 description = eventDTO.description,
+                organization = eventDTO.organization,
+                link = eventDTO.link,
                 startDate = eventDTO.startDate,
                 endDate = eventDTO.endDate,
                 publicationDate = eventDTO.publicationDate,
@@ -78,7 +76,7 @@ class DataConverter {
 
         fun videoToDTO(video: Video): VideoDTO{
             return VideoDTO(
-                idVideo = video.idVideo,
+                idVideo = video.idVideo!!,
                 link = video.link
             )
         }
@@ -86,6 +84,27 @@ class DataConverter {
             return Video(
                 idVideo = videoDTO.idVideo,
                 link = videoDTO.link
+            )
+        }
+
+        fun tourismToDTO(tourism: Tourism): TourismDTO{
+            return TourismDTO(
+                idTourism = tourism.idTourism,
+                title = tourism.title,
+                description = tourism.description,
+                images = tourism.images.let { tourism.images?.map { image -> imageToDTO(image) } }!!.toMutableList(),
+                latitude = tourism.latitude,
+                longitude = tourism.longitude
+            )
+        }
+        fun tourismFromDTO(tourismDTO: TourismDTO): Tourism{
+            return Tourism(
+                idTourism = tourismDTO.idTourism,
+                title = tourismDTO.title,
+                description = tourismDTO.description,
+                images = tourismDTO.images.let { tourismDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList(),
+                latitude = tourismDTO.latitude,
+                longitude = tourismDTO.longitude
             )
         }
     }

@@ -1,7 +1,7 @@
 package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
-import com.etno.microservice.model.dto.VideoDTO
+import com.etno.microservice.model.dto.TourismDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -12,18 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 
 @Controller
-interface VideoControllerInterface {
-
+interface TourismControllerInterface {
     @ApiOperation(
-        value = "get a video list",
-        nickname = "getVideos",
-        notes = "this endpoint is to get video list",
-        tags = ["Video"],
-        response = VideoDTO::class
+        value = "get a tourism list",
+        nickname = "getTourism",
+        notes = "Endpoint to get tourism list",
+        tags = ["Tourism"],
+        response = TourismDTO::class
     )
     @ApiResponses(
         value = [
-            ApiResponse(code = 201, message = "Video", response = VideoDTO::class),
+            ApiResponse(code = 201, message = "Tourism", response = TourismDTO::class),
             ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
             ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
             ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
@@ -31,22 +30,22 @@ interface VideoControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/videos"],
+        value = ["/tourism"],
         produces = ["application/json"],
         method = [RequestMethod.GET]
     )
-    fun getVideos(): ResponseEntity<List<VideoDTO>>?
+    fun getTourism(): ResponseEntity<List<TourismDTO>>?
 
     @ApiOperation(
-        value = "save a video",
-        nickname = "saveVideo",
-        notes = "this endpoint is to save video",
-        tags = ["Video"],
-        response = VideoDTO::class
+        value = "save a tourism",
+        nickname = "saveTourism",
+        notes = "Endpoint where you will save a tourism",
+        tags = ["Tourism"],
+        response = TourismDTO::class
     )
     @ApiResponses(
         value = [
-            ApiResponse(code = 201, message = "Video", response = VideoDTO::class),
+            ApiResponse(code = 201, message = "Tourism", response = TourismDTO::class),
             ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
             ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
             ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
@@ -54,10 +53,10 @@ interface VideoControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/videos"],
+        value = ["/tourism"],
         consumes = ["application/json"],
         produces = ["application/json"],
         method = [RequestMethod.POST]
     )
-    fun saveVideo(@RequestBody videoDTO: VideoDTO): ResponseEntity<VideoDTO>?
+    fun saveTourism(@RequestBody tourismDTO: TourismDTO): ResponseEntity<TourismDTO>?
 }
