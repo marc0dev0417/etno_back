@@ -8,23 +8,25 @@ data class EventDTO(
 
     @JsonProperty("title") var title: String? = null,
 
+    @JsonProperty("address") var address: String? = null,
+
     @JsonProperty("description") var description: String? = null,
 
     @JsonProperty("organization") var organization: String? = null,
 
     @JsonProperty("link") var link: String? = null,
 
-    @JsonProperty("startDate") var startDate: Date? = null,
+    @JsonProperty("startDate") var startDate: String? = null,
 
-    @JsonProperty("endDate") var endDate: Date? = null,
+    @JsonProperty("endDate") var endDate: String? = null,
 
-    @JsonProperty("publicationDate") var publicationDate: Date? = null,
+    @JsonProperty("publicationDate") var publicationDate: String? = null,
+
+    @JsonProperty("time") var time: String? = null,
 
     @JsonProperty("lat") var latitude: String? = null,
 
     @JsonProperty("long") var longitude: String? = null,
-
-    @JsonProperty("subscription") var subscription: Boolean? = null,
 
     @JsonProperty("images") var images: MutableList<ImageDTO>? = mutableListOf(),
 

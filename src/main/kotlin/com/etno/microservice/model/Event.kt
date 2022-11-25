@@ -15,6 +15,9 @@ data class Event(
     @Column(name = "title")
     var title: String? = null,
 
+    @Column(name = "address")
+    var address: String? = null,
+
     @Column(name = "description")
     var description: String? = null,
 
@@ -25,13 +28,16 @@ data class Event(
     var link: String? = null,
 
     @Column(name = "startDate")
-    var startDate: Date? = null,
+    var startDate: String? = null,
 
     @Column(name = "endDate")
-    var endDate: Date? = null,
+    var endDate: String? = null,
 
     @Column(name = "publicationDate")
-    var publicationDate: Date? = null,
+    var publicationDate: String? = null,
+
+    @Column(name = "time")
+    var time: String? = null,
 
     @Column(name = "latitude")
     var latitude: String? = null,

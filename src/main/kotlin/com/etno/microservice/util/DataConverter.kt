@@ -29,15 +29,16 @@ class DataConverter {
             return EventDTO(
                 idEvent = event.idEvent,
                 title = event.title,
+                address = event.address,
                 description = event.description,
                 organization = event.organization,
                 link = event.link,
                 startDate = event.startDate,
                 endDate = event.endDate,
                 publicationDate = event.publicationDate,
+                time = event.time,
                 latitude = event.latitude,
                 longitude = event.longitude,
-                subscription = event.subscription,
                 images = event.images.let { event.images?.map { image -> imageToDTO(image) } }?.toMutableList(),
                 videos = event.videos.let { event.videos?.map { video -> videoToDTO(video) } }?.toMutableList()
             )
@@ -47,15 +48,16 @@ class DataConverter {
             return Event(
                 idEvent = eventDTO.idEvent!!,
                 title = eventDTO.title,
+                address = eventDTO.address,
                 description = eventDTO.description,
                 organization = eventDTO.organization,
                 link = eventDTO.link,
                 startDate = eventDTO.startDate,
                 endDate = eventDTO.endDate,
                 publicationDate = eventDTO.publicationDate,
+                time = eventDTO.time,
                 latitude = eventDTO.latitude,
                 longitude = eventDTO.longitude,
-                subscription = eventDTO.subscription,
                 images = eventDTO.images.let { eventDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList(),
                 videos = eventDTO.videos.let { eventDTO.videos?.map { videoDTO -> videoFromDTO(videoDTO) } }?.toMutableList()
             )

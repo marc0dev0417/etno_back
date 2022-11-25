@@ -45,7 +45,7 @@ class SecurityConfig() {
     @Throws(Exception::class)
     @Bean
     fun configure(http: HttpSecurity?): SecurityFilterChain {
-        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login")
+        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/events")
             ?.permitAll()?.anyRequest()?.authenticated()?.and()?.exceptionHandling()
             ?.authenticationEntryPoint{ request: HttpServletRequest?, response: HttpServletResponse, authException: AuthenticationException? ->
 
