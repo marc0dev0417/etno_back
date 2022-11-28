@@ -3,6 +3,7 @@ package com.etno.microservice.user
 import com.etno.microservice.model.User
 import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.UserDTO
+import com.etno.microservice.util.TokenUser
 import com.google.gson.Gson
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -19,20 +20,17 @@ class UserTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    private var gson:Gson = Gson()
+    private var gson: Gson = Gson()
 
     lateinit var token: String
 
     @Test
     fun saveUser(){
-
         val userDTO = UserDTO(
             null,
-            "admin",
+            "ecomputer",
             "12345",
-            "super",
-            mutableListOf(EventDTO(idEvent = null, title = "event 1")),
-            )
+            "super")
 
         val objectUser:String = gson.toJson(userDTO, UserDTO::class.java)
 
@@ -52,12 +50,12 @@ class UserTest {
             MockMvcRequestBuilders.get("/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .param("username", "admin")
+                .param("username", "ecomputer")
                 .param("password", "12345"))
                 .andReturn().response.contentAsString
 
-        val valueUser: User = gson.fromJson(result, User::class.java)
+        val valueUser: TokenUser = gson.fromJson(result, TokenUser::class.java)
 
-        Assertions.assertEquals(valueUser.username, "admin")
+        Assertions.assertEquals(valueUser.user?.username, "ecomputer")
     }
 }

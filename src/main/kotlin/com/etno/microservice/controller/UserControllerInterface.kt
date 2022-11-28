@@ -1,7 +1,6 @@
 package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
-import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.UserDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse

@@ -1,6 +1,5 @@
 package com.etno.microservice.service
 
-import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.UserDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service

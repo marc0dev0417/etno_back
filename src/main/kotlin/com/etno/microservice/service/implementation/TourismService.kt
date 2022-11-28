@@ -4,7 +4,6 @@ import com.etno.microservice.model.dto.TourismDTO
 import com.etno.microservice.repository.TourismRepository
 import com.etno.microservice.service.TourismServiceInterface
 import com.etno.microservice.util.DataConverter
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 

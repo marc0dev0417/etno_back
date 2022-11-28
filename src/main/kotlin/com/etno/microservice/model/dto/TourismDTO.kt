@@ -1,6 +1,5 @@
 package com.etno.microservice.model.dto
 
-import com.etno.microservice.model.Image
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.UUID
 

@@ -45,10 +45,9 @@ class SecurityConfig() {
     @Throws(Exception::class)
     @Bean
     fun configure(http: HttpSecurity?): SecurityFilterChain {
-        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/events")
+        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/events", "/images/**")
             ?.permitAll()?.anyRequest()?.authenticated()?.and()?.exceptionHandling()
             ?.authenticationEntryPoint{ request: HttpServletRequest?, response: HttpServletResponse, authException: AuthenticationException? ->
-
                 val responseMap: MutableMap<String, Any> = HashMap()
                 val mapper = ObjectMapper()
                 response.status = 401
@@ -57,7 +56,6 @@ class SecurityConfig() {
                 response.setHeader("content-type", "application/json")
                 val responseMsg = mapper.writeValueAsString(responseMap)
                 response.writer.write(responseMsg)
-
             }?.and()?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             ?.and()?.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
 

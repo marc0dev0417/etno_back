@@ -1,7 +1,6 @@
 package com.etno.microservice.controller.implementation
 
 import com.etno.microservice.controller.UserControllerInterface
-import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.UserDTO
 import com.etno.microservice.service.implementation.UserService
 import org.springframework.http.ResponseEntity

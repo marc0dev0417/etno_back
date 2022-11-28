@@ -37,8 +37,8 @@ class DataConverter {
                 endDate = event.endDate,
                 publicationDate = event.publicationDate,
                 time = event.time,
-                latitude = event.latitude,
-                longitude = event.longitude,
+                lat = event.lat,
+                long = event.long,
                 images = event.images.let { event.images?.map { image -> imageToDTO(image) } }?.toMutableList(),
                 videos = event.videos.let { event.videos?.map { video -> videoToDTO(video) } }?.toMutableList()
             )
@@ -56,8 +56,8 @@ class DataConverter {
                 endDate = eventDTO.endDate,
                 publicationDate = eventDTO.publicationDate,
                 time = eventDTO.time,
-                latitude = eventDTO.latitude,
-                longitude = eventDTO.longitude,
+                lat = eventDTO.lat,
+                long = eventDTO.long,
                 images = eventDTO.images.let { eventDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList(),
                 videos = eventDTO.videos.let { eventDTO.videos?.map { videoDTO -> videoFromDTO(videoDTO) } }?.toMutableList()
             )
@@ -66,12 +66,14 @@ class DataConverter {
         fun imageToDTO(image: Image): ImageDTO{
             return ImageDTO(
                 idImage = image.idImage,
+                name = image.name,
                 link = image.link
             )
         }
         fun imageFromDTO(imageDTO: ImageDTO): Image{
             return Image(
                 idImage = imageDTO.idImage!!,
+                name = imageDTO.name,
                 link = imageDTO.link
             )
         }

@@ -40,10 +40,10 @@ data class Event(
     var time: String? = null,
 
     @Column(name = "latitude")
-    var latitude: String? = null,
+    var lat: String? = null,
 
     @Column(name = "longitude")
-    var longitude: String? = null,
+    var long: String? = null,
 
     @Column(name = "subscription")
     var subscription: Boolean? = null,

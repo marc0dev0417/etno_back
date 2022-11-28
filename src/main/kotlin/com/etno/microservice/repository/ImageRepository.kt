@@ -7,5 +7,5 @@ import java.util.UUID
 
 @Repository
 interface ImageRepository: JpaRepository<Image, UUID> {
-
+    fun findImageByName(name: String): Image
 }

@@ -1,6 +1,5 @@
 package com.etno.microservice.model
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.annotations.Type
 import java.util.*
 import javax.persistence.*
@@ -21,6 +20,6 @@ data class User(
     @Column(name = "role")
     var role: String? = null,
 
-    @OneToMany(cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var events: MutableList<Event>? = mutableListOf()
 )
