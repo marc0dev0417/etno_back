@@ -34,9 +34,10 @@ interface ImageControllerInterface {
         value = ["/images"],
         consumes = ["multipart/form-data"],
         produces = ["application/json"],
-        method = [RequestMethod.POST]
+        method = [RequestMethod.POST],
+        params = ["section"]
     )
-    fun saveImage(@RequestParam(name = "image") multipartFile: MultipartFile): ResponseEntity<ImageDTO>?
+    fun saveImage(@RequestParam(name = "image") multipartFile: MultipartFile, @RequestParam(name = "section", required = true) section: String): ResponseEntity<ImageDTO>?
 
     @ApiOperation(
         value = "get a list about image",
@@ -81,7 +82,7 @@ interface ImageControllerInterface {
         value = ["/images"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["name"]
+        params = ["name", "section"]
     )
-    fun deleteImage(@RequestParam(name = "name", required = true) name: String): ResponseEntity<ImageDTO>?
+    fun deleteImage(@RequestParam(name = "name", required = true) name: String, @RequestParam(name = "section", required = true) section: String): ResponseEntity<ImageDTO>?
 }

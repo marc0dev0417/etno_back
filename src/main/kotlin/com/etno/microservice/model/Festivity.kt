@@ -1,16 +1,15 @@
 package com.etno.microservice.model
 
 import org.hibernate.annotations.Type
-import java.util.*
+import java.util.UUID
 import javax.persistence.*
 
-
 @Entity
-@Table(name = "events")
-data class Event(
+@Table(name = "festivities")
+data class Festivity(
     @Id
     @Type(type = "uuid-char")
-    var idEvent: UUID? = UUID.randomUUID(),
+    var idFestivity: UUID? = UUID.randomUUID(),
 
     @Column(name = "title")
     var title: String? = null,
@@ -50,4 +49,4 @@ data class Event(
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var videos: MutableList<Video>? = mutableListOf()
-)
+    )

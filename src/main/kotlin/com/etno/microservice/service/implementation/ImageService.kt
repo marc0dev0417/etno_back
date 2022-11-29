@@ -14,9 +14,23 @@ import java.util.UUID
 class ImageService(
     private val imageRepository: ImageRepository
 ): ImageServiceInterface {
-    override fun saveImage(multipartFile: MultipartFile): ImageDTO? {
-        val routeBase = "http://192.168.137.1:8080/images/"
-        val converterFile = File("src\\main\\resources\\images\\${multipartFile.originalFilename}")
+    override fun saveImage(multipartFile: MultipartFile, section: String): ImageDTO? {
+
+        val nameSectionPath: String = when(section){
+            "event" -> "events"
+            "festivity" -> "festivities"
+            "tourism" -> "tourism"
+            "new" -> "news"
+
+            "evento" -> "events"
+            "fiestividad" -> "festivities"
+            "tourismo" -> "tourism"
+            "noticia" -> "news"
+            else -> {"NO PATH :("}
+        }
+
+        val routeBase = "http://192.168.137.1:8080/images/$nameSectionPath/"
+        val converterFile = File("src\\main\\resources\\images\\$nameSectionPath\\${multipartFile.originalFilename}")
         converterFile.createNewFile()
 
         val fos = FileOutputStream(converterFile)
@@ -37,9 +51,23 @@ class ImageService(
         return imageRepository.findAll().map { DataConverter.imageToDTO(it) }
     }
 
-    override fun deleteImage(name: String): ImageDTO? {
+    override fun deleteImage(name: String, section: String): ImageDTO? {
         val imageItem = imageRepository.findImageByName(name)
-        val file = File("src\\main\\resources\\images\\${imageItem.name}")
+
+        val nameSectionPath: String = when(section){
+            "event" -> "events"
+            "festivity" -> "festivities"
+            "tourism" -> "tourism"
+            "new" -> "news"
+
+            "evento" -> "events"
+            "fiestividad" -> "festivities"
+            "tourismo" -> "tourism"
+            "noticia" -> "news"
+            else -> {"NO PATH :("}
+        }
+
+        val file = File("src\\main\\resources\\images\\$nameSectionPath\\${imageItem.name}")
 
         if(imageItem.name != null){
             imageRepository.delete(imageItem)

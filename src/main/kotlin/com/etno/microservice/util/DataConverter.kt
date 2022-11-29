@@ -111,5 +111,42 @@ class DataConverter {
                 longitude = tourismDTO.longitude
             )
         }
+
+        fun festivityToDTO(festivity: Festivity): FestivityDTO{
+            return FestivityDTO(
+                idFestivity = festivity.idFestivity,
+                title = festivity.title,
+                address = festivity.address,
+                description = festivity.description,
+                organization = festivity.organization,
+                link = festivity.link,
+                startDate = festivity.startDate,
+                endDate = festivity.endDate,
+                publicationDate = festivity.publicationDate,
+                time = festivity.time,
+                lat = festivity.lat,
+                long = festivity.long,
+                images = festivity.images.let { festivity.images?.map { image -> imageToDTO(image) } }?.toMutableList(),
+                videos = festivity.videos.let { festivity.videos?.map { video -> videoToDTO(video) } }?.toMutableList()
+            )
+        }
+        fun festivityFromDTO(festivityDTO: FestivityDTO): Festivity{
+            return Festivity(
+                idFestivity = festivityDTO.idFestivity,
+                title = festivityDTO.title,
+                address = festivityDTO.address,
+                description = festivityDTO.description,
+                organization = festivityDTO.organization,
+                link = festivityDTO.link,
+                startDate = festivityDTO.startDate,
+                endDate = festivityDTO.endDate,
+                publicationDate = festivityDTO.publicationDate,
+                time = festivityDTO.time,
+                lat = festivityDTO.lat,
+                long = festivityDTO.long,
+                images = festivityDTO.images.let { festivityDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList(),
+                videos = festivityDTO.videos.let { festivityDTO.videos?.map { videoDTO -> videoFromDTO(videoDTO) } }?.toMutableList()
+            )
+        }
     }
 }
