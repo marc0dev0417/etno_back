@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class ImageConfig: WebMvcConfigurer {
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         super.addResourceHandlers(registry)
-
         registry.addResourceHandler("/images/**").addResourceLocations("file:///${System.getProperty("user.dir")}/src/main/resources/images/")
     }
 }

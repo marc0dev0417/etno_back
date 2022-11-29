@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.AuthenticationException
@@ -45,7 +46,13 @@ class SecurityConfig() {
     @Throws(Exception::class)
     @Bean
     fun configure(http: HttpSecurity?): SecurityFilterChain {
-        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/events", "/images/**")
+        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login","/swagger-resources/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**",
+            "/events/**",
+            "/images/**")
             ?.permitAll()?.anyRequest()?.authenticated()?.and()?.exceptionHandling()
             ?.authenticationEntryPoint{ request: HttpServletRequest?, response: HttpServletResponse, authException: AuthenticationException? ->
                 val responseMap: MutableMap<String, Any> = HashMap()

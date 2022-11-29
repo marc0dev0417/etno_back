@@ -7,4 +7,6 @@ import org.springframework.stereotype.Service
 interface EventServiceInterface {
     fun getEvents(): List<EventDTO>?
     fun saveEvents(eventDTO: EventDTO): EventDTO?
+    fun addImageToEvent(title: String, imageName: String): EventDTO?
+    fun deleteImageToEvent(title: String, imageName: String): EventDTO?
 }

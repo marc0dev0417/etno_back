@@ -34,11 +34,8 @@ class ImageService(
     }
 
     override fun getImages(): List<ImageDTO>? {
-        val file = File("src\\main\\resources\\images")
-        val filesFiltered = file.walk().filter { file: File -> file.name != "images" }
-
         return imageRepository.findAll().map { DataConverter.imageToDTO(it) }
-        }
+    }
 
     override fun deleteImage(name: String): ImageDTO? {
         val imageItem = imageRepository.findImageByName(name)

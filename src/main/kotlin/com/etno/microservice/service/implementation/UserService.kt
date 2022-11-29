@@ -84,9 +84,7 @@ class UserService(
     }
 
     override fun updateUser(username: String, userDTO: UserDTO): UserDTO? {
-
-            val itemUser = userRepository.findUserByUsername(username) //DataConverter.userFromDTO(userDTO)
-            //itemUser.password = BCryptPasswordEncoder().encode(userDTO.password)
+            val itemUser = userRepository.findUserByUsername(username)
             itemUser.username = userDTO.username
             itemUser.password = BCryptPasswordEncoder().encode(userDTO.password)
             itemUser.role = userDTO.role
@@ -94,5 +92,4 @@ class UserService(
             userRepository.save(itemUser)
             return DataConverter.userToDTO(itemUser)
     }
-
 }

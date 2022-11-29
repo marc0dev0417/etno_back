@@ -17,4 +17,12 @@ class EventController(
     override fun saveEvent(eventDTO: EventDTO): ResponseEntity<EventDTO>? {
         return ResponseEntity.ok().body(eventService.saveEvents(eventDTO))
     }
+
+    override fun addImageToEvent(title: String, imageName: String): ResponseEntity<EventDTO>? {
+        return ResponseEntity.ok().body(eventService.addImageToEvent(title, imageName))
+    }
+
+    override fun removeImageToEvent(title: String, imageName: String): ResponseEntity<EventDTO>? {
+        return ResponseEntity.ok().body(eventService.deleteImageToEvent(title, imageName))
+    }
 }

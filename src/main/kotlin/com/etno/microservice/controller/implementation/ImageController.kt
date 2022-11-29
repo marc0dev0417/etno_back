@@ -15,7 +15,6 @@ class ImageController(
         return ResponseEntity.ok().body(imageService.saveImage(multipartFile))
     }
 
-
     override fun getImages(): ResponseEntity<List<ImageDTO>>? {
         return ResponseEntity.ok().body(imageService.getImages())
     }

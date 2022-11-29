@@ -8,5 +8,5 @@ import java.util.*
 
 @Repository
 interface EventRepository: JpaRepository<Event, UUID> {
-    fun findByTitle(title: String): Event
+    fun findEventByTitle(title: String): Event
 }
