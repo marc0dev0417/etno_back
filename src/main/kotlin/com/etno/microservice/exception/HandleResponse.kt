@@ -6,5 +6,4 @@ data class HandleResponse(
     @JsonProperty("code") val code: String? = null,
 
     @JsonProperty("message") val errorCode: String? = null,
-
 )

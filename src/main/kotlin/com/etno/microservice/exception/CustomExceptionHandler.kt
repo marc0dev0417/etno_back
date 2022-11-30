@@ -2,7 +2,6 @@ package com.etno.microservice.exception
 
 import com.etno.microservice.exception.handler.BadRequestException
 import com.etno.microservice.exception.handler.ListEmptyException
-import com.etno.microservice.exception.handler.NotFoundException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,7 +24,7 @@ class CustomExceptionHandler {
     //Exception to code error 500 ->
     @ExceptionHandler(Exception::class)
     fun handleAll(ex: Exception, request: WebRequest): ResponseEntity<Any> {
-        val handleMessage = HandleResponse(HttpStatus.INTERNAL_SERVER_ERROR.name, ex.localizedMessage)
+        val handleMessage = HandleResponse(HttpStatus.INTERNAL_SERVER_ERROR.name, "Result is null")
         val sw = StringWriter()
         val pw = PrintWriter(sw)
 
@@ -34,12 +33,14 @@ class CustomExceptionHandler {
         return ResponseEntity(handleMessage, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
+    //When he finds nothing ->
     @ExceptionHandler(ListEmptyException::class)
     fun handleNotFoundException(ex: Exception, request: WebRequest): ResponseEntity<Any>{
         val handleMessage = HandleResponse(Constants.LIST_EMPTY.code, Constants.LIST_EMPTY.message)
         return ResponseEntity(handleMessage, HttpHeaders(), HttpStatus.OK)
     }
 
+    //When there is malformation in the request ->
     @ExceptionHandler(BadRequestException::class)
     fun handleBadRequestException(): ResponseEntity<Any>{
         val handleMessage = HandleResponse(Constants.BAD_REQUEST.code, Constants.BAD_REQUEST.message)
