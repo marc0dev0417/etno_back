@@ -15,7 +15,6 @@ class ImageService(
     private val imageRepository: ImageRepository
 ): ImageServiceInterface {
     override fun saveImage(multipartFile: MultipartFile, section: String): ImageDTO? {
-
         val nameSectionPath: String = when(section){
             "event" -> "events"
             "festivity" -> "festivities"
@@ -61,7 +60,7 @@ class ImageService(
             "new" -> "news"
 
             "evento" -> "events"
-            "fiestividad" -> "festivities"
+            "festividad" -> "festivities"
             "tourismo" -> "tourism"
             "noticia" -> "news"
             else -> {"NO PATH :("}
@@ -69,12 +68,10 @@ class ImageService(
 
         val file = File("src\\main\\resources\\images\\$nameSectionPath\\${imageItem.name}")
 
-        if(imageItem.name != null){
+        if(imageItem.name != null && file.exists()){
             imageRepository.delete(imageItem)
             file.delete()
         }
         return DataConverter.imageToDTO(imageItem)
     }
 }
-
-

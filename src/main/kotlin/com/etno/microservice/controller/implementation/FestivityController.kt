@@ -13,4 +13,20 @@ class FestivityController(
     override fun getFestivities(): ResponseEntity<List<FestivityDTO>>? {
         return ResponseEntity.ok().body(festivityService.getFestivities())
     }
+
+    override fun saveFestivity(festivityDTO: FestivityDTO): ResponseEntity<FestivityDTO>? {
+        return ResponseEntity.ok().body(festivityService.saveFestivity(festivityDTO))
+    }
+
+    override fun deleteFestivity(title: String): ResponseEntity<FestivityDTO>? {
+        return ResponseEntity.ok().body(festivityService.deleteFestivityByTitle(title))
+    }
+
+    override fun addImageToFestivity(title: String, name: String): ResponseEntity<FestivityDTO>? {
+        return ResponseEntity.ok().body(festivityService.addImageToFestivity(title, name))
+    }
+
+    override fun deleteImageFromFestivity(title: String, imageName: String): ResponseEntity<FestivityDTO>? {
+        return ResponseEntity.ok().body(festivityService.deleteImageFromFestivity(title, imageName))
+    }
 }

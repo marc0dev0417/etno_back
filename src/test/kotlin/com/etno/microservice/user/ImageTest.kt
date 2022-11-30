@@ -22,6 +22,7 @@ class ImageTest {
     private lateinit var mockMvc: MockMvc
     private var gson: Gson = Gson()
 
+    /*
     @Test
     fun saveImage(){
 
@@ -32,6 +33,6 @@ class ImageTest {
         val imageMultiPart = MockMultipartFile("image", "", "multipart/form-data", fileInputStream)
 
         val result = mockMvc.perform(multipart("/images").file(imageMultiPart)).andExpect(status().isOk)
-
     }
+     */
 }

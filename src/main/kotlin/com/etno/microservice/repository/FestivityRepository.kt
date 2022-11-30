@@ -7,5 +7,5 @@ import java.util.UUID
 
 @Repository
 interface FestivityRepository: JpaRepository<Festivity, UUID> {
-
+    fun findFestivityByTitle(title: String): Festivity
 }
