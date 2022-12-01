@@ -9,6 +9,7 @@ import com.etno.microservice.service.EventServiceInterface
 import com.etno.microservice.util.DataConverter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
@@ -18,7 +19,8 @@ class EventService(
     private val eventRepository: EventRepository,
 
     @Autowired
-    private val imageRepository: ImageRepository
+    private val imageRepository: ImageRepository,
+
 ): EventServiceInterface {
     override fun getEvents(): List<EventDTO>? {
         if(eventRepository.findAll().isEmpty()){

@@ -148,5 +148,18 @@ class DataConverter {
                 videos = festivityDTO.videos.let { festivityDTO.videos?.map { videoDTO -> videoFromDTO(videoDTO) } }?.toMutableList()
             )
         }
+
+        fun fcmTokenToDTO(fcmToken: FCMToken): FCMTokenDTO{
+            return FCMTokenDTO(
+                idFMC = fcmToken.idFMC,
+                token = fcmToken.token
+            )
+        }
+        fun fcmTokenFromDTO(fcmTokenDTO: FCMTokenDTO): FCMToken{
+            return FCMToken(
+                idFMC = fcmTokenDTO.idFMC,
+                token = fcmTokenDTO.token
+            )
+        }
     }
 }

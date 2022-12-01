@@ -40,6 +40,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson
 	implementation("com.google.code.gson:gson:2.10")
 
+	// https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+	implementation("com.google.firebase:firebase-admin:9.1.1")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

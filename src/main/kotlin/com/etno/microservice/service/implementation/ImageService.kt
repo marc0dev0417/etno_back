@@ -29,7 +29,7 @@ class ImageService(
         }
 
         val routeBase = "http://192.168.137.1:8080/images/$nameSectionPath/"
-        val converterFile = File("src\\main\\resources\\images\\$nameSectionPath\\${multipartFile.originalFilename}")
+        val converterFile = File("src/main/resources/fcm_service_account.jsonimages\\$nameSectionPath\\${multipartFile.originalFilename}")
         converterFile.createNewFile()
 
         val fos = FileOutputStream(converterFile)

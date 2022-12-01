@@ -1,12 +1,39 @@
 package com.etno.microservice
 
+import com.google.auth.oauth2.GoogleCredentials
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
+import com.google.firebase.messaging.FirebaseMessaging
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import springfox.documentation.swagger2.annotations.EnableSwagger2
+import java.io.FileInputStream
+import java.io.IOException
+
 
 @SpringBootApplication
 class MicroserviceApplication
 
+fun firebaseMessaging(): FirebaseMessaging {
+
+	val serviceAccount = FileInputStream("src/main/resources/service_firebase.json")
+
+	try {
+		val options = FirebaseOptions.Builder()
+			.setCredentials(GoogleCredentials.fromStream(serviceAccount))
+			.build()
+
+		if(FirebaseApp.getApps().isEmpty()){
+			val app = FirebaseApp.initializeApp(options)
+			return FirebaseMessaging.getInstance(app)
+		}
+
+	}catch (_: IOException){}
+	return FirebaseMessaging.getInstance()
+	//return FirebaseMessaging.getInstance(app)
+}
+
+
 fun main(args: Array<String>) {
 	runApplication<MicroserviceApplication>(*args)
+	firebaseMessaging()
 }

@@ -22,16 +22,7 @@ class CustomExceptionHandler {
     }
 
     //Exception to code error 500 ->
-    @ExceptionHandler(Exception::class)
-    fun handleAll(ex: Exception, request: WebRequest): ResponseEntity<Any> {
-        val handleMessage = HandleResponse(HttpStatus.INTERNAL_SERVER_ERROR.name, "Result is null")
-        val sw = StringWriter()
-        val pw = PrintWriter(sw)
 
-        ex.printStackTrace(pw)
-
-        return ResponseEntity(handleMessage, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
-    }
 
     //When he finds nothing ->
     @ExceptionHandler(ListEmptyException::class)
