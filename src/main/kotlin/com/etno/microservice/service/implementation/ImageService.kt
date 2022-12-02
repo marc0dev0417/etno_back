@@ -4,6 +4,7 @@ import com.etno.microservice.model.dto.ImageDTO
 import com.etno.microservice.repository.ImageRepository
 import com.etno.microservice.service.ImageServiceInterface
 import com.etno.microservice.util.DataConverter
+import com.etno.microservice.util.Urls
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
@@ -29,7 +30,7 @@ class ImageService(
         }
 
         val routeBase = "http://192.168.137.1:8080/images/$nameSectionPath/"
-        val converterFile = File("src/main/resources/fcm_service_account.jsonimages\\$nameSectionPath\\${multipartFile.originalFilename}")
+        val converterFile = File("${Urls.sourceImagePath}\\$nameSectionPath\\${multipartFile.originalFilename}")
         converterFile.createNewFile()
 
         val fos = FileOutputStream(converterFile)

@@ -15,5 +15,4 @@ class Firebase(
     override fun sendNotification(@RequestBody note: NoteDTO): ResponseEntity<NotificationDTO>? {
         return ResponseEntity.ok().body(firebaseCloudMessageService.sendNotification(note))
     }
-
 }

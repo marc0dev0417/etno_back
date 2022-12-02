@@ -12,7 +12,7 @@ data class Event(
     @Type(type = "uuid-char")
     var idEvent: UUID? = UUID.randomUUID(),
 
-    @Column(name = "title")
+    @Column(name = "title", unique = true)
     var title: String? = null,
 
     @Column(name = "address")

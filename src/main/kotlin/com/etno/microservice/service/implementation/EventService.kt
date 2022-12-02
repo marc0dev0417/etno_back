@@ -4,13 +4,17 @@ import com.etno.microservice.exception.Constants
 import com.etno.microservice.exception.handler.ListEmptyException
 import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.repository.EventRepository
+import com.etno.microservice.repository.FCMTokenRepository
 import com.etno.microservice.repository.ImageRepository
 import com.etno.microservice.service.EventServiceInterface
 import com.etno.microservice.util.DataConverter
+import com.etno.microservice.util.Urls
+import org.apache.catalina.util.URLEncoder
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.multipart.MultipartFile
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 @Service
@@ -21,6 +25,9 @@ class EventService(
     @Autowired
     private val imageRepository: ImageRepository,
 
+    @Autowired
+    private val fcmTokenRepository: FCMTokenRepository
+
 ): EventServiceInterface {
     override fun getEvents(): List<EventDTO>? {
         if(eventRepository.findAll().isEmpty()){
@@ -30,10 +37,19 @@ class EventService(
         return eventRepository.findAll().map { DataConverter.eventToDTO(it) }
     }
 
-    override fun saveEvents(eventDTO: EventDTO): EventDTO? {
+
+   override fun saveEvents(eventDTO: EventDTO): EventDTO? {
         val eventItem = DataConverter.eventFromDTO(eventDTO)
         eventItem.idEvent = UUID.randomUUID()
         val eventToSave = eventRepository.save(eventItem)
+
+        if (fcmTokenRepository.findAll().isNotEmpty()){
+            val restTemplate = RestTemplate()
+            val map: Map<String, String> = mapOf("subject" to "Nuevo evento", "content" to "Evento ${eventToSave.title} disponible")
+
+            val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
+        }
+
         return DataConverter.eventToDTO(eventToSave)
     }
 

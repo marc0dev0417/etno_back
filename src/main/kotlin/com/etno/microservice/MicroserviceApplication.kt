@@ -1,5 +1,6 @@
 package com.etno.microservice
 
+import com.etno.microservice.util.Urls
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
@@ -15,7 +16,7 @@ class MicroserviceApplication
 
 fun firebaseMessaging(): FirebaseMessaging {
 
-	val serviceAccount = FileInputStream("src/main/resources/service_firebase.json")
+	val serviceAccount = FileInputStream(Urls.urlSourceFirebaseCredential)
 
 	try {
 		val options = FirebaseOptions.Builder()
@@ -29,7 +30,6 @@ fun firebaseMessaging(): FirebaseMessaging {
 
 	}catch (_: IOException){}
 	return FirebaseMessaging.getInstance()
-	//return FirebaseMessaging.getInstance(app)
 }
 
 
