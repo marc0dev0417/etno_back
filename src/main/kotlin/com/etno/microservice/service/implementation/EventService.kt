@@ -33,14 +33,13 @@ class EventService(
         if(eventRepository.findAll().isEmpty()){
             throw ListEmptyException(Constants.LIST_EMPTY.code, Constants.LIST_EMPTY)
         }
-
         return eventRepository.findAll().map { DataConverter.eventToDTO(it) }
     }
-
 
    override fun saveEvents(eventDTO: EventDTO): EventDTO? {
         val eventItem = DataConverter.eventFromDTO(eventDTO)
         eventItem.idEvent = UUID.randomUUID()
+        //eventItem.publicationDate = Date()
         val eventToSave = eventRepository.save(eventItem)
 
         if (fcmTokenRepository.findAll().isNotEmpty()){

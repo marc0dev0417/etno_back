@@ -34,7 +34,7 @@ data class Event(
     var endDate: String? = null,
 
     @Column(name = "publicationDate")
-    var publicationDate: String? = null,
+    var publicationDate: Date? = null,
 
     @Column(name = "time")
     var time: String? = null,

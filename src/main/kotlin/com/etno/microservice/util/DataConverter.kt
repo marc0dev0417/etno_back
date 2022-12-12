@@ -2,6 +2,10 @@ package com.etno.microservice.util
 
 import com.etno.microservice.model.*
 import com.etno.microservice.model.dto.*
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class DataConverter {
     companion object {
@@ -26,6 +30,9 @@ class DataConverter {
         }
 
         fun eventToDTO(event: Event): EventDTO {
+            val localTimeToFormat = LocalDateTime.ofInstant(event.publicationDate!!.toInstant(), ZoneId.systemDefault())
+            val formatter = DateTimeFormatter.ofPattern("yyyy-d-M")
+
             return EventDTO(
                 idEvent = event.idEvent,
                 title = event.title,
@@ -35,7 +42,7 @@ class DataConverter {
                 link = event.link,
                 startDate = event.startDate,
                 endDate = event.endDate,
-                publicationDate = event.publicationDate,
+                publicationDate = localTimeToFormat.format(formatter),
                 time = event.time,
                 lat = event.lat,
                 long = event.long,
@@ -54,7 +61,7 @@ class DataConverter {
                 link = eventDTO.link,
                 startDate = eventDTO.startDate,
                 endDate = eventDTO.endDate,
-                publicationDate = eventDTO.publicationDate,
+                publicationDate = Date(),
                 time = eventDTO.time,
                 lat = eventDTO.lat,
                 long = eventDTO.long,
