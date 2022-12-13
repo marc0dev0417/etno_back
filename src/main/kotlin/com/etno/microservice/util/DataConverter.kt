@@ -1,6 +1,7 @@
 package com.etno.microservice.util
 
 import com.etno.microservice.model.*
+import com.etno.microservice.model.SectionSubscribe
 import com.etno.microservice.model.dto.*
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -166,6 +167,21 @@ class DataConverter {
             return FCMToken(
                 idFMC = fcmTokenDTO.idFMC,
                 token = fcmTokenDTO.token
+            )
+        }
+
+        fun sectionSubscribeToDTO(sectionSubscribe: SectionSubscribe): SectionSubscribeDTO{
+            return SectionSubscribeDTO(
+                idSectionSubscribe = sectionSubscribe.idSectionSubscribe,
+                title = sectionSubscribe.title,
+                isSubscribe = sectionSubscribe.isSubscribe.toString()
+            )
+        }
+        fun sectionSubscribeFromDTO(sectionSubscribeDTO: SectionSubscribeDTO): SectionSubscribe{
+            return SectionSubscribe(
+                idSectionSubscribe = sectionSubscribeDTO.idSectionSubscribe!!,
+                title = sectionSubscribeDTO.title,
+                isSubscribe = sectionSubscribeDTO.isSubscribe.toBoolean()
             )
         }
     }

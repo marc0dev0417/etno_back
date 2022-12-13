@@ -1,4 +1,4 @@
-package com.etno.microservice.controller.implementation
+package com.etno.microservice.controller.implementation.firebase
 
 import com.etno.microservice.controller.FCMTokenControllerInterface
 import com.etno.microservice.model.dto.FCMTokenDTO

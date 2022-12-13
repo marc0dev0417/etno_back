@@ -1,4 +1,4 @@
-package com.etno.microservice.controller.implementation
+package com.etno.microservice.controller.implementation.firebase
 
 import com.etno.microservice.controller.FirebaseCloudMessageControllerInterface
 import com.etno.microservice.model.dto.firebase.NoteDTO
