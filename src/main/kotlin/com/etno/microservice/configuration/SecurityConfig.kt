@@ -45,17 +45,20 @@ class SecurityConfig() {
     @Throws(Exception::class)
     @Bean
     fun configure(http: HttpSecurity?): SecurityFilterChain {
-        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/send-notification", "/FCMTokens",
+        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/send-notification",
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v2/api-docs",
             "/webjars/**",
+            "/FCMTokens/**",
             "/events/**",
             "/images/**",
-            "/festivities/**")
+            "/festivities/**",
+            "/sections",
+            "/subscriptions")
             ?.permitAll()?.anyRequest()?.authenticated()?.and()?.exceptionHandling()
-            ?.authenticationEntryPoint{ request: HttpServletRequest?, response: HttpServletResponse, authException: AuthenticationException? ->
+            ?.authenticationEntryPoint{ _: HttpServletRequest?, response: HttpServletResponse, _: AuthenticationException? ->
                 val responseMap: MutableMap<String, Any> = HashMap()
                 val mapper = ObjectMapper()
                 response.status = 401

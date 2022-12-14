@@ -7,5 +7,5 @@ import java.util.UUID
 
 @Repository
 interface FCMTokenRepository: JpaRepository<FCMToken, UUID> {
-
+        fun findFCMTokenByToken(token: String): FCMToken
 }

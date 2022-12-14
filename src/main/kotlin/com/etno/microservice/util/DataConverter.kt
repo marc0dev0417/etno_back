@@ -1,7 +1,6 @@
 package com.etno.microservice.util
 
 import com.etno.microservice.model.*
-import com.etno.microservice.model.SectionSubscribe
 import com.etno.microservice.model.dto.*
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -32,7 +31,7 @@ class DataConverter {
 
         fun eventToDTO(event: Event): EventDTO {
             val localTimeToFormat = LocalDateTime.ofInstant(event.publicationDate!!.toInstant(), ZoneId.systemDefault())
-            val formatter = DateTimeFormatter.ofPattern("yyyy-d-M")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM")
 
             return EventDTO(
                 idEvent = event.idEvent,
@@ -170,18 +169,23 @@ class DataConverter {
             )
         }
 
-        fun sectionSubscribeToDTO(sectionSubscribe: SectionSubscribe): SectionSubscribeDTO{
-            return SectionSubscribeDTO(
-                idSectionSubscribe = sectionSubscribe.idSectionSubscribe,
-                title = sectionSubscribe.title,
-                isSubscribe = sectionSubscribe.isSubscribe.toString()
+        fun subscriptionToDTO(subscription: Subscription): SubscriptionDTO{
+            return SubscriptionDTO(
+                idSubscription = subscription.idSectionSubscribe,
+                token = subscription.token,
+                category = subscription.category,
+                title = subscription.title,
+                isSubscribe = subscription.isSubscribe
             )
         }
-        fun sectionSubscribeFromDTO(sectionSubscribeDTO: SectionSubscribeDTO): SectionSubscribe{
-            return SectionSubscribe(
-                idSectionSubscribe = sectionSubscribeDTO.idSectionSubscribe!!,
-                title = sectionSubscribeDTO.title,
-                isSubscribe = sectionSubscribeDTO.isSubscribe.toBoolean()
+
+        fun subscriptionFromDTO(subscriptionDTO: SubscriptionDTO): Subscription{
+            return Subscription(
+                idSectionSubscribe = subscriptionDTO.idSubscription!!,
+                token = subscriptionDTO.token,
+                category = subscriptionDTO.category,
+                title = subscriptionDTO.title,
+                isSubscribe = subscriptionDTO.isSubscribe
             )
         }
     }
