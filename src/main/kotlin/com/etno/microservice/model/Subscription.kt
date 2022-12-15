@@ -14,7 +14,7 @@ data class Subscription(
     @Type(type = "uuid-char")
     var idSectionSubscribe: UUID? = UUID.randomUUID(),
 
-    @Column(name = "token", unique = true)
+    @Column(name = "token")
     var token: String ? = null,
 
     @Column(name = "category")

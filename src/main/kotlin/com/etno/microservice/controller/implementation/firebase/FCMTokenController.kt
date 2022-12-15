@@ -3,6 +3,7 @@ package com.etno.microservice.controller.implementation.firebase
 import com.etno.microservice.controller.FCMTokenControllerInterface
 import com.etno.microservice.model.dto.FCMTokenDTO
 import com.etno.microservice.model.dto.SectionDTO
+import com.etno.microservice.model.dto.SubscriptionDTO
 import com.etno.microservice.service.implementation.FCMTokenService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -19,11 +20,11 @@ class FCMTokenController(
         return ResponseEntity.ok().body(fcmTokenService.saveFCMToken(fcmTokenDTO))
     }
 
-    override fun addSectionToFcmToken(token: String, sectionDTO: SectionDTO): ResponseEntity<FCMTokenDTO>? {
+    override fun addSectionToFcmToken(token: String, sectionDTO: SectionDTO): ResponseEntity<SubscriptionDTO>? {
         return ResponseEntity.ok().body(fcmTokenService.addSectionToFcmToken(token, sectionDTO))
     }
 
-    override fun dropOutSectionByTokenAndTitle(token: String, title: String): ResponseEntity<FCMTokenDTO> {
+    override fun dropOutSectionByTokenAndTitle(token: String, title: String): ResponseEntity<SubscriptionDTO> {
         return ResponseEntity.ok().body(fcmTokenService.dropOutSectionByTokenAndTitle(token, title))
     }
 }

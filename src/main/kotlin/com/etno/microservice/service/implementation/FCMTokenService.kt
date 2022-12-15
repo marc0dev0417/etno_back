@@ -3,6 +3,7 @@ package com.etno.microservice.service.implementation
 import com.etno.microservice.model.Subscription
 import com.etno.microservice.model.dto.FCMTokenDTO
 import com.etno.microservice.model.dto.SectionDTO
+import com.etno.microservice.model.dto.SubscriptionDTO
 import com.etno.microservice.repository.FCMTokenRepository
 import com.etno.microservice.repository.SubscriptionRepository
 import com.etno.microservice.service.FCMTokenServiceInterface
@@ -27,9 +28,9 @@ class FCMTokenService(
     }
 
 
-    override fun addSectionToFcmToken(token: String, sectionDTO: SectionDTO): FCMTokenDTO? {
+    override fun addSectionToFcmToken(token: String, sectionDTO: SectionDTO): SubscriptionDTO? {
         val itemFound = fcmTokenRepository.findFCMTokenByToken(token)
-        val itemSubscription = subscriptionRepository.findSubscriptionByTokenAndTitle(token, sectionDTO.title!!)
+        var itemSubscription = subscriptionRepository.findSubscriptionByTokenAndTitle(token, sectionDTO.title!!)
 
         if(itemSubscription != null){
             itemSubscription.token = itemFound.token
@@ -38,17 +39,16 @@ class FCMTokenService(
             itemSubscription.isSubscribe = true
             subscriptionRepository.save(itemSubscription)
         }else{
-            subscriptionRepository.save(Subscription(token = itemFound.token, category = sectionDTO.category, title = sectionDTO.title, isSubscribe = true))
+          itemSubscription =  subscriptionRepository.save(Subscription(token = itemFound.token, category = sectionDTO.category, title = sectionDTO.title, isSubscribe = true))
         }
-        return DataConverter.fcmTokenToDTO(itemFound)
+        return DataConverter.subscriptionToDTO(itemSubscription)
     }
 
-    override fun dropOutSectionByTokenAndTitle(token: String, sectionTitle: String): FCMTokenDTO? {
-        val itemFcmToken = fcmTokenRepository.findFCMTokenByToken(token)
+    override fun dropOutSectionByTokenAndTitle(token: String, sectionTitle: String): SubscriptionDTO? {
         val itemSubscription = subscriptionRepository.findSubscriptionByTokenAndTitle(token, sectionTitle)
         itemSubscription!!.isSubscribe = false
-        subscriptionRepository.save(itemSubscription)
-        return DataConverter.fcmTokenToDTO(itemFcmToken)
+        val itemSubscriptionSaved = subscriptionRepository.save(itemSubscription)
+        return DataConverter.subscriptionToDTO(itemSubscriptionSaved)
     }
 
 }
