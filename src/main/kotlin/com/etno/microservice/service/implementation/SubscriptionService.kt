@@ -1,6 +1,7 @@
 package com.etno.microservice.service.implementation
 
 import com.etno.microservice.model.dto.SubscriptionDTO
+import com.etno.microservice.model.dto.SubscriptionUserDTO
 import com.etno.microservice.repository.SubscriptionRepository
 import com.etno.microservice.service.SubscriptionServiceInterface
 import com.etno.microservice.util.DataConverter
@@ -15,8 +16,12 @@ class SubscriptionService(
         return subscriptionRepository.findAll().map { DataConverter.subscriptionToDTO(it) }
     }
 
-    override fun getSubscription(token: String, category: String, title: String): SubscriptionDTO? {
-        return DataConverter.subscriptionToDTO(subscriptionRepository.findSubscriptionByTokenAndCategoryAndTitle(token = token, category = category, title = title)!!)
+
+    override fun getSubscription(token: String, category: String, title: String): SubscriptionUserDTO? {
+       val itemSubscription = subscriptionRepository.findSubscriptionByCategoryAndTitle( category = category, title = title)
+        val itemSubscriptionUserFound = itemSubscription?.subscriptionsUsers?.find { subscriptionUser -> subscriptionUser.fcmToken == token }
+
+        return DataConverter.subscriptionUserToDTO(itemSubscriptionUserFound!!)
     }
 
     override fun saveSubscription(subscriptionDTO: SubscriptionDTO): SubscriptionDTO? {

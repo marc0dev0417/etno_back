@@ -6,6 +6,7 @@ import com.etno.microservice.model.dto.SectionDTO
 import com.etno.microservice.model.dto.SubscriptionDTO
 import com.etno.microservice.service.implementation.FCMTokenService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -20,11 +21,24 @@ class FCMTokenController(
         return ResponseEntity.ok().body(fcmTokenService.saveFCMToken(fcmTokenDTO))
     }
 
-    override fun addSectionToFcmToken(token: String, sectionDTO: SectionDTO): ResponseEntity<SubscriptionDTO>? {
-        return ResponseEntity.ok().body(fcmTokenService.addSectionToFcmToken(token, sectionDTO))
+    override fun addSectionToFcmToken(
+        token: String,
+        nameUser: String,
+        mail: String,
+        phone: String,
+        wallet: Double,
+        sectionDTO: SectionDTO
+    ): ResponseEntity<SubscriptionDTO>? {
+        return ResponseEntity.ok().body(fcmTokenService.addSectionToFcmToken(token = token, nameUser = nameUser, mail = mail, phone = phone, wallet = wallet, sectionDTO = sectionDTO))
     }
 
-    override fun dropOutSectionByTokenAndTitle(token: String, title: String): ResponseEntity<SubscriptionDTO> {
-        return ResponseEntity.ok().body(fcmTokenService.dropOutSectionByTokenAndTitle(token, title))
+    override fun dropOutSectionByTokenAndTitle(
+        token: String,
+        category: String,
+        title: String
+    ): ResponseEntity<SubscriptionDTO> {
+        return ResponseEntity.ok().body(fcmTokenService.dropOutSectionByTokenAndTitle(token = token, category = category, sectionTitle = title))
     }
+
+
 }

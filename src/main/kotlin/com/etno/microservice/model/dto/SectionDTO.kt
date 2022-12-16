@@ -9,6 +9,4 @@ data class SectionDTO(
     @JsonProperty("category") var category: String ? = null,
 
     @JsonProperty("title") var title: String ? = null,
-
-    //@JsonProperty("isSubscribe") var isSubscribe: Boolean ? = null
 )

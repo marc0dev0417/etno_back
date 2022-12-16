@@ -56,7 +56,8 @@ class SecurityConfig() {
             "/images/**",
             "/festivities/**",
             "/sections",
-            "/subscriptions")
+            "/subscriptions",
+        "/subscription_users")
             ?.permitAll()?.anyRequest()?.authenticated()?.and()?.exceptionHandling()
             ?.authenticationEntryPoint{ _: HttpServletRequest?, response: HttpServletResponse, _: AuthenticationException? ->
                 val responseMap: MutableMap<String, Any> = HashMap()

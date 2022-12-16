@@ -7,6 +7,6 @@ import java.util.UUID
 
 @Repository
 interface SubscriptionRepository: JpaRepository<Subscription,UUID> {
-        fun findSubscriptionByTokenAndTitle(token: String, title: String): Subscription?
-        fun findSubscriptionByTokenAndCategoryAndTitle(token: String, category: String, title: String): Subscription?
+        fun findSubscriptionByCategoryAndTitle(category: String, title: String): Subscription?
+
 }

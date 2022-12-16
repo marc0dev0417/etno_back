@@ -2,6 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.SubscriptionDTO
+import com.etno.microservice.model.dto.SubscriptionUserDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -61,16 +62,17 @@ interface SubscriptionControllerInterface {
     )
     fun saveSubscription(@RequestBody subscriptionDTO: SubscriptionDTO): ResponseEntity<SubscriptionDTO>
 
+
     @ApiOperation(
         value = "get a subscription by token, category and title",
         nickname = "findSubscriptionByTokenAndCategoryAndTitle",
         notes = "Will get a subscription by token, category and title",
         tags = ["Subscription"],
-        response = SubscriptionDTO::class
+        response = SubscriptionUserDTO::class
     )
     @ApiResponses(
         value = [
-            ApiResponse(code = 201, message = "Subscription", response = SubscriptionDTO::class),
+            ApiResponse(code = 201, message = "Subscription", response = SubscriptionUserDTO::class),
             ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
             ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
             ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
@@ -83,5 +85,6 @@ interface SubscriptionControllerInterface {
         method = [RequestMethod.GET],
         params = ["token", "category", "title"]
     )
-    fun findSubscriptionByTokenAndCategoryAndTitle(@RequestParam(name = "token", required = true) token: String, @RequestParam(name = "category", required = true) category: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<SubscriptionDTO>
+    fun findSubscriptionCategoryAndTitleAndUser(@RequestParam(name = "token", required = true) token: String, @RequestParam(name = "category", required = true) category: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<SubscriptionUserDTO>
+
 }

@@ -83,9 +83,14 @@ interface FCMTokenControllerInterface {
         value = ["/FCMTokens/section"],
         produces = ["application/json"],
         method = [RequestMethod.PUT],
-        params = ["token"]
+        params = ["token", "name", "mail", "phone","wallet"]
     )
-    fun addSectionToFcmToken(@RequestParam(name = "token", required = true) token: String, @RequestBody sectionDTO: SectionDTO): ResponseEntity<SubscriptionDTO>?
+    fun addSectionToFcmToken(@RequestParam(name = "token", required = true) token: String,
+                             @RequestParam(name = "name", required = true) nameUser: String,
+                             @RequestParam(name = "mail", required = true) mail: String,
+                             @RequestParam(name = "phone", required = true) phone: String,
+                             @RequestParam(name = "wallet", required = true) wallet: Double,
+                             @RequestBody sectionDTO: SectionDTO): ResponseEntity<SubscriptionDTO>?
 
     @ApiOperation(
         value = "drop out a section subscription by token and section title",
@@ -107,7 +112,9 @@ interface FCMTokenControllerInterface {
         value = ["/FCMTokens/dropout/section"],
         produces = ["application/json"],
         method = [RequestMethod.PUT],
-        params = ["token", "title"]
+        params = ["token", "category", "title"]
     )
-    fun dropOutSectionByTokenAndTitle(@RequestParam(name = "token", required = true) token: String, @RequestParam(name = "title") title: String): ResponseEntity<SubscriptionDTO>
+    fun dropOutSectionByTokenAndTitle(@RequestParam(name = "token", required = true) token: String,
+                                        @RequestParam(name = "category", required = true) category: String,
+                                      @RequestParam(name = "title") title: String): ResponseEntity<SubscriptionDTO>
 }

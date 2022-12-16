@@ -9,6 +9,13 @@ import org.springframework.stereotype.Service
 interface FCMTokenServiceInterface {
     fun getFCMTokens(): List<FCMTokenDTO>?
     fun saveFCMToken(fcmTokenDTO: FCMTokenDTO): FCMTokenDTO?
-    fun addSectionToFcmToken(token: String, sectionDTO: SectionDTO): SubscriptionDTO?
-    fun dropOutSectionByTokenAndTitle(token: String, sectionTitle: String): SubscriptionDTO?
+    fun addSectionToFcmToken(
+        token: String,
+        nameUser: String,
+        mail: String,
+        phone: String,
+        wallet: Double,
+        sectionDTO: SectionDTO
+    ): SubscriptionDTO?
+    fun dropOutSectionByTokenAndTitle(token: String, category: String, sectionTitle: String): SubscriptionDTO?
 }

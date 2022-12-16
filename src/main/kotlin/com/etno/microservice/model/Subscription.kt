@@ -2,10 +2,7 @@ package com.etno.microservice.model
 
 import org.hibernate.annotations.Type
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "subscriptions")
@@ -14,9 +11,6 @@ data class Subscription(
     @Type(type = "uuid-char")
     var idSectionSubscribe: UUID? = UUID.randomUUID(),
 
-    @Column(name = "token")
-    var token: String ? = null,
-
     @Column(name = "category")
     var category: String ? = null,
 
@@ -24,5 +18,8 @@ data class Subscription(
     var title: String ? = null,
 
     @Column(name = "isSubscribe")
-    var isSubscribe: Boolean ? = null
+    var isSubscribe: Boolean ? = null,
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var subscriptionsUsers: MutableList<SubscriptionUser> ? = mutableListOf()
 )

@@ -172,20 +172,43 @@ class DataConverter {
         fun subscriptionToDTO(subscription: Subscription): SubscriptionDTO{
             return SubscriptionDTO(
                 idSubscription = subscription.idSectionSubscribe,
-                token = subscription.token,
                 category = subscription.category,
                 title = subscription.title,
-                isSubscribe = subscription.isSubscribe
+                isSubscribe = subscription.isSubscribe,
+                subscriptionUsers = subscription.subscriptionsUsers.let { subscription.subscriptionsUsers?.map { subscriptionUser -> subscriptionUserToDTO(subscriptionUser) } }!!.toMutableList()
             )
         }
 
         fun subscriptionFromDTO(subscriptionDTO: SubscriptionDTO): Subscription{
             return Subscription(
                 idSectionSubscribe = subscriptionDTO.idSubscription!!,
-                token = subscriptionDTO.token,
                 category = subscriptionDTO.category,
                 title = subscriptionDTO.title,
-                isSubscribe = subscriptionDTO.isSubscribe
+                isSubscribe = subscriptionDTO.isSubscribe,
+                subscriptionsUsers = subscriptionDTO.subscriptionUsers.let { subscriptionDTO.subscriptionUsers.map { subscriptionUserDTO -> subscriptionUserFromDTO(subscriptionUserDTO) } }.toMutableList()
+            )
+        }
+
+        fun subscriptionUserToDTO(subscriptionUser: SubscriptionUser): SubscriptionUserDTO{
+            return SubscriptionUserDTO(
+                idSubscriptionUser = subscriptionUser.idSubscriptionUser,
+                fcmToken = subscriptionUser.fcmToken,
+                name = subscriptionUser.name,
+                mail = subscriptionUser.mail,
+                phone = subscriptionUser.phone,
+                wallet = subscriptionUser.wallet,
+                isSubscribe = subscriptionUser.isSubscribe
+            )
+        }
+        fun subscriptionUserFromDTO(subscriptionUserDTO: SubscriptionUserDTO): SubscriptionUser{
+            return SubscriptionUser(
+                idSubscriptionUser = subscriptionUserDTO.idSubscriptionUser,
+                fcmToken = subscriptionUserDTO.fcmToken,
+                name = subscriptionUserDTO.name,
+                mail = subscriptionUserDTO.mail,
+                phone = subscriptionUserDTO.phone,
+                wallet = subscriptionUserDTO.wallet,
+                isSubscribe = subscriptionUserDTO.isSubscribe
             )
         }
     }
