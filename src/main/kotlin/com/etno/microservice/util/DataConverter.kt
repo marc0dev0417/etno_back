@@ -211,5 +211,28 @@ class DataConverter {
                 isSubscribe = subscriptionUserDTO.isSubscribe
             )
         }
+
+        fun pharmacyToDTO(pharmacy: Pharmacy): PharmacyDTO{
+            return PharmacyDTO(
+                idPharmacy = UUID.randomUUID(),
+                type = pharmacy.type,
+                name = pharmacy.name,
+                phone = pharmacy.phone,
+                schedule = pharmacy.schedule,
+                longitude = pharmacy.longitude,
+                latitude = pharmacy.latitude
+            )
+        }
+        fun pharmacyFromDTO(pharmacyDTO: PharmacyDTO): Pharmacy{
+            return Pharmacy(
+                idPharmacy = UUID.randomUUID(),
+                type = pharmacyDTO.type,
+                name = pharmacyDTO.name,
+                phone = pharmacyDTO.phone,
+                schedule = pharmacyDTO.schedule,
+                longitude = pharmacyDTO.longitude,
+                latitude = pharmacyDTO.latitude
+            )
+        }
     }
 }

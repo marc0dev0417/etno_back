@@ -19,7 +19,7 @@ interface FirebaseCloudMessageControllerInterface {
         value = "send a firebase cloud message",
         nickname = "sendNotification",
         notes = "will send notification all devices",
-        tags = ["NotificationDTO"],
+        tags = ["Notification"],
         response = NotificationDTO::class
     )
     @ApiResponses(

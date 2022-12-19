@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+
 class VideoController(
     private val videoService: VideoService
 ): VideoControllerInterface {

@@ -10,7 +10,10 @@ import com.etno.microservice.repository.SubscriptionRepository
 import com.etno.microservice.repository.SubscriptionUserRepository
 import com.etno.microservice.service.FCMTokenServiceInterface
 import com.etno.microservice.util.DataConverter
+import com.etno.microservice.util.Urls
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 import java.util.*
 
 @Service
@@ -56,7 +59,7 @@ class FCMTokenService(
             subscriptionRepository.save(itemSubscription)
         }else{
             itemSubscriptionUser = subscriptionUserRepository.save(SubscriptionUser(fcmToken = itemFound.token, name = nameUser, mail = mail, phone = phone, wallet = wallet, isSubscribe = true))
-          itemSubscription =  subscriptionRepository.save(Subscription(category = sectionDTO.category, title = sectionDTO.title, isSubscribe = true, subscriptionsUsers = mutableListOf(itemSubscriptionUser)))
+            itemSubscription =  subscriptionRepository.save(Subscription(category = sectionDTO.category, title = sectionDTO.title, isSubscribe = true, subscriptionsUsers = mutableListOf(itemSubscriptionUser)))
         }
         return DataConverter.subscriptionToDTO(itemSubscription)
     }
@@ -85,10 +88,7 @@ class FCMTokenService(
             ))
         }
         itemSubscription!!.isSubscribe = false
-
         val itemSubscriptionSaved = subscriptionRepository.save(itemSubscription)
-
-
         return DataConverter.subscriptionToDTO(itemSubscriptionSaved)
     }
 }
