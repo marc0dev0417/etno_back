@@ -56,7 +56,7 @@ class SecurityConfig() {
             "/images/**",
             "/festivities/**",
             "/sections",
-            "/pharmacies",
+            "/pharmacies/**",
             "/subscriptions",
         "/subscription_users")
             ?.permitAll()?.anyRequest()?.authenticated()?.and()?.exceptionHandling()

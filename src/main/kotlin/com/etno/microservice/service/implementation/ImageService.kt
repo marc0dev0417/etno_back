@@ -21,15 +21,17 @@ class ImageService(
             "festivity" -> "festivities"
             "tourism" -> "tourism"
             "new" -> "news"
+            "pharmacy" -> "pharmacies"
 
             "evento" -> "events"
             "fiestividad" -> "festivities"
             "tourismo" -> "tourism"
             "noticia" -> "news"
+            "farmacia" -> "pharmacies"
             else -> {"NO PATH :("}
         }
 
-        val routeBase = "http://192.168.137.1:8080/images/$nameSectionPath/"
+        val routeBase = "${Urls.urlBase}images/$nameSectionPath/"
         val converterFile = File("${Urls.sourceImagePath}\\$nameSectionPath\\${multipartFile.originalFilename}")
         converterFile.createNewFile()
 

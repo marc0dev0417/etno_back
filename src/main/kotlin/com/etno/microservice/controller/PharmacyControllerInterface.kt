@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 interface PharmacyControllerInterface {
@@ -58,4 +59,28 @@ interface PharmacyControllerInterface {
         method = [RequestMethod.POST]
     )
     fun savePharmacy(@RequestBody pharmacyDTO: PharmacyDTO): ResponseEntity<PharmacyDTO>
+
+    @ApiOperation(
+        value = "Add a image a pharmacy",
+        nickname = "addImageToPharmacy",
+        notes = "Will add a image to pharmacy",
+        tags = ["Pharmacy"],
+        response = PharmacyDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Pharmacy", response = PharmacyDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/pharmacies/image"],
+        produces = ["application/json"],
+        params = ["title", "image"],
+        method = [RequestMethod.PUT]
+    )
+    fun addImageToPharmacy(@RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<PharmacyDTO>
 }

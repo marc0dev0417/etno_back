@@ -39,6 +39,7 @@ class DataConverter {
                 address = event.address,
                 description = event.description,
                 organization = event.organization,
+                reservePrice = event.reservePrice,
                 link = event.link,
                 startDate = event.startDate,
                 endDate = event.endDate,
@@ -58,6 +59,7 @@ class DataConverter {
                 address = eventDTO.address,
                 description = eventDTO.description,
                 organization = eventDTO.organization,
+                reservePrice = eventDTO.reservePrice,
                 link = eventDTO.link,
                 startDate = eventDTO.startDate,
                 endDate = eventDTO.endDate,
@@ -216,9 +218,12 @@ class DataConverter {
             return PharmacyDTO(
                 idPharmacy = UUID.randomUUID(),
                 type = pharmacy.type,
+                link = pharmacy.link,
+                imageUrl = pharmacy.imageUrl,
                 name = pharmacy.name,
                 phone = pharmacy.phone,
                 schedule = pharmacy.schedule,
+                description = pharmacy.description,
                 longitude = pharmacy.longitude,
                 latitude = pharmacy.latitude
             )
@@ -227,9 +232,12 @@ class DataConverter {
             return Pharmacy(
                 idPharmacy = UUID.randomUUID(),
                 type = pharmacyDTO.type,
+                link = pharmacyDTO.link,
+                imageUrl = pharmacyDTO.imageUrl,
                 name = pharmacyDTO.name,
                 phone = pharmacyDTO.phone,
                 schedule = pharmacyDTO.schedule,
+                description = pharmacyDTO.description,
                 longitude = pharmacyDTO.longitude,
                 latitude = pharmacyDTO.latitude
             )

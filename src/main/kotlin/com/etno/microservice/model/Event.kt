@@ -24,6 +24,9 @@ data class Event(
     @Column(name = "organization")
     var organization: String? = null,
 
+    @Column(name = "reservePrice")
+    var reservePrice: Double ? = null,
+
     @Column(name = "link")
     var link: String? = null,
 

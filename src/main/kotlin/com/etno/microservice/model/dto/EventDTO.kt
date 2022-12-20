@@ -14,6 +14,8 @@ data class EventDTO(
 
     @JsonProperty("organization") var organization: String? = null,
 
+    @JsonProperty("reservePrice") var reservePrice: Double ? = null,
+
     @JsonProperty("link") var link: String? = null,
 
     @JsonProperty("startDate") var startDate: String? = null,

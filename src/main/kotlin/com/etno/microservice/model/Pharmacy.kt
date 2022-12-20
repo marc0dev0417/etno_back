@@ -17,7 +17,13 @@ data class Pharmacy(
     @Column(name = "type")
     var type: String ? = null,
 
-    @Column(name = "name")
+    @Column(name = "link")
+    var link: String ? = null,
+
+    @Column(name = "imageUrl")
+    var imageUrl: String ? = null,
+
+    @Column(name = "name", unique = true)
     var name: String ? = null,
 
     @Column(name = "phone")
@@ -26,9 +32,12 @@ data class Pharmacy(
     @Column(name = "schedule")
     var schedule: String ? = null,
 
-    @Column(name = "longitude")
-    var longitude: String ? = null,
+    @Column(name = "description")
+    var description: String ? = null,
 
     @Column(name = "latitude")
+    var longitude: String ? = null,
+
+    @Column(name = "longitude")
     var latitude: String ? = null
 )

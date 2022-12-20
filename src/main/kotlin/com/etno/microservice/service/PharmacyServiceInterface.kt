@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service
 interface PharmacyServiceInterface {
     fun getPharmacies(): List<PharmacyDTO>
     fun savePharmacy(pharmacyDTO: PharmacyDTO): PharmacyDTO?
+    fun addImageToPharmacy(title: String, imageName: String): PharmacyDTO?
 }
