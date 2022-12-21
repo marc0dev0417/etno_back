@@ -62,9 +62,9 @@ class EventService(
         val imageItem = imageRepository.findImageByName(imageName)
 
         eventItem.images?.add(imageItem)
-        eventRepository.save(eventItem)
+        val itemToSaved = eventRepository.save(eventItem)
 
-        return DataConverter.eventToDTO(eventItem)
+        return DataConverter.eventToDTO(itemToSaved)
     }
 
     override fun deleteImageToEvent(title: String, imageName: String): EventDTO? {

@@ -64,7 +64,7 @@ class ImageService(
 
             "evento" -> "events"
             "festividad" -> "festivities"
-            "tourismo" -> "tourism"
+            "turismo" -> "tourism"
             "noticia" -> "news"
             else -> {"NO PATH :("}
         }

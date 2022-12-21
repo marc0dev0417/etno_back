@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 interface TourismControllerInterface {
@@ -59,4 +60,28 @@ interface TourismControllerInterface {
         method = [RequestMethod.POST]
     )
     fun saveTourism(@RequestBody tourismDTO: TourismDTO): ResponseEntity<TourismDTO>?
+
+    @ApiOperation(
+        value = "Will add an image in tourism",
+        nickname = "addImageToTourism",
+        notes = "Endpoint to save image to Tourism",
+        tags = ["Tourism"],
+        response = TourismDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Tourism", response = TourismDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/tourism/image"],
+        produces = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["title", "image"]
+    )
+    fun addImageToTourism(@RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) image: String): ResponseEntity<TourismDTO>
 }

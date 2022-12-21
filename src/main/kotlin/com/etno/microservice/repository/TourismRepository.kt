@@ -7,5 +7,5 @@ import java.util.*
 
 @Repository
 interface TourismRepository: JpaRepository<Tourism, UUID> {
-
+    fun findTourismByTitle(title: String): Tourism
 }

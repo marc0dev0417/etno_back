@@ -103,21 +103,23 @@ class DataConverter {
         fun tourismToDTO(tourism: Tourism): TourismDTO{
             return TourismDTO(
                 idTourism = tourism.idTourism,
+                type = tourism.type,
                 title = tourism.title,
                 description = tourism.description,
-                images = tourism.images.let { tourism.images?.map { image -> imageToDTO(image) } }!!.toMutableList(),
                 latitude = tourism.latitude,
-                longitude = tourism.longitude
+                longitude = tourism.longitude,
+                images = tourism.images.let { tourism.images?.map { image -> imageToDTO(image) } }!!.toMutableList()
             )
         }
         fun tourismFromDTO(tourismDTO: TourismDTO): Tourism{
             return Tourism(
                 idTourism = tourismDTO.idTourism,
+                type = tourismDTO.type,
                 title = tourismDTO.title,
                 description = tourismDTO.description,
-                images = tourismDTO.images.let { tourismDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList(),
                 latitude = tourismDTO.latitude,
-                longitude = tourismDTO.longitude
+                longitude = tourismDTO.longitude,
+                images = tourismDTO.images.let { tourismDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList()
             )
         }
 
