@@ -14,8 +14,9 @@ class DataConverter {
                 idUser = user.idUser,
                 username = user.username,
                 password = user.password,
-                role = user.role,
-                events = user.events.let { it!!.map { event -> eventToDTO(event) } }.toMutableList()
+                events = user.events.let { it!!.map { event -> eventToDTO(event) } }.toMutableList(),
+                pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
+                tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList()
             )
         }
 
@@ -24,8 +25,9 @@ class DataConverter {
                 idUser = userDTO.idUser!!,
                 username = userDTO.username,
                 password = userDTO.password,
-                role = userDTO.role,
-                events = userDTO.events.let { it?.map { eventDTO -> eventFromDTO(eventDTO) } }!!.toMutableList()
+                events = userDTO.events.let { it?.map { eventDTO -> eventFromDTO(eventDTO) } }!!.toMutableList(),
+                pharmacies = userDTO.pharmacies.let { it?.map { pharmacyDTO -> pharmacyFromDTO(pharmacyDTO) } }?.toMutableList(),
+                tourism = userDTO.tourism.let { it?.map { tourismDTO -> tourismFromDTO(tourismDTO) } }?.toMutableList()
             )
         }
 
@@ -35,6 +37,7 @@ class DataConverter {
 
             return EventDTO(
                 idEvent = event.idEvent,
+                username = event.username,
                 title = event.title,
                 address = event.address,
                 description = event.description,
@@ -55,6 +58,7 @@ class DataConverter {
         fun eventFromDTO(eventDTO: EventDTO): Event {
             return Event(
                 idEvent = eventDTO.idEvent!!,
+                username = eventDTO.username,
                 title = eventDTO.title,
                 address = eventDTO.address,
                 description = eventDTO.description,
@@ -104,6 +108,7 @@ class DataConverter {
             return TourismDTO(
                 idTourism = tourism.idTourism,
                 type = tourism.type,
+                username = tourism.username,
                 title = tourism.title,
                 description = tourism.description,
                 latitude = tourism.latitude,
@@ -115,6 +120,7 @@ class DataConverter {
             return Tourism(
                 idTourism = tourismDTO.idTourism,
                 type = tourismDTO.type,
+                username = tourismDTO.username,
                 title = tourismDTO.title,
                 description = tourismDTO.description,
                 latitude = tourismDTO.latitude,
@@ -218,11 +224,12 @@ class DataConverter {
 
         fun pharmacyToDTO(pharmacy: Pharmacy): PharmacyDTO{
             return PharmacyDTO(
-                idPharmacy = UUID.randomUUID(),
+                idPharmacy = pharmacy.idPharmacy,
+                username = pharmacy.username,
                 type = pharmacy.type,
+                name = pharmacy.name,
                 link = pharmacy.link,
                 imageUrl = pharmacy.imageUrl,
-                name = pharmacy.name,
                 phone = pharmacy.phone,
                 schedule = pharmacy.schedule,
                 description = pharmacy.description,
@@ -232,7 +239,8 @@ class DataConverter {
         }
         fun pharmacyFromDTO(pharmacyDTO: PharmacyDTO): Pharmacy{
             return Pharmacy(
-                idPharmacy = UUID.randomUUID(),
+                idPharmacy = pharmacyDTO.idPharmacy!!,
+                username = pharmacyDTO.username,
                 type = pharmacyDTO.type,
                 link = pharmacyDTO.link,
                 imageUrl = pharmacyDTO.imageUrl,

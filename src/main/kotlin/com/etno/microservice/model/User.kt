@@ -17,9 +17,12 @@ data class User(
     @Column(name = "password", nullable = false)
     var password: String? = null,
 
-    @Column(name = "role")
-    var role: String? = null,
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var events: MutableList<Event>? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var events: MutableList<Event>? = mutableListOf()
+    var pharmacies: MutableList<Pharmacy>? = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var tourism: MutableList<Tourism> ? = mutableListOf()
 )

@@ -7,5 +7,5 @@ import java.util.UUID
 
 @Repository
 interface PharmacyRepository: JpaRepository<Pharmacy, UUID> {
-        fun findPharmacyByName(name: String): Pharmacy
+        fun findPharmacyByNameAndUsername(name: String, username: String): Pharmacy?
 }

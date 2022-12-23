@@ -23,17 +23,11 @@ class PharmacyService(
     }
 
     override fun savePharmacy(pharmacyDTO: PharmacyDTO): PharmacyDTO? {
-        val itemToSave = pharmacyRepository.save(DataConverter.pharmacyFromDTO(pharmacyDTO))
-        return DataConverter.pharmacyToDTO(itemToSave)
-    }
+        val itemToSave = DataConverter.pharmacyFromDTO(pharmacyDTO)
+        itemToSave.idPharmacy = UUID.randomUUID()
 
-    override fun addImageToPharmacy(title: String, imageName: String): PharmacyDTO? {
-        val pharmacyItem = pharmacyRepository.findPharmacyByName(title)
-        val imageItem = imageRepository.findImageByName(imageName)
-
-        pharmacyItem.imageUrl = imageItem.link
-        val pharmacySaved = pharmacyRepository.save(pharmacyItem)
-
+        val pharmacySaved = pharmacyRepository.save(DataConverter.pharmacyFromDTO(pharmacyDTO))
         return DataConverter.pharmacyToDTO(pharmacySaved)
     }
+
 }

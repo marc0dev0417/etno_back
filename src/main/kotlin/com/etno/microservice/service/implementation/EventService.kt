@@ -19,15 +19,9 @@ import java.util.*
 
 @Service
 class EventService(
-    @Autowired
     private val eventRepository: EventRepository,
-
-    @Autowired
     private val imageRepository: ImageRepository,
-
-    @Autowired
     private val fcmTokenRepository: FCMTokenRepository
-
 ): EventServiceInterface {
     override fun getEvents(): List<EventDTO>? {
         if(eventRepository.findAll().isEmpty()){
@@ -51,28 +45,28 @@ class EventService(
         return DataConverter.eventToDTO(eventToSave)
     }
 
-    override fun deleteEventByTitle(title: String): EventDTO? {
-        val itemToDelete = eventRepository.findEventByTitle(title)
-        eventRepository.delete(itemToDelete)
+    override fun deleteEventByTitleAndUsername(title: String, username: String): EventDTO? {
+        val itemToDelete = eventRepository.findEventByTitleAndUsername(title, username)
+        eventRepository.delete(itemToDelete!!)
         return DataConverter.eventToDTO(itemToDelete)
     }
 
-    override fun addImageToEvent(title: String, imageName: String): EventDTO? {
-        val eventItem = eventRepository.findEventByTitle(title)
+    override fun addImageToEvent(username: String, title: String, imageName: String): EventDTO? {
+        val eventItem = eventRepository.findEventByTitleAndUsername(title, username)
         val imageItem = imageRepository.findImageByName(imageName)
 
-        eventItem.images?.add(imageItem)
-        val itemToSaved = eventRepository.save(eventItem)
+        eventItem?.images?.add(imageItem)
+        val itemToSaved = eventRepository.save(eventItem!!)
 
         return DataConverter.eventToDTO(itemToSaved)
     }
 
-    override fun deleteImageToEvent(title: String, imageName: String): EventDTO? {
-        val eventItem = eventRepository.findEventByTitle(title)
+    override fun deleteImageToEvent(username: String, title: String, imageName: String): EventDTO? {
+        val eventItem = eventRepository.findEventByTitleAndUsername(title, username)
         val imageItem = imageRepository.findImageByName(imageName)
 
-        eventItem.images?.remove(imageItem)
-        eventRepository.save(eventItem)
+        eventItem?.images?.remove(imageItem)
+        eventRepository.save(eventItem!!)
 
         return DataConverter.eventToDTO(eventItem)
     }

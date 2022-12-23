@@ -20,15 +20,15 @@ class EventController(
         return ResponseEntity.ok().body(eventService.saveEvents(eventDTO))
     }
 
-    override fun addImageToEvent(title: String, imageName: String): ResponseEntity<EventDTO>? {
-        return ResponseEntity.ok().body(eventService.addImageToEvent(title, imageName))
+    override fun addImageToEvent(username: String, title: String, imageName: String): ResponseEntity<EventDTO>? {
+        return ResponseEntity.ok().body(eventService.addImageToEvent(username, title, imageName))
     }
 
-    override fun deleteEvent(title: String): ResponseEntity<EventDTO>? {
-        return ResponseEntity.ok().body(eventService.deleteEventByTitle(title))
+    override fun deleteEvent(username: String, title: String): ResponseEntity<EventDTO>? {
+        return ResponseEntity.ok().body(eventService.deleteEventByTitleAndUsername(username, title))
     }
 
-    override fun removeImageToEvent(title: String, imageName: String): ResponseEntity<EventDTO>? {
-        return ResponseEntity.ok().body(eventService.deleteImageToEvent(title, imageName))
+    override fun removeImageToEvent(username: String, title: String, imageName: String): ResponseEntity<EventDTO>? {
+        return ResponseEntity.ok().body(eventService.deleteImageToEvent(username,title, imageName))
     }
 }

@@ -12,6 +12,6 @@ class JwtUserDetailsService(
 ): UserDetailsService {
     override fun loadUserByUsername(username: String?): UserDetails {
         val user = userRepository.findUserByUsername(username!!)
-        return User(user.username, user.password, listOf())
+        return User(user!!.username, user.password, listOf())
     }
 }

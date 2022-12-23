@@ -5,12 +5,10 @@ import com.etno.microservice.model.dto.firebase.NoteDTO
 import com.etno.microservice.model.dto.firebase.NotificationDTO
 import com.etno.microservice.repository.FCMTokenRepository
 import com.etno.microservice.service.FirebaseMessageServiceInterface
-import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.MulticastMessage
 import com.google.firebase.messaging.Notification
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Service
 class FirebaseCloudMessageService(

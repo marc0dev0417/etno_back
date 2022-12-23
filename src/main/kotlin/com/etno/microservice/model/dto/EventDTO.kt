@@ -6,6 +6,8 @@ import java.util.*
 data class EventDTO(
     @JsonProperty("idEvent") var idEvent: UUID? = UUID.randomUUID(),
 
+    @JsonProperty("username") var username: String ? = null,
+
     @JsonProperty("title") var title: String? = null,
 
     @JsonProperty("address") var address: String? = null,

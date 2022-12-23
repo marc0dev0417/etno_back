@@ -20,7 +20,4 @@ class PharmacyController(
         return ResponseEntity.ok().body(pharmacyService.savePharmacy(pharmacyDTO))
     }
 
-    override fun addImageToPharmacy(title: String, imageName: String): ResponseEntity<PharmacyDTO> {
-        return ResponseEntity.ok().body(pharmacyService.addImageToPharmacy(title, imageName))
-    }
 }

@@ -21,7 +21,7 @@ import kotlin.collections.ArrayList
 class SwaggerDocumentationConfig {
     private fun apiInfo(): ApiInfo{
         return ApiInfo(
-            "REST API ETNO",
+            "ETNO MICROSERVICE",
             "API documentation where you be able to see how to operate about ETNO",
             "API ETNO",
             "Terms of service",

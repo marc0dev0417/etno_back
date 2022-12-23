@@ -6,13 +6,15 @@ import java.util.UUID
 data class PharmacyDTO(
     @JsonProperty("idPharmacy") var idPharmacy: UUID ? = null,
 
+    @JsonProperty("username") var username: String ? = null,
+
     @JsonProperty("type") var type: String ? = null,
+
+    @JsonProperty("name") var name: String ? = null,
 
     @JsonProperty("link") var link: String ? = null,
 
     @JsonProperty("imageUrl") var imageUrl: String ? = null,
-
-    @JsonProperty("name") var name: String ? = null,
 
     @JsonProperty("phone") var phone: String ? = null,
 

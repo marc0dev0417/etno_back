@@ -8,6 +8,8 @@ data class TourismDTO(
 
     @JsonProperty("type") var type: String ? = null,
 
+    @JsonProperty("username") var username: String ? = null,
+
     @JsonProperty("title") var title: String ? = null,
 
     @JsonProperty("description") var description: String ? = null,

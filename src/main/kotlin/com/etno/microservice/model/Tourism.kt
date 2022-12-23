@@ -14,6 +14,9 @@ data class Tourism(
     @Column(name = "type")
     var type: String ? = null,
 
+    @Column(name = "username")
+    var username: String ? = null,
+
     @Column(name = "title")
     var title: String? = null,
 

@@ -82,9 +82,9 @@ interface EventControllerInterface {
         value = ["/events/image"],
         produces = ["application/json"],
         method = [RequestMethod.PUT],
-        params = ["title", "image"]
+        params = ["username", "title", "image"]
     )
-    fun addImageToEvent(@RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<EventDTO>?
+    fun addImageToEvent(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<EventDTO>?
 
     @ApiOperation(
         value = "delete a even",
@@ -106,9 +106,9 @@ interface EventControllerInterface {
         value = ["events"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["title"]
+        params = ["username", "title"]
     )
-    fun deleteEvent(@RequestParam("title", required = true) title: String): ResponseEntity<EventDTO>?
+    fun deleteEvent(@RequestParam("username", required = true) username: String, @RequestParam("title", required = true) title: String): ResponseEntity<EventDTO>?
 
     @ApiOperation(
         value = "delete event image",
@@ -130,7 +130,7 @@ interface EventControllerInterface {
         value = ["/events/image/remove"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["title", "image"]
+        params = ["username", "title", "image"]
     )
-    fun removeImageToEvent(@RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<EventDTO>?
+    fun removeImageToEvent(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<EventDTO>?
 }
