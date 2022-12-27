@@ -17,8 +17,9 @@ class TourismController(
     override fun saveTourism(tourismDTO: TourismDTO): ResponseEntity<TourismDTO>? {
         return ResponseEntity.ok().body(tourismService.saveTourism(tourismDTO))
     }
-
+    /*
     override fun addImageToTourism(title: String, image: String): ResponseEntity<TourismDTO> {
         return ResponseEntity.ok().body(tourismService.addImageToTourism(title = title, imageName = image))
     }
+     */
 }

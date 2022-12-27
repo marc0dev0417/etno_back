@@ -14,5 +14,7 @@ data class UserDTO(
 
     @JsonProperty("pharmacies") val pharmacies: MutableList<PharmacyDTO> ? = mutableListOf(),
 
-    @JsonProperty("tourism") val tourism: MutableList<TourismDTO> ? = mutableListOf()
+    @JsonProperty("tourism") val tourism: MutableList<TourismDTO> ? = mutableListOf(),
+
+    @JsonProperty("deaths") val deaths: MutableList<DeathDTO> ? = mutableListOf()
 )

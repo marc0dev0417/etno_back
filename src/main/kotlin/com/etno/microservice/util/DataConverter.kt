@@ -16,7 +16,8 @@ class DataConverter {
                 password = user.password,
                 events = user.events.let { it!!.map { event -> eventToDTO(event) } }.toMutableList(),
                 pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
-                tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList()
+                tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
+                deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList()
             )
         }
 
@@ -27,7 +28,18 @@ class DataConverter {
                 password = userDTO.password,
                 events = userDTO.events.let { it?.map { eventDTO -> eventFromDTO(eventDTO) } }!!.toMutableList(),
                 pharmacies = userDTO.pharmacies.let { it?.map { pharmacyDTO -> pharmacyFromDTO(pharmacyDTO) } }?.toMutableList(),
-                tourism = userDTO.tourism.let { it?.map { tourismDTO -> tourismFromDTO(tourismDTO) } }?.toMutableList()
+                tourism = userDTO.tourism.let { it?.map { tourismDTO -> tourismFromDTO(tourismDTO) } }?.toMutableList(),
+                deaths = userDTO.deaths.let { it?.map { deathDTO -> deathFromDTO(deathDTO) } }?.toMutableList()
+            )
+        }
+
+        fun userVillagerToDTO(user: User): UserVillagerDTO {
+            return UserVillagerDTO(
+                username = user.username,
+                events = user.events.let { it?.map { event -> eventToDTO(event) } }?.toMutableList(),
+                pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
+                tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
+                deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList()
             )
         }
 
@@ -111,9 +123,9 @@ class DataConverter {
                 username = tourism.username,
                 title = tourism.title,
                 description = tourism.description,
+                imageUrl = tourism.imageUrl,
                 latitude = tourism.latitude,
-                longitude = tourism.longitude,
-                images = tourism.images.let { tourism.images?.map { image -> imageToDTO(image) } }!!.toMutableList()
+                longitude = tourism.longitude
             )
         }
         fun tourismFromDTO(tourismDTO: TourismDTO): Tourism{
@@ -123,9 +135,9 @@ class DataConverter {
                 username = tourismDTO.username,
                 title = tourismDTO.title,
                 description = tourismDTO.description,
+                imageUrl = tourismDTO.imageUrl,
                 latitude = tourismDTO.latitude,
                 longitude = tourismDTO.longitude,
-                images = tourismDTO.images.let { tourismDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList()
             )
         }
 
@@ -250,6 +262,25 @@ class DataConverter {
                 description = pharmacyDTO.description,
                 longitude = pharmacyDTO.longitude,
                 latitude = pharmacyDTO.latitude
+            )
+        }
+
+        fun deathToDTO(death: Death): DeathDTO{
+            return DeathDTO(
+                idDeath = death.idDeath,
+                username = death.username,
+                name = death.name,
+                deathDate = death.deathDate,
+                description = death.description
+            )
+        }
+        fun deathFromDTO(deathDTO: DeathDTO): Death{
+            return Death(
+                idDeath = deathDTO.idDeath,
+                username = deathDTO.username,
+                name = deathDTO.name,
+                deathDate = deathDTO.deathDate,
+                description = deathDTO.description
             )
         }
     }

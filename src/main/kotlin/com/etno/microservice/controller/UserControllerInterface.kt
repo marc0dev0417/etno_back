@@ -1,9 +1,7 @@
 package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
-import com.etno.microservice.model.dto.EventDTO
-import com.etno.microservice.model.dto.PharmacyDTO
-import com.etno.microservice.model.dto.UserDTO
+import com.etno.microservice.model.dto.*
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -87,6 +85,30 @@ interface UserControllerInterface {
         params = ["username", "password"]
     )
     fun login(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "password", required = true) password: String):ResponseEntity<*>?
+
+    @ApiOperation(
+        value = "find user by username",
+        nickname = "findUserByUsername",
+        notes = "find a user by his username to show to villagers",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/villagers"],
+        produces = ["application/json"],
+        method = [RequestMethod.GET],
+        params = ["username"]
+    )
+    fun findUserByUsernameToVillager(@RequestParam(name = "username", required = true) username: String): ResponseEntity<UserVillagerDTO>
 
     @ApiOperation(
         value = "add a event to User",
@@ -281,9 +303,9 @@ interface UserControllerInterface {
     fun addImageToPharmacyInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "name", required = true) name: String, @RequestParam(name = "image") imageName: String): ResponseEntity<UserDTO>
 
     @ApiOperation(
-        value = "Delete image of event in user",
-        nickname = "deleteImageToEventInUser",
-        notes = "Will delete image of event in user",
+        value = "Delete image of pharmacy in user",
+        nickname = "deleteImageToPharmacyInUser",
+        notes = "Will delete image of pharmacy in user",
         tags = ["User"],
         response = UserDTO::class
     )
@@ -303,4 +325,124 @@ interface UserControllerInterface {
         params = ["username", "name", "image"]
     )
     fun deleteImageToPharmacyInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "name", required = true) name: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add Tourism in User",
+        nickname = "addTourismInUser",
+        notes = "You can add new tourism",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/tourism"],
+        produces = ["application/json"],
+        method = [RequestMethod.POST],
+        params = ["username"]
+    )
+    fun addTourismInUser(@RequestParam(name = "username", required = true) username: String, @RequestBody tourismDTO: TourismDTO): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add image of tourism in user",
+        nickname = "addImageToTourismInUser",
+        notes = "Will add image of tourism in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/image/tourism"],
+        produces = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["username", "title", "image"]
+    )
+    fun addImageToTourismInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Delete tourism in user",
+        nickname = "deleteTourismInUser",
+        notes = "Will delete tourism in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/delete/tourism"],
+        produces = ["application/json"],
+        method = [RequestMethod.DELETE],
+        params = ["username", "title"]
+    )
+    fun deleteTourismInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Delete image of tourism in user",
+        nickname = "deleteImageInUser",
+        notes = "Will delete image of tourism in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["users/image/delete/tourism"],
+        produces = ["application/json"],
+        method = [RequestMethod.DELETE],
+        params = ["username", "title", "image"]
+    )
+    fun deleteImageToTourismInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add death in User",
+        nickname = "addDeathInUser",
+        notes = "You can add new Death",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/death"],
+        produces = ["application/json"],
+        method = [RequestMethod.POST],
+        params = ["username"]
+    )
+    fun addDeathInUser(@RequestParam(name = "username", required = true) username: String, @RequestBody deathDTO: DeathDTO): ResponseEntity<UserDTO>
 }

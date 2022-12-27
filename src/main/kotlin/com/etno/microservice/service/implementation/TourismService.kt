@@ -23,6 +23,7 @@ class TourismService(
 
         return DataConverter.tourismToDTO(itemSaved)
     }
+    /*
     override fun addImageToTourism(title: String, imageName: String): TourismDTO? {
         val tourismItem = tourismRepository.findTourismByTitle(title)
         val imageItem = imageRepository.findImageByName(imageName)
@@ -32,4 +33,5 @@ class TourismService(
 
         return DataConverter.tourismToDTO(itemToSaved)
     }
+     */
 }

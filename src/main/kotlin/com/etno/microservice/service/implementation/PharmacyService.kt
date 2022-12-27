@@ -29,5 +29,4 @@ class PharmacyService(
         val pharmacySaved = pharmacyRepository.save(DataConverter.pharmacyFromDTO(pharmacyDTO))
         return DataConverter.pharmacyToDTO(pharmacySaved)
     }
-
 }

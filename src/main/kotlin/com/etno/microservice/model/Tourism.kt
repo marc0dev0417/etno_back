@@ -23,12 +23,12 @@ data class Tourism(
     @Column(name = "description")
     var description: String? = null,
 
+    @Column(name = "imageUrl")
+    var imageUrl: String ? = null,
+
     @Column(name = "longitude")
     var longitude: String? = null,
 
     @Column(name = "latitude")
-    var latitude: String? = null,
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var images: MutableList<Image>? = mutableListOf()
+    var latitude: String? = null
 )

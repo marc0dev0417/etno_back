@@ -45,7 +45,7 @@ class SecurityConfig() {
     @Throws(Exception::class)
     @Bean
     fun configure(http: HttpSecurity?): SecurityFilterChain {
-        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/send-notification",
+        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/users/villagers", "/send-notification",
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
@@ -57,6 +57,7 @@ class SecurityConfig() {
             "/festivities/**",
             "/tourism/**",
             "/pharmacies/**",
+            "/deaths/**",
             "/subscriptions",
             "/subscription_users")
             ?.permitAll()?.anyRequest()?.authenticated()?.and()?.exceptionHandling()

@@ -1,13 +1,7 @@
 package com.etno.microservice.service.implementation
 
-import com.etno.microservice.model.dto.EventDTO
-import com.etno.microservice.model.dto.PharmacyDTO
-import com.etno.microservice.model.dto.TourismDTO
-import com.etno.microservice.model.dto.UserDTO
-import com.etno.microservice.repository.EventRepository
-import com.etno.microservice.repository.ImageRepository
-import com.etno.microservice.repository.PharmacyRepository
-import com.etno.microservice.repository.UserRepository
+import com.etno.microservice.model.dto.*
+import com.etno.microservice.repository.*
 import com.etno.microservice.security.JwtTokenUtil
 import com.etno.microservice.service.UserServiceInterface
 import com.etno.microservice.service.implementation.jwt.JwtUserDetailsService
@@ -30,6 +24,8 @@ class UserService(
     private val eventRepository: EventRepository,
     private val imageRepository: ImageRepository,
     private val pharmacyRepository: PharmacyRepository,
+    private val tourismRepository: TourismRepository,
+    private val deathRepository: DeathRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -95,6 +91,10 @@ class UserService(
         }
     }
 
+    override fun findUserByUsername(username: String): UserVillagerDTO? {
+        return DataConverter.userVillagerToDTO(userRepository.findUserByUsername(username)!!)
+    }
+
     override fun updateUserCredentials(name: String, username: String, password: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(name)
         itemUser?.username = username
@@ -139,7 +139,7 @@ class UserService(
         val itemImage = imageRepository.findImageByName(imageName)
 
        // eventRepository.save(itemEvent!!)
-        itemUser?.events?.find { it.title == title }?.images?.add(itemImage)
+        itemUser?.events?.find { it.title == itemEvent?.title }?.images?.add(itemImage)
 
        val itemUserSaved = userRepository.save(itemUser!!)
 
@@ -159,24 +159,24 @@ class UserService(
 
     override fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): UserDTO? {
 
-        val itemUser = userRepository.findUserByUsername(username)
+        var itemUser = userRepository.findUserByUsername(username)
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(pharmacyDTO.name!!, username)
 
         if(itemPharmacy == null){
             pharmacyDTO.idPharmacy = UUID.randomUUID()
             pharmacyDTO.username = itemUser?.username
             itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
-            userRepository.save(itemUser!!)
+            itemUser = userRepository.save(itemUser!!)
         }else{
             val checkIfExistPharmacy = itemUser?.pharmacies?.find { it.name == itemPharmacy.name }
             if(checkIfExistPharmacy == null){
                 pharmacyDTO.idPharmacy = UUID.randomUUID()
                 pharmacyDTO.username = itemUser?.username
                 itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
-                userRepository.save(itemUser!!)
+               itemUser = userRepository.save(itemUser!!)
             }
         }
-        return DataConverter.userToDTO(itemUser)
+        return DataConverter.userToDTO(itemUser!!)
     }
 
     override fun deletePharmacyInUser(username: String, name: String): UserDTO? {
@@ -212,18 +212,76 @@ class UserService(
     }
 
     override fun addTourismInUser(username: String, tourismDTO: TourismDTO): UserDTO? {
-        TODO("NOT yet implemented")
+        var itemUser = userRepository.findUserByUsername(username)
+        val itemTourism = tourismRepository.findTourismByTitleAndUsername(tourismDTO.title!!, username)
+
+        if(itemTourism == null){
+            tourismDTO.idTourism = UUID.randomUUID()
+            tourismDTO.username = username
+            itemUser?.tourism?.add(DataConverter.tourismFromDTO(tourismDTO))
+            itemUser = userRepository.save(itemUser!!)
+        }else{
+            val checkIfExistTourism = itemUser?.tourism?.find { it.title == itemTourism.title }
+            if(checkIfExistTourism == null){
+                tourismDTO.idTourism = UUID.randomUUID()
+                tourismDTO.username = username
+                itemUser?.tourism?.add(DataConverter.tourismFromDTO(tourismDTO))
+              itemUser = userRepository.save(itemUser!!)
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
     }
 
-    override fun deleteTourismInUser(username: String, title: String, imageName: String): UserDTO? {
-        TODO("Not yet implemented")
+    override fun deleteTourismInUser(username: String, title: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemTourism = tourismRepository.findTourismByTitleAndUsername(title, username)
+
+        itemUser?.tourism?.remove(itemTourism)
+        val itemUserSaved = userRepository.save(itemUser!!)
+        tourismRepository.delete(itemTourism!!)
+        return DataConverter.userToDTO(itemUserSaved)
     }
 
     override fun addImageToTourismInUser(username: String, title: String, imageName: String): UserDTO? {
-        TODO("Not yet implemented")
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemTourism = tourismRepository.findTourismByTitleAndUsername(title, username)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.tourism?.find { it.title == itemTourism?.title }?.imageUrl = itemImage.link
+        val itemUserSaved = userRepository.save(itemUser!!)
+        return DataConverter.userToDTO(itemUserSaved)
     }
 
     override fun deleteImageToTourismInUser(username: String, title: String, imageName: String): UserDTO? {
-        TODO("Not yet implemented")
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemTourism = tourismRepository.findTourismByTitleAndUsername(title, username)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.tourism?.find { it.title == itemTourism?.title }?.imageUrl = ""
+        val itemUserSaved = userRepository.save(itemUser!!)
+        imageRepository.delete(itemImage)
+
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun addDeathInUser(username: String, deathDTO: DeathDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+        val itemDeath = deathRepository.findDeathByUsernameAndName(username, deathDTO.name!!)
+
+        if (itemDeath == null){
+            deathDTO.idDeath = UUID.randomUUID()
+            deathDTO.username = username
+            itemUser?.deaths?.add(DataConverter.deathFromDTO(deathDTO))
+            itemUser = userRepository.save(itemUser!!)
+        }else{
+            val checkIfExistDeath = itemUser?.deaths?.find { it.name == itemDeath.name }
+            if (checkIfExistDeath == null){
+                deathDTO.idDeath = UUID.randomUUID()
+                deathDTO.username = username
+                itemUser?.deaths?.add(DataConverter.deathFromDTO(deathDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
     }
 }

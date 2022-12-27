@@ -1,9 +1,7 @@
 package com.etno.microservice.controller.implementation
 
 import com.etno.microservice.controller.UserControllerInterface
-import com.etno.microservice.model.dto.EventDTO
-import com.etno.microservice.model.dto.PharmacyDTO
-import com.etno.microservice.model.dto.UserDTO
+import com.etno.microservice.model.dto.*
 import com.etno.microservice.service.implementation.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -22,6 +20,10 @@ class UserController(
 
     override fun login(username: String, password: String): ResponseEntity<*>? {
         return userService.login(username, password)
+    }
+
+    override fun findUserByUsernameToVillager(username: String): ResponseEntity<UserVillagerDTO> {
+        return ResponseEntity.ok().body(userService.findUserByUsername(username))
     }
 
     override fun updateUser(name: String, username: String, password: String): ResponseEntity<UserDTO>? {
@@ -62,5 +64,29 @@ class UserController(
         imageName: String
     ): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.deleteImageToPharmacyInUser(username, name, imageName))
+    }
+
+    override fun addTourismInUser(username: String, tourismDTO: TourismDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addTourismInUser(username, tourismDTO))
+    }
+
+    override fun addImageToTourismInUser(username: String, title: String, imageName: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addImageToTourismInUser(username, title, imageName))
+    }
+
+    override fun deleteTourismInUser(username: String, title: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteTourismInUser(username, title))
+    }
+
+    override fun deleteImageToTourismInUser(
+        username: String,
+        title: String,
+        imageName: String
+    ): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteImageToTourismInUser(username, title, imageName))
+    }
+
+    override fun addDeathInUser(username: String, deathDTO: DeathDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addDeathInUser(username, deathDTO))
     }
 }

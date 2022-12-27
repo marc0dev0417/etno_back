@@ -1,9 +1,6 @@
 package com.etno.microservice.service
 
-import com.etno.microservice.model.dto.EventDTO
-import com.etno.microservice.model.dto.PharmacyDTO
-import com.etno.microservice.model.dto.TourismDTO
-import com.etno.microservice.model.dto.UserDTO
+import com.etno.microservice.model.dto.*
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -12,6 +9,8 @@ interface UserServiceInterface {
     fun getUsers(): List<UserDTO>?
     fun signUp(userDTO: UserDTO): UserDTO?
     fun login(username: String, password: String): ResponseEntity<*>
+
+    fun findUserByUsername(username: String): UserVillagerDTO?
     fun updateUserCredentials(name: String, username: String, password: String): UserDTO?
 
     //User Event -> ---------------------------------------------------------------------------
@@ -28,7 +27,10 @@ interface UserServiceInterface {
 
     //User Tourism -> -------------------------------------------------------------------------
     fun addTourismInUser(username: String, tourismDTO: TourismDTO): UserDTO?
-    fun deleteTourismInUser(username: String, title: String, imageName: String): UserDTO?
+    fun deleteTourismInUser(username: String, title: String): UserDTO?
     fun addImageToTourismInUser(username: String, title: String, imageName: String): UserDTO?
     fun deleteImageToTourismInUser(username: String, title: String, imageName: String): UserDTO?
+
+    //User Death -> ---------------------------------------------------------------------------
+    fun addDeathInUser(username: String, deathDTO: DeathDTO): UserDTO?
 }

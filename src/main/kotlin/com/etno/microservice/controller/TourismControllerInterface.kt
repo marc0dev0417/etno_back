@@ -61,6 +61,7 @@ interface TourismControllerInterface {
     )
     fun saveTourism(@RequestBody tourismDTO: TourismDTO): ResponseEntity<TourismDTO>?
 
+    /*
     @ApiOperation(
         value = "Will add an image in tourism",
         nickname = "addImageToTourism",
@@ -84,4 +85,5 @@ interface TourismControllerInterface {
         params = ["title", "image"]
     )
     fun addImageToTourism(@RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) image: String): ResponseEntity<TourismDTO>
+     */
 }
