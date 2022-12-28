@@ -24,5 +24,8 @@ data class Death(
     var deathDate: String ? = null,
 
     @Column(name = "description")
-    var description: String ? = null
+    var description: String ? = null,
+
+    @Column(name = "imageUrl")
+    var imageUrl: String ? = null
 )

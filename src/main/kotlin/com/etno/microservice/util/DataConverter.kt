@@ -17,7 +17,8 @@ class DataConverter {
                 events = user.events.let { it!!.map { event -> eventToDTO(event) } }.toMutableList(),
                 pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
-                deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList()
+                deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
+                phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList()
             )
         }
 
@@ -29,7 +30,8 @@ class DataConverter {
                 events = userDTO.events.let { it?.map { eventDTO -> eventFromDTO(eventDTO) } }!!.toMutableList(),
                 pharmacies = userDTO.pharmacies.let { it?.map { pharmacyDTO -> pharmacyFromDTO(pharmacyDTO) } }?.toMutableList(),
                 tourism = userDTO.tourism.let { it?.map { tourismDTO -> tourismFromDTO(tourismDTO) } }?.toMutableList(),
-                deaths = userDTO.deaths.let { it?.map { deathDTO -> deathFromDTO(deathDTO) } }?.toMutableList()
+                deaths = userDTO.deaths.let { it?.map { deathDTO -> deathFromDTO(deathDTO) } }?.toMutableList(),
+                phones = userDTO.phones.let { it?.map { phoneDTO -> phoneFromDTO(phoneDTO) } }?.toMutableList()
             )
         }
 
@@ -39,7 +41,8 @@ class DataConverter {
                 events = user.events.let { it?.map { event -> eventToDTO(event) } }?.toMutableList(),
                 pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
-                deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList()
+                deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
+                phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList()
             )
         }
 
@@ -181,12 +184,14 @@ class DataConverter {
         fun fcmTokenToDTO(fcmToken: FCMToken): FCMTokenDTO{
             return FCMTokenDTO(
                 idFMC = fcmToken.idFMC,
+                username = fcmToken.username,
                 token = fcmToken.token
             )
         }
         fun fcmTokenFromDTO(fcmTokenDTO: FCMTokenDTO): FCMToken{
             return FCMToken(
                 idFMC = fcmTokenDTO.idFMC,
+                username = fcmTokenDTO.username,
                 token = fcmTokenDTO.token
             )
         }
@@ -271,7 +276,8 @@ class DataConverter {
                 username = death.username,
                 name = death.name,
                 deathDate = death.deathDate,
-                description = death.description
+                description = death.description,
+                imageUrl = death.imageUrl
             )
         }
         fun deathFromDTO(deathDTO: DeathDTO): Death{
@@ -280,7 +286,27 @@ class DataConverter {
                 username = deathDTO.username,
                 name = deathDTO.name,
                 deathDate = deathDTO.deathDate,
-                description = deathDTO.description
+                description = deathDTO.description,
+                imageUrl = deathDTO.imageUrl
+            )
+        }
+
+        fun phoneToDTO(phone: Phone): PhoneDTO{
+            return PhoneDTO(
+                idPhone = phone.idPhone,
+                username = phone.username,
+                category = phone.category,
+                owner = phone.owner,
+                number = phone.number
+            )
+        }
+        fun phoneFromDTO(phoneDTO: PhoneDTO): Phone{
+            return Phone(
+                idPhone = phoneDTO.idPhone,
+                username = phoneDTO.username,
+                category = phoneDTO.category,
+                owner = phoneDTO.owner,
+                number = phoneDTO.number
             )
         }
     }

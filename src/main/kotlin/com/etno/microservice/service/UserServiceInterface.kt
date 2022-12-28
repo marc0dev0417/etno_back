@@ -33,4 +33,13 @@ interface UserServiceInterface {
 
     //User Death -> ---------------------------------------------------------------------------
     fun addDeathInUser(username: String, deathDTO: DeathDTO): UserDTO?
+    fun deleteDeathInUser(username: String, name: String): UserDTO?
+    fun addImageToDeathInUser(username: String, name: String, imageName: String): UserDTO?
+    fun deleteImageToDeathInUser(username: String, name: String, imageName: String): UserDTO?
+
+    //User Phone -> ---------------------------------------------------------------------------
+    fun addPhoneInUser(username: String, phoneDTO: PhoneDTO): UserDTO?
+    fun deletePhoneInUser(username: String, name: String): UserDTO?
+    fun addImageToPhoneInUser(username: String, name: String, imageName: String): UserDTO?
+    fun deleteImageToPhoneInUser(username: String, name: String, imageName: String): UserDTO?
 }

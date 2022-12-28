@@ -39,7 +39,7 @@ class FestivityService(
         val festivityToSave = festivityRepository.findFestivityByTitle(title)
         val imageToSave = imageRepository.findImageByName(name)
 
-        festivityToSave.images?.add(imageToSave)
+        festivityToSave.images?.add(imageToSave!!)
         val festivitySaved = festivityRepository.save(festivityToSave)
 
         return DataConverter.festivityToDTO(festivitySaved)

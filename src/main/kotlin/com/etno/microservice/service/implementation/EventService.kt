@@ -55,7 +55,7 @@ class EventService(
         val eventItem = eventRepository.findEventByTitleAndUsername(title, username)
         val imageItem = imageRepository.findImageByName(imageName)
 
-        eventItem?.images?.add(imageItem)
+        eventItem?.images?.add(imageItem!!)
         val itemToSaved = eventRepository.save(eventItem!!)
 
         return DataConverter.eventToDTO(itemToSaved)

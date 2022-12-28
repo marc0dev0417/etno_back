@@ -6,6 +6,7 @@ import com.etno.microservice.security.JwtTokenUtil
 import com.etno.microservice.service.UserServiceInterface
 import com.etno.microservice.service.implementation.jwt.JwtUserDetailsService
 import com.etno.microservice.util.DataConverter
+import com.etno.microservice.util.Urls
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -15,17 +16,20 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 import java.text.DateFormat
 import java.util.*
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
+    private val fcmTokenRepository: FCMTokenRepository,
     private val eventRepository: EventRepository,
     private val imageRepository: ImageRepository,
     private val pharmacyRepository: PharmacyRepository,
     private val tourismRepository: TourismRepository,
     private val deathRepository: DeathRepository,
+    private val phoneRepository: PhoneRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -113,12 +117,30 @@ class UserService(
             val itemEventSaved = eventRepository.save(DataConverter.eventFromDTO(eventDTO))
             itemUser?.events?.add(DataConverter.eventFromDTO(DataConverter.eventToDTO(itemEventSaved)))
             userRepository.save(itemUser!!)
+
+            if (fcmTokenRepository.findAll().any { it.username == username }){
+                val restTemplate = RestTemplate()
+                val map: Map<String, String> = mapOf("subject" to "Nuevo evento", "content" to "Evento ${itemEventSaved.title} disponible", "username" to "${itemUser.username}")
+
+                val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
+            }
+
         }else{
             val checkIfExistEvent = itemUser?.events?.find { it.title == itemEvent.title }
             if(checkIfExistEvent == null){
                 eventDTO.username = itemUser?.username
                 itemUser?.events?.add(DataConverter.eventFromDTO(eventDTO))
                 userRepository.save(itemUser!!)
+
+                if (fcmTokenRepository.findAll().any { it.username == username }){
+                    val restTemplate = RestTemplate()
+                    val map: Map<String, String> = mapOf(
+                        "subject" to "Nuevo evento",
+                        "content" to "Evento ${eventDTO.title} disponible",
+                        "username" to "${itemUser.username}")
+
+                    val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
+                }
             }
         }
         return DataConverter.userToDTO(itemUser)
@@ -128,6 +150,12 @@ class UserService(
         val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
 
         itemUser?.events?.remove(itemEvent!!)
+
+        itemEvent?.images?.forEach {
+           val itemImage = imageRepository.findImageByLink(it.link!!)
+           imageRepository.delete(itemImage!!)
+        }
+
         val itemSaved = userRepository.save(itemUser!!)
         eventRepository.delete(itemEvent!!)
         return DataConverter.userToDTO(itemSaved)
@@ -138,10 +166,8 @@ class UserService(
         val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
         val itemImage = imageRepository.findImageByName(imageName)
 
-       // eventRepository.save(itemEvent!!)
-        itemUser?.events?.find { it.title == itemEvent?.title }?.images?.add(itemImage)
-
-       val itemUserSaved = userRepository.save(itemUser!!)
+        itemUser?.events?.find { it.title == itemEvent?.title }?.images?.add(itemImage!!)
+        val itemUserSaved = userRepository.save(itemUser!!)
 
         return DataConverter.userToDTO(itemUserSaved)
     }
@@ -182,10 +208,12 @@ class UserService(
     override fun deletePharmacyInUser(username: String, name: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(name, username)
+        val itemImageDelete = imageRepository.findImageByLink(itemPharmacy?.imageUrl!!)
 
-        itemUser?.pharmacies?.remove(itemPharmacy!!)
+        itemUser?.pharmacies?.remove(itemPharmacy)
+        imageRepository.delete(itemImageDelete!!)
         val itemSaved = userRepository.save(itemUser!!)
-        pharmacyRepository.delete(itemPharmacy!!)
+        pharmacyRepository.delete(itemPharmacy)
         return DataConverter.userToDTO(itemSaved)
     }
 
@@ -194,7 +222,7 @@ class UserService(
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(name, username)
         val itemImage = imageRepository.findImageByName(imageName)
 
-        itemUser?.pharmacies?.find { it.name == itemPharmacy?.name }?.imageUrl = itemImage.link
+        itemUser?.pharmacies?.find { it.name == itemPharmacy?.name }?.imageUrl = itemImage?.link
         val itemUserSaved = userRepository.save(itemUser!!)
 
         return DataConverter.userToDTO(itemUserSaved)
@@ -235,10 +263,12 @@ class UserService(
     override fun deleteTourismInUser(username: String, title: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemTourism = tourismRepository.findTourismByTitleAndUsername(title, username)
+        val itemImageDelete = imageRepository.findImageByLink(itemTourism?.imageUrl!!)
 
         itemUser?.tourism?.remove(itemTourism)
+        imageRepository.delete(itemImageDelete!!)
         val itemUserSaved = userRepository.save(itemUser!!)
-        tourismRepository.delete(itemTourism!!)
+        tourismRepository.delete(itemTourism)
         return DataConverter.userToDTO(itemUserSaved)
     }
 
@@ -247,7 +277,7 @@ class UserService(
         val itemTourism = tourismRepository.findTourismByTitleAndUsername(title, username)
         val itemImage = imageRepository.findImageByName(imageName)
 
-        itemUser?.tourism?.find { it.title == itemTourism?.title }?.imageUrl = itemImage.link
+        itemUser?.tourism?.find { it.title == itemTourism?.title }?.imageUrl = itemImage?.link
         val itemUserSaved = userRepository.save(itemUser!!)
         return DataConverter.userToDTO(itemUserSaved)
     }
@@ -259,7 +289,7 @@ class UserService(
 
         itemUser?.tourism?.find { it.title == itemTourism?.title }?.imageUrl = ""
         val itemUserSaved = userRepository.save(itemUser!!)
-        imageRepository.delete(itemImage)
+        imageRepository.delete(itemImage!!)
 
         return DataConverter.userToDTO(itemUserSaved)
     }
@@ -283,5 +313,55 @@ class UserService(
             }
         }
         return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun deleteDeathInUser(username: String, name: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemDeath = deathRepository.findDeathByUsernameAndName(username, name)
+        val itemImageDelete = imageRepository.findImageByLink(itemDeath?.imageUrl!!)
+
+        itemUser?.deaths?.remove(itemDeath)
+        imageRepository.delete(itemImageDelete!!)
+        val itemUserSaved = userRepository.save(itemUser!!)
+        deathRepository.delete(itemDeath)
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun addImageToDeathInUser(username: String, name: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemDeath = deathRepository.findDeathByUsernameAndName(username, name)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.deaths?.find { it.name == itemDeath?.name }?.imageUrl = itemImage?.link
+        val itemUserSaved = userRepository.save(itemUser!!)
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun deleteImageToDeathInUser(username: String, name: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemDeath = deathRepository.findDeathByUsernameAndName(username, name)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.deaths?.find { it.name == itemDeath?.name }?.imageUrl = ""
+        val itemUserSaved = userRepository.save(itemUser!!)
+        imageRepository.delete(itemImage!!)
+
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun addPhoneInUser(username: String, phoneDTO: PhoneDTO): UserDTO? {
+        TODO("Not yet implemented")
+    }
+
+    override fun deletePhoneInUser(username: String, name: String): UserDTO? {
+        TODO("Not yet implemented")
+    }
+
+    override fun addImageToPhoneInUser(username: String, name: String, imageName: String): UserDTO? {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteImageToPhoneInUser(username: String, name: String, imageName: String): UserDTO? {
+        TODO("Not yet implemented")
     }
 }

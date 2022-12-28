@@ -9,25 +9,20 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.FileOutputStream
-import java.util.UUID
+import java.util.*
 
 @Service
 class ImageService(
     private val imageRepository: ImageRepository
 ): ImageServiceInterface {
     override fun saveImage(multipartFile: MultipartFile, section: String): ImageDTO? {
-        val nameSectionPath: String = when(section){
-            "event" -> "events"
-            "festivity" -> "festivities"
-            "tourism" -> "tourism"
-            "new" -> "news"
-            "pharmacy" -> "pharmacies"
-
+        val nameSectionPath: String = when(section.lowercase(Locale.getDefault())){
             "evento" -> "events"
-            "fiestividad" -> "festivities"
-            "tourismo" -> "tourism"
+            "fiesta" -> "festivities"
+            "turismo" -> "tourism"
             "noticia" -> "news"
             "farmacia" -> "pharmacies"
+            "muerte" -> "deaths"
             else -> {"NO PATH :("}
         }
 
@@ -56,25 +51,22 @@ class ImageService(
     override fun deleteImage(name: String, section: String): ImageDTO? {
         val imageItem = imageRepository.findImageByName(name)
 
-        val nameSectionPath: String = when(section){
-            "event" -> "events"
-            "festivity" -> "festivities"
-            "tourism" -> "tourism"
-            "new" -> "news"
-
+        val nameSectionPath: String = when(section.lowercase(Locale.getDefault())){
             "evento" -> "events"
-            "festividad" -> "festivities"
+            "fiesta" -> "festivities"
             "turismo" -> "tourism"
             "noticia" -> "news"
+            "muerte" -> "deaths"
+            "farmacia" -> "pharmacies"
             else -> {"NO PATH :("}
         }
 
-        val file = File("src\\main\\resources\\images\\$nameSectionPath\\${imageItem.name}")
+        val file = File("src\\main\\resources\\images\\$nameSectionPath\\${imageItem?.name}")
 
-        if(imageItem.name != null && file.exists()){
+        if(imageItem?.name != null && file.exists()){
             imageRepository.delete(imageItem)
             file.delete()
         }
-        return DataConverter.imageToDTO(imageItem)
+        return DataConverter.imageToDTO(imageItem!!)
     }
 }

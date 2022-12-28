@@ -5,6 +5,8 @@ import com.etno.microservice.model.dto.firebase.NoteDTO
 import com.etno.microservice.model.dto.firebase.NotificationDTO
 import com.etno.microservice.repository.FCMTokenRepository
 import com.etno.microservice.service.FirebaseMessageServiceInterface
+import com.google.firebase.messaging.ApnsConfig
+import com.google.firebase.messaging.FcmOptions
 import com.google.firebase.messaging.MulticastMessage
 import com.google.firebase.messaging.Notification
 import org.springframework.stereotype.Service
@@ -17,7 +19,8 @@ class FirebaseCloudMessageService(
 
    override fun sendNotification(note: NoteDTO): NotificationDTO? {
 
-        val listFmc = fcmTokenRepository.findAll().let { fcmTokenRepository.findAll().map { it.token } }
+        //val listFmc = fcmTokenRepository.findAll().let { fcmTokenRepository.findAll().map { it.token } }
+        val listFmc = fcmTokenRepository.findAll().filter { it.username == note.username }.map { it.token }
 
         val message = MulticastMessage
             .builder()
@@ -33,6 +36,7 @@ class FirebaseCloudMessageService(
 
         return NotificationDTO(
             idNotification = UUID.randomUUID(),
+            username = note.username,
             subject = note.subject,
             content = note.content,
             imageUrl = note.image

@@ -89,4 +89,16 @@ class UserController(
     override fun addDeathInUser(username: String, deathDTO: DeathDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addDeathInUser(username, deathDTO))
     }
+
+    override fun deleteDeathInUser(username: String, name: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteDeathInUser(username, name))
+    }
+
+    override fun addImageToDeathInUser(username: String, name: String, imageName: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addImageToDeathInUser(username, name, imageName))
+    }
+
+    override fun deleteImageToDeathInUser(username: String, name: String, imageName: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteImageToDeathInUser(username, name, imageName))
+    }
 }

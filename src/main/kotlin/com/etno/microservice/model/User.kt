@@ -27,5 +27,8 @@ data class User(
     var tourism: MutableList<Tourism> ? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var deaths: MutableList<Death> ? = mutableListOf()
+    var deaths: MutableList<Death> ? = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var phones: MutableList<Phone> ? = mutableListOf()
 )

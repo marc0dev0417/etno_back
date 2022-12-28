@@ -11,6 +11,9 @@ data class FCMToken(
     @Type(type = "uuid-char")
     var idFMC: UUID? = UUID.randomUUID(),
 
+    @Column(name = "username")
+    var username: String ? = null,
+
     @Column(name = "token", unique = true)
     var token: String? = null
 )

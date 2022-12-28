@@ -12,5 +12,7 @@ data class DeathDTO(
 
     @JsonProperty("deathDate") var deathDate: String ? = null,
 
-    @JsonProperty("description") var description: String ? = null
+    @JsonProperty("description") var description: String ? = null,
+
+    @JsonProperty("imageUrl") var imageUrl: String ? = null
 )
