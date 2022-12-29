@@ -39,7 +39,7 @@ interface UserServiceInterface {
 
     //User Phone -> ---------------------------------------------------------------------------
     fun addPhoneInUser(username: String, phoneDTO: PhoneDTO): UserDTO?
-    fun deletePhoneInUser(username: String, name: String): UserDTO?
-    fun addImageToPhoneInUser(username: String, name: String, imageName: String): UserDTO?
-    fun deleteImageToPhoneInUser(username: String, name: String, imageName: String): UserDTO?
+    fun deletePhoneInUser(username: String, owner: String): UserDTO?
+    fun addImageToPhoneInUser(username: String, owner: String, imageName: String): UserDTO?
+    fun deleteImageToPhoneInUser(username: String, owner: String, imageName: String): UserDTO?
 }

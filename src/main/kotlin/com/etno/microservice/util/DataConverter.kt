@@ -297,7 +297,8 @@ class DataConverter {
                 username = phone.username,
                 category = phone.category,
                 owner = phone.owner,
-                number = phone.number
+                number = phone.number,
+                imageUrl = phone.imageUrl
             )
         }
         fun phoneFromDTO(phoneDTO: PhoneDTO): Phone{
@@ -306,7 +307,8 @@ class DataConverter {
                 username = phoneDTO.username,
                 category = phoneDTO.category,
                 owner = phoneDTO.owner,
-                number = phoneDTO.number
+                number = phoneDTO.number,
+                imageUrl = phoneDTO.imageUrl
             )
         }
     }

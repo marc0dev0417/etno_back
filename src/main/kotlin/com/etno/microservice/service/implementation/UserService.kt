@@ -179,6 +179,7 @@ class UserService(
 
         itemUser?.events?.find{ it.title == itemEvent?.title }?.images?.remove(itemImage)
         val itemUserSaved = userRepository.save(itemUser!!)
+        imageRepository.delete(itemImage!!)
 
         return DataConverter.userToDTO(itemUserSaved)
     }
@@ -350,18 +351,56 @@ class UserService(
     }
 
     override fun addPhoneInUser(username: String, phoneDTO: PhoneDTO): UserDTO? {
-        TODO("Not yet implemented")
+        var itemUser = userRepository.findUserByUsername(username)
+        val itemPhone = phoneRepository.findPhoneByUsernameAndOwner(username, phoneDTO.owner!!)
+
+        if(itemPhone == null){
+            phoneDTO.idPhone = UUID.randomUUID()
+            phoneDTO.username = itemUser?.username
+            itemUser?.phones?.add(DataConverter.phoneFromDTO(phoneDTO))
+            itemUser = userRepository.save(itemUser!!)
+        }else{
+            val checkIfExistPhone = itemUser?.phones?.find { it.owner == itemPhone.owner }
+            if(checkIfExistPhone == null){
+                phoneDTO.idPhone = UUID.randomUUID()
+                phoneDTO.username = itemUser?.username
+                itemUser?.phones?.add(DataConverter.phoneFromDTO(phoneDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
     }
 
-    override fun deletePhoneInUser(username: String, name: String): UserDTO? {
-        TODO("Not yet implemented")
+    override fun deletePhoneInUser(username: String, owner: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemPhone = phoneRepository.findPhoneByUsernameAndOwner(username, owner)
+        val itemImageDelete = imageRepository.findImageByLink(itemPhone?.imageUrl!!)
+
+        itemUser?.phones?.remove(itemPhone)
+        imageRepository.delete(itemImageDelete!!)
+        val itemSaved = userRepository.save(itemUser!!)
+        phoneRepository.delete(itemPhone)
+        return DataConverter.userToDTO(itemSaved)
     }
 
-    override fun addImageToPhoneInUser(username: String, name: String, imageName: String): UserDTO? {
-        TODO("Not yet implemented")
+    override fun addImageToPhoneInUser(username: String, owner: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemPhone = phoneRepository.findPhoneByUsernameAndOwner(username, owner)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.phones?.find { it.owner == itemPhone?.owner }?.imageUrl = itemImage?.link
+        val itemUserSaved = userRepository.save(itemUser!!)
+        return DataConverter.userToDTO(itemUserSaved)
     }
 
-    override fun deleteImageToPhoneInUser(username: String, name: String, imageName: String): UserDTO? {
-        TODO("Not yet implemented")
+    override fun deleteImageToPhoneInUser(username: String, owner: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemPhone = phoneRepository.findPhoneByUsernameAndOwner(username, owner)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.phones?.find { it.owner == itemPhone?.owner }?.imageUrl = ""
+        val itemUserSaved = userRepository.save(itemUser!!)
+        imageRepository.delete(itemImage!!)
+        return DataConverter.userToDTO(itemUserSaved)
     }
 }

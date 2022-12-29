@@ -23,6 +23,7 @@ class ImageService(
             "noticia" -> "news"
             "farmacia" -> "pharmacies"
             "muerte" -> "deaths"
+            "telefono" -> "phones"
             else -> {"NO PATH :("}
         }
 
@@ -58,6 +59,7 @@ class ImageService(
             "noticia" -> "news"
             "muerte" -> "deaths"
             "farmacia" -> "pharmacies"
+            "telefono" -> "phones"
             else -> {"NO PATH :("}
         }
 

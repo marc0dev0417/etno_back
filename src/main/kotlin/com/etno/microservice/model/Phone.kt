@@ -6,6 +6,7 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
+import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "phones")
@@ -17,12 +18,15 @@ data class Phone(
     @Column(name = "username")
     var username: String ? = null,
 
-    @Column(name = "category")
+    @Column(name = "category", nullable = false)
     var category: String ? = null,
 
     @Column(name = "owner")
     var owner: String ? = null,
 
     @Column(name = "number")
-    var number: String ? = null
+    var number: String ? = null,
+
+    @Column(name = "imageUrl")
+    var imageUrl: String ? = null
 )

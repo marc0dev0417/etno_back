@@ -8,10 +8,12 @@ import io.swagger.annotations.ApiResponses
 import org.apache.http.protocol.ResponseServer
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
+import javax.validation.Valid
 
 @Controller
 interface UserControllerInterface {
@@ -517,4 +519,101 @@ interface UserControllerInterface {
         params = ["username", "name", "image"]
     )
     fun deleteImageToDeathInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "name", required = true) name: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add phone in User",
+        nickname = "addPhoneInUser",
+        notes = "Will add a phone in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/phone"],
+        consumes = ["application/json"],
+        produces = ["application/json"],
+        method = [RequestMethod.POST],
+        params = ["username"]
+    )
+    fun addPhoneInUser(@RequestParam(name = "username", required = true) username: String, @RequestBody phoneDTO: PhoneDTO): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "delete phone in user",
+        nickname = "deletePhoneInUser",
+        notes = "Will delete a phone in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/delete/phone"],
+        produces = ["application/json"],
+        method = [RequestMethod.DELETE],
+        params = ["username", "owner"]
+    )
+    fun deletePhoneInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "owner", required = true) owner: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add image to phone in user",
+        nickname = "addImageToPhoneInUser",
+        notes = "Will add an image to phone in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/image/phone"],
+        produces = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["username", "owner", "image"]
+    )
+    fun addImageToPhoneInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "owner", required = true) owner: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "delete image to phone in user",
+        nickname = "deleteImageToPhoneInUser",
+        notes = "Will delete an image to phone in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/image/delete/phone"],
+        produces = ["application/json"],
+        method = [RequestMethod.DELETE],
+        params = ["username", "owner", "image"]
+    )
+    fun deleteImageToPhoneInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam("owner", required = true) owner: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<UserDTO>
 }
