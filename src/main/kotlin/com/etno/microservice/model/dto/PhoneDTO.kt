@@ -14,5 +14,7 @@ data class PhoneDTO(
 
     @JsonProperty("number") var number: String ? = null,
 
+    @JsonProperty("schedule") var schedule: String ? = null,
+
     @JsonProperty("imageUrl") var imageUrl: String ? = null
 )

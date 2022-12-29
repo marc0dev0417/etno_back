@@ -298,6 +298,7 @@ class DataConverter {
                 category = phone.category,
                 owner = phone.owner,
                 number = phone.number,
+                schedule = phone.schedule,
                 imageUrl = phone.imageUrl
             )
         }
@@ -308,6 +309,7 @@ class DataConverter {
                 category = phoneDTO.category,
                 owner = phoneDTO.owner,
                 number = phoneDTO.number,
+                schedule = phoneDTO.schedule,
                 imageUrl = phoneDTO.imageUrl
             )
         }

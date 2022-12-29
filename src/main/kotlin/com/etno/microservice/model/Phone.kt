@@ -27,6 +27,9 @@ data class Phone(
     @Column(name = "number")
     var number: String ? = null,
 
+    @Column(name = "schedule")
+    var schedule: String ? = null,
+
     @Column(name = "imageUrl")
     var imageUrl: String ? = null
 )

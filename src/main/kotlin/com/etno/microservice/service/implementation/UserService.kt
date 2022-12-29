@@ -357,6 +357,7 @@ class UserService(
         if(itemPhone == null){
             phoneDTO.idPhone = UUID.randomUUID()
             phoneDTO.username = itemUser?.username
+            phoneDTO.category = phoneDTO.category
             itemUser?.phones?.add(DataConverter.phoneFromDTO(phoneDTO))
             itemUser = userRepository.save(itemUser!!)
         }else{
