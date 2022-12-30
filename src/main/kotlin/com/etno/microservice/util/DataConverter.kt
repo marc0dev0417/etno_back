@@ -18,7 +18,8 @@ class DataConverter {
                 pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
-                phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList()
+                phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
+                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList()
             )
         }
 
@@ -31,7 +32,8 @@ class DataConverter {
                 pharmacies = userDTO.pharmacies.let { it?.map { pharmacyDTO -> pharmacyFromDTO(pharmacyDTO) } }?.toMutableList(),
                 tourism = userDTO.tourism.let { it?.map { tourismDTO -> tourismFromDTO(tourismDTO) } }?.toMutableList(),
                 deaths = userDTO.deaths.let { it?.map { deathDTO -> deathFromDTO(deathDTO) } }?.toMutableList(),
-                phones = userDTO.phones.let { it?.map { phoneDTO -> phoneFromDTO(phoneDTO) } }?.toMutableList()
+                phones = userDTO.phones.let { it?.map { phoneDTO -> phoneFromDTO(phoneDTO) } }?.toMutableList(),
+                news = userDTO.news.let { it?.map { newDTO -> newFromDTO(newDTO) } }?.toMutableList()
             )
         }
 
@@ -42,7 +44,8 @@ class DataConverter {
                 pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
-                phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList()
+                phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
+                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList()
             )
         }
 
@@ -311,6 +314,29 @@ class DataConverter {
                 number = phoneDTO.number,
                 schedule = phoneDTO.schedule,
                 imageUrl = phoneDTO.imageUrl
+            )
+        }
+
+        fun newToDTO(new: New): NewDTO {
+            return NewDTO(
+                idNew = new.idNew,
+                username = new.username,
+                category = new.category,
+                title = new.title,
+                publicationDate = new.publicationDate,
+                description = new.description,
+                imageUrl = new.imageUrl
+            )
+        }
+        fun newFromDTO(newDTO: NewDTO): New{
+            return New(
+                idNew = newDTO.idNew,
+                username = newDTO.username,
+                category = newDTO.category,
+                title = newDTO.title,
+                publicationDate = newDTO.publicationDate,
+                description = newDTO.description,
+                imageUrl = newDTO.imageUrl
             )
         }
     }

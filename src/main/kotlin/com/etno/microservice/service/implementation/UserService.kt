@@ -30,6 +30,7 @@ class UserService(
     private val tourismRepository: TourismRepository,
     private val deathRepository: DeathRepository,
     private val phoneRepository: PhoneRepository,
+    private val newRepository: NewRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -400,6 +401,60 @@ class UserService(
         val itemImage = imageRepository.findImageByName(imageName)
 
         itemUser?.phones?.find { it.owner == itemPhone?.owner }?.imageUrl = ""
+        val itemUserSaved = userRepository.save(itemUser!!)
+        imageRepository.delete(itemImage!!)
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun addNewInUser(username: String, newDTO: NewDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+        val itemNew = newRepository.findNewByUsernameAndTitle(username, newDTO.title!!)
+
+        if(itemNew == null){
+            newDTO.idNew = UUID.randomUUID()
+            newDTO.username = itemUser?.username
+            itemUser?.news?.add(DataConverter.newFromDTO(newDTO))
+            itemUser = userRepository.save(itemUser!!)
+        }else{
+            val checkIfExistPhone = itemUser?.news?.find { it.title == itemNew.title }
+            if(checkIfExistPhone == null){
+                newDTO.idNew = UUID.randomUUID()
+                newDTO.username = itemUser?.username
+                itemUser?.news?.add(DataConverter.newFromDTO(newDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun deleteNewInUser(username: String, title: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemNew = newRepository.findNewByUsernameAndTitle(username, title)
+        val itemImageDelete = imageRepository.findImageByLink(itemNew?.imageUrl!!)
+
+        itemUser?.news?.remove(itemNew)
+        imageRepository.delete(itemImageDelete!!)
+        val itemSaved = userRepository.save(itemUser!!)
+        newRepository.delete(itemNew)
+        return DataConverter.userToDTO(itemSaved)
+    }
+
+    override fun addImageToNewInUser(username: String, title: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemNew = newRepository.findNewByUsernameAndTitle(username, title)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.news?.find { it.title == itemNew?.title }?.imageUrl = itemImage?.link
+        val itemUserSaved = userRepository.save(itemUser!!)
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun deleteImageToNewInUser(username: String, title: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemNew = newRepository.findNewByUsernameAndTitle(username, title)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.news?.find { it.title == itemNew?.title }?.imageUrl = ""
         val itemUserSaved = userRepository.save(itemUser!!)
         imageRepository.delete(itemImage!!)
         return DataConverter.userToDTO(itemUserSaved)

@@ -117,4 +117,8 @@ class UserController(
     override fun deleteImageToPhoneInUser(username: String, owner: String, imageName: String): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.deleteImageToPhoneInUser(username, owner, imageName))
     }
+
+    override fun addNewInUser(username: String, newDTO: NewDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addNewInUser(username, newDTO))
+    }
 }

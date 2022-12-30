@@ -616,4 +616,28 @@ interface UserControllerInterface {
         params = ["username", "owner", "image"]
     )
     fun deleteImageToPhoneInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam("owner", required = true) owner: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add new in User",
+        nickname = "addNewInUser",
+        notes = "You can add new New",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/new"],
+        produces = ["application/json"],
+        method = [RequestMethod.POST],
+        params = ["username"]
+    )
+    fun addNewInUser(@RequestParam(name = "username", required = true) username: String, @RequestBody newDTO: NewDTO): ResponseEntity<UserDTO>
 }
