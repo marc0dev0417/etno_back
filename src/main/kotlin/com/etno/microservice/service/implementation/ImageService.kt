@@ -15,8 +15,13 @@ import java.util.*
 class ImageService(
     private val imageRepository: ImageRepository
 ): ImageServiceInterface {
-    override fun saveImage(multipartFile: MultipartFile, section: String): ImageDTO? {
-        val nameSectionPath: String = when(section.lowercase(Locale.getDefault())){
+    override fun saveImage(
+        multipartFile: MultipartFile,
+        section: String,
+        category: String,
+        username: String
+    ): ImageDTO? {
+        val nameSectionPath: String = when(section){
             "evento" -> "events"
             "fiesta" -> "festivities"
             "turismo" -> "tourism"
@@ -26,6 +31,7 @@ class ImageService(
             "telefono" -> "phones"
             else -> {"NO PATH :("}
         }
+        //error(nameSectionPath)
 
         val routeBase = "${Urls.urlBase}images/$nameSectionPath/"
         val converterFile = File("${Urls.sourceImagePath}\\$nameSectionPath\\${multipartFile.originalFilename}")
@@ -37,7 +43,10 @@ class ImageService(
 
         val itemImage = com.etno.microservice.model.Image()
         itemImage.idImage = UUID.randomUUID()
+        itemImage.locality = username
+        itemImage.section = section
         itemImage.name = multipartFile.originalFilename
+        itemImage.category = category
         itemImage.link = "$routeBase${multipartFile.originalFilename}"
 
         val itemToSave = imageRepository.save(itemImage)
@@ -49,10 +58,14 @@ class ImageService(
         return imageRepository.findAll().map { DataConverter.imageToDTO(it) }
     }
 
-    override fun deleteImage(name: String, section: String): ImageDTO? {
-        val imageItem = imageRepository.findImageByName(name)
+    override fun findImageByLocality(locality: String): List<ImageDTO>? {
+        return imageRepository.findImagesByLocality(locality)?.map { DataConverter.imageToDTO(it) }
+    }
 
-        val nameSectionPath: String = when(section.lowercase(Locale.getDefault())){
+    override fun deleteImage(name: String, section: String, locality: String): ImageDTO? {
+        val imageItem = imageRepository.findImageByLocalityAndName(locality, name)
+
+        val nameSectionPath: String = when(section.lowercase()){
             "evento" -> "events"
             "fiesta" -> "festivities"
             "turismo" -> "tourism"

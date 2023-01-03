@@ -6,7 +6,8 @@ import org.springframework.web.multipart.MultipartFile
 
 @Service
 interface ImageServiceInterface {
-    fun saveImage(multipartFile: MultipartFile, section: String): ImageDTO?
+    fun saveImage(multipartFile: MultipartFile, section: String, category: String, username: String): ImageDTO?
     fun getImages(): List<ImageDTO>?
-    fun deleteImage(name: String, section: String): ImageDTO?
+    fun findImageByLocality(locality: String): List<ImageDTO>?
+    fun deleteImage(name: String, section: String, locality: String): ImageDTO?
 }

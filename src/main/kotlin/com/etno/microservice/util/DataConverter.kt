@@ -97,14 +97,20 @@ class DataConverter {
         fun imageToDTO(image: Image): ImageDTO{
             return ImageDTO(
                 idImage = image.idImage,
+                locality = image.locality,
+                section = image.section,
                 name = image.name,
+                category = image.category,
                 link = image.link
             )
         }
         fun imageFromDTO(imageDTO: ImageDTO): Image{
             return Image(
                 idImage = imageDTO.idImage!!,
+                locality = imageDTO.locality,
+                section = imageDTO.section,
                 name = imageDTO.name,
+                category = imageDTO.category,
                 link = imageDTO.link
             )
         }

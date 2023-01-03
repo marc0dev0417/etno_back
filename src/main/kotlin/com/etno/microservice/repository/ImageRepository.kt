@@ -8,5 +8,7 @@ import java.util.UUID
 @Repository
 interface ImageRepository: JpaRepository<Image, UUID> {
     fun findImageByName(name: String): Image?
+    fun findImageByLocalityAndName(locality: String, name: String): Image?
     fun findImageByLink(link: String): Image?
+    fun findImagesByLocality(locality: String): List<Image>?
 }

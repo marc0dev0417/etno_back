@@ -1,6 +1,7 @@
 package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
+import com.etno.microservice.model.Image
 import com.etno.microservice.model.dto.ImageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -35,9 +36,13 @@ interface ImageControllerInterface {
         consumes = ["multipart/form-data"],
         produces = ["application/json"],
         method = [RequestMethod.POST],
-        params = ["section"]
+        params = ["section", "category", "username"]
     )
-    fun saveImage(@RequestParam(name = "image") multipartFile: MultipartFile, @RequestParam(name = "section", required = true) section: String): ResponseEntity<ImageDTO>?
+    fun saveImage(
+        @RequestParam(name = "image") multipartFile: MultipartFile,
+        @RequestParam(name = "section", required = true) section: String,
+        @RequestParam(name = "category") category: String,
+        @RequestParam(name = "username") username: String): ResponseEntity<ImageDTO>?
 
     @ApiOperation(
         value = "get a list about image",
@@ -82,7 +87,32 @@ interface ImageControllerInterface {
         value = ["/images"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["name", "section"]
+        params = ["name", "section", "locality"]
     )
-    fun deleteImage(@RequestParam(name = "name", required = true) name: String, @RequestParam(name = "section", required = true) section: String): ResponseEntity<ImageDTO>?
+    fun deleteImage(@RequestParam(name = "name", required = true) name: String, @RequestParam(name = "section", required = true) section: String, @RequestParam(name = "locality", required = true) locality: String): ResponseEntity<ImageDTO>?
+
+
+    @ApiOperation(
+        value = "Find images by locality",
+        nickname = "findImagesByLocality",
+        notes = "Endpoint to find all image list by locality",
+        tags = ["Image"],
+        response = ImageDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Image", response = ImageDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/images"],
+        produces = ["application/json"],
+        method = [RequestMethod.GET],
+        params = ["locality"]
+    )
+    fun findImagesByLocality(@RequestParam(name = "locality") locality: String):ResponseEntity<List<ImageDTO>>
 }

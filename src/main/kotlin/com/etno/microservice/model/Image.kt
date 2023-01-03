@@ -14,8 +14,17 @@ data class Image(
     @Type(type = "uuid-char")
     var idImage: UUID? = UUID.randomUUID(),
 
+    @Column(name = "locality")
+    var locality: String ? = null,
+
+    @Column(name = "section")
+    var section: String ? = null,
+
     @Column(name = "name", unique = true)
     var name: String? = null,
+
+    @Column(name = "category")
+    var category: String ? = null,
 
     @Column(name = "link")
     var link: String? = null
