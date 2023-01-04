@@ -5,6 +5,7 @@ import com.etno.microservice.model.dto.*
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import io.swagger.models.Response
 import org.apache.http.protocol.ResponseServer
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -640,4 +641,80 @@ interface UserControllerInterface {
         params = ["username"]
     )
     fun addNewInUser(@RequestParam(name = "username", required = true) username: String, @RequestBody newDTO: NewDTO): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "delete new in User",
+        nickname = "deleteNewInUser",
+        notes = "delete new in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/delete/new"],
+        produces = ["application/json"],
+        method = [RequestMethod.DELETE],
+        params = ["username", "title"]
+    )
+    fun deleteNewInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add image to new in User",
+        nickname = "addImageToNewInUser",
+        notes = "You can add an image to new in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/image/new"],
+        produces = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["username", "title", "image"]
+    )
+    fun addImageToNewInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image") imageName: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "delete image of new in User",
+        nickname = "deleteImageToNewInUser",
+        notes = "You can delete image to new in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/image/delete/new"],
+        produces = ["application/json"],
+        method = [RequestMethod.DELETE],
+        params = ["username", "title", "image"]
+    )
+    fun deleteImageToNewInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "title", required = true) title: String,
+        @RequestParam(name = "image", required = true) imageName: String
+    ): ResponseEntity<UserDTO>
 }

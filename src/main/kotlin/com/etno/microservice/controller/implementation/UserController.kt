@@ -3,6 +3,7 @@ package com.etno.microservice.controller.implementation
 import com.etno.microservice.controller.UserControllerInterface
 import com.etno.microservice.model.dto.*
 import com.etno.microservice.service.implementation.UserService
+import io.swagger.models.Response
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 
@@ -120,5 +121,17 @@ class UserController(
 
     override fun addNewInUser(username: String, newDTO: NewDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addNewInUser(username, newDTO))
+    }
+
+    override fun deleteNewInUser(username: String, title: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteNewInUser(username, title))
+    }
+
+    override fun addImageToNewInUser(username: String, title: String, imageName: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addImageToNewInUser(username, title, imageName))
+    }
+
+    override fun deleteImageToNewInUser(username: String, title: String, imageName: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteImageToNewInUser(username, title, imageName))
     }
 }
