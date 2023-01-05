@@ -20,6 +20,8 @@ data class EventDTO(
 
     @JsonProperty("link") var link: String? = null,
 
+    @JsonProperty("imageUrl") var imageUrl: String ? = null,
+
     @JsonProperty("startDate") var startDate: String? = null,
 
     @JsonProperty("endDate") var endDate: String? = null,

@@ -167,6 +167,7 @@ class UserService(
         val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
         val itemImage = imageRepository.findImageByName(imageName)
 
+        itemEvent?.imageUrl = itemImage?.link
         itemUser?.events?.find { it.title == itemEvent?.title }?.images?.add(itemImage!!)
         val itemUserSaved = userRepository.save(itemUser!!)
 

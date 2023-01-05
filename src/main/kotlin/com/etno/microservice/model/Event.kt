@@ -33,6 +33,9 @@ data class Event(
     @Column(name = "link")
     var link: String? = null,
 
+    @Column(name = "imageUrl")
+    var imageUrl: String ? = null,
+
     @Column(name = "startDate")
     var startDate: String? = null,
 
