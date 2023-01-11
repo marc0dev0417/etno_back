@@ -18,6 +18,10 @@ data class EventDTO(
 
     @JsonProperty("reservePrice") var reservePrice: Double ? = null,
 
+    @JsonProperty("seats") var seats: Int ? = null,
+
+    @JsonProperty("capacity") var capacity: Int ? = null,
+
     @JsonProperty("link") var link: String? = null,
 
     @JsonProperty("imageUrl") var imageUrl: String ? = null,

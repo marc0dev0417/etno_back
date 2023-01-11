@@ -17,5 +17,5 @@ interface FCMTokenServiceInterface {
         wallet: Double,
         sectionDTO: SectionDTO
     ): SubscriptionDTO?
-    fun dropOutSectionByTokenAndTitle(token: String, category: String, sectionTitle: String): SubscriptionDTO?
+    fun dropOutSectionByTokenAndTitle(token: String, username: String ,category: String, sectionTitle: String): SubscriptionDTO?
 }

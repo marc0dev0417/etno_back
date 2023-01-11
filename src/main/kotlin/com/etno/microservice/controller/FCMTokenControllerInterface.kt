@@ -112,9 +112,12 @@ interface FCMTokenControllerInterface {
         value = ["/FCMTokens/dropout/section"],
         produces = ["application/json"],
         method = [RequestMethod.PUT],
-        params = ["token", "category", "title"]
+        params = ["token", "username", "category", "title"]
     )
-    fun dropOutSectionByTokenAndTitle(@RequestParam(name = "token", required = true) token: String,
-                                        @RequestParam(name = "category", required = true) category: String,
-                                      @RequestParam(name = "title") title: String): ResponseEntity<SubscriptionDTO>
+    fun dropOutSectionByTokenAndTitle(
+        @RequestParam(name = "token", required = true) token: String,
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "category", required = true) category: String,
+        @RequestParam(name = "title") title: String
+    ): ResponseEntity<SubscriptionDTO>
 }

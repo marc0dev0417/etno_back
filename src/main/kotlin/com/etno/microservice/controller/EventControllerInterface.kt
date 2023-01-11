@@ -38,6 +38,33 @@ interface EventControllerInterface {
     fun getEvents(): ResponseEntity<List<EventDTO>>?
 
     @ApiOperation(
+        value = "Get a Event by username and title",
+        nickname = "getEvent",
+        notes = "You gonna find a event by username and title",
+        tags = ["Event"],
+        response = EventDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Event", response = EventDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/events"],
+        produces = ["application/json"],
+        method = [RequestMethod.GET],
+        params = ["username", "title"]
+    )
+    fun getEventByUsernameAndTitle(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "title", required = true) title: String
+    ): ResponseEntity<EventDTO>
+
+    @ApiOperation(
         value = "Save a event",
         nickname = "saveEvent",
         notes = "this endpoint is to save a event",

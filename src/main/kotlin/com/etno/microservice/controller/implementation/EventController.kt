@@ -14,7 +14,11 @@ class EventController(
         return ResponseEntity.ok().body(eventService.getEvents())
     }
 
-   override fun saveEvent(
+    override fun getEventByUsernameAndTitle(username: String, title: String): ResponseEntity<EventDTO> {
+        return ResponseEntity.ok().body(eventService.findEventByTitleAndUsername(title, username))
+    }
+
+    override fun saveEvent(
         eventDTO: EventDTO
     ): ResponseEntity<EventDTO>? {
         return ResponseEntity.ok().body(eventService.saveEvents(eventDTO))

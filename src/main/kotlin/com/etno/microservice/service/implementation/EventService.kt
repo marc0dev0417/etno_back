@@ -9,12 +9,9 @@ import com.etno.microservice.repository.ImageRepository
 import com.etno.microservice.service.EventServiceInterface
 import com.etno.microservice.util.DataConverter
 import com.etno.microservice.util.Urls
-import org.apache.catalina.util.URLEncoder
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import java.nio.charset.StandardCharsets
 import java.util.*
 
 @Service
@@ -30,7 +27,11 @@ class EventService(
         return eventRepository.findAll().map { DataConverter.eventToDTO(it) }
     }
 
-   override fun saveEvents(eventDTO: EventDTO): EventDTO? {
+    override fun findEventByTitleAndUsername(title: String, username: String): EventDTO? {
+        return DataConverter.eventToDTO(eventRepository.findEventByTitleAndUsername(title, username)!!)
+    }
+
+    override fun saveEvents(eventDTO: EventDTO): EventDTO? {
         val eventItem = DataConverter.eventFromDTO(eventDTO)
         eventItem.idEvent = UUID.randomUUID()
         val eventToSave = eventRepository.save(eventItem)

@@ -34,10 +34,11 @@ class FCMTokenController(
 
     override fun dropOutSectionByTokenAndTitle(
         token: String,
+        username: String,
         category: String,
         title: String
     ): ResponseEntity<SubscriptionDTO> {
-        return ResponseEntity.ok().body(fcmTokenService.dropOutSectionByTokenAndTitle(token = token, category = category, sectionTitle = title))
+        return ResponseEntity.ok().body(fcmTokenService.dropOutSectionByTokenAndTitle(token = token, username = username, category = category, sectionTitle = title))
     }
 
 

@@ -115,24 +115,28 @@ class UserService(
 
         if(itemEvent == null){
             eventDTO.username = itemUser?.username
+            eventDTO.seats = eventDTO.capacity
             val itemEventSaved = eventRepository.save(DataConverter.eventFromDTO(eventDTO))
             itemUser?.events?.add(DataConverter.eventFromDTO(DataConverter.eventToDTO(itemEventSaved)))
             userRepository.save(itemUser!!)
 
+            /*
             if (fcmTokenRepository.findAll().any { it.username == username }){
                 val restTemplate = RestTemplate()
                 val map: Map<String, String> = mapOf("subject" to "Nuevo evento", "content" to "Evento ${itemEventSaved.title} disponible", "username" to "${itemUser.username}")
 
                 val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
             }
+             */
 
         }else{
             val checkIfExistEvent = itemUser?.events?.find { it.title == itemEvent.title }
             if(checkIfExistEvent == null){
                 eventDTO.username = itemUser?.username
+                eventDTO.seats = eventDTO.capacity
                 itemUser?.events?.add(DataConverter.eventFromDTO(eventDTO))
                 userRepository.save(itemUser!!)
-
+                /*
                 if (fcmTokenRepository.findAll().any { it.username == username }){
                     val restTemplate = RestTemplate()
                     val map: Map<String, String> = mapOf(
@@ -142,6 +146,7 @@ class UserService(
 
                     val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
                 }
+                 */
             }
         }
         return DataConverter.userToDTO(itemUser)

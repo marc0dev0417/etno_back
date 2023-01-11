@@ -30,6 +30,12 @@ data class Event(
     @Column(name = "reservePrice")
     var reservePrice: Double ? = null,
 
+    @Column(name = "seats")
+    var seats: Int ? = null,
+
+    @Column(name = "capacity")
+    var capacity: Int ? = null,
+
     @Column(name = "link")
     var link: String? = null,
 
