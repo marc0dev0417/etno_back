@@ -64,5 +64,8 @@ data class Event(
     var images: MutableList<Image>? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var videos: MutableList<Video>? = mutableListOf()
+    var videos: MutableList<Video>? = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var userSubscriptions: MutableList<SubscriptionUser>? = mutableListOf()
 )

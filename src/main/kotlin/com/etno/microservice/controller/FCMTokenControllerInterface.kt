@@ -3,7 +3,6 @@ package com.etno.microservice.controller
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.FCMTokenDTO
 import com.etno.microservice.model.dto.SectionDTO
-import com.etno.microservice.model.dto.SubscriptionDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -62,62 +61,4 @@ interface FCMTokenControllerInterface {
         method = [RequestMethod.POST]
     )
     fun saveFCMToken(@RequestBody fcmTokenDTO: FCMTokenDTO): ResponseEntity<FCMTokenDTO>?
-
-    @ApiOperation(
-        value = "add a section to FCMToken",
-        nickname = "addSectionToFcmToken",
-        notes = "Will add a section subscription",
-        tags = ["FCMToken"],
-        response = SubscriptionDTO::class
-    )
-    @ApiResponses(
-        value = [
-            ApiResponse(code = 201, message = "Subscription with FCM Token", response = SubscriptionDTO::class),
-            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
-            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
-            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
-            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
-        ]
-    )
-    @RequestMapping(
-        value = ["/FCMTokens/section"],
-        produces = ["application/json"],
-        method = [RequestMethod.PUT],
-        params = ["token", "name", "mail", "phone","wallet"]
-    )
-    fun addSectionToFcmToken(@RequestParam(name = "token", required = true) token: String,
-                             @RequestParam(name = "name", required = true) nameUser: String,
-                             @RequestParam(name = "mail", required = true) mail: String,
-                             @RequestParam(name = "phone", required = true) phone: String,
-                             @RequestParam(name = "wallet", required = true) wallet: Double,
-                             @RequestBody sectionDTO: SectionDTO): ResponseEntity<SubscriptionDTO>?
-
-    @ApiOperation(
-        value = "drop out a section subscription by token and section title",
-        nickname = "dropOutSectionByTokenAndTitle",
-        notes = "Will drop out a section subscription by token and title",
-        tags = ["FCMToken"],
-        response = SubscriptionDTO::class
-    )
-    @ApiResponses(
-        value = [
-            ApiResponse(code = 201, message = "Subscription with FCM Token", response = SubscriptionDTO::class),
-            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
-            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
-            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
-            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
-        ]
-    )
-    @RequestMapping(
-        value = ["/FCMTokens/dropout/section"],
-        produces = ["application/json"],
-        method = [RequestMethod.PUT],
-        params = ["token", "username", "category", "title"]
-    )
-    fun dropOutSectionByTokenAndTitle(
-        @RequestParam(name = "token", required = true) token: String,
-        @RequestParam(name = "username", required = true) username: String,
-        @RequestParam(name = "category", required = true) category: String,
-        @RequestParam(name = "title") title: String
-    ): ResponseEntity<SubscriptionDTO>
 }

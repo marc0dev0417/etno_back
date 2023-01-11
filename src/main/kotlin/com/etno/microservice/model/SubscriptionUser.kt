@@ -14,8 +14,11 @@ data class SubscriptionUser(
     @Type(type = "uuid-char")
     var idSubscriptionUser: UUID ? = UUID.randomUUID(),
 
-    @Column(name = "fcmToken", unique = true)
+    @Column(name = "fcmToken")
     var fcmToken: String ? = null,
+
+    @Column(name = "title")
+    var title: String ? = null,
 
     @Column(name = "name")
     var name: String ? = null,

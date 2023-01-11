@@ -19,6 +19,11 @@ interface UserServiceInterface {
     fun addImageToEventInUser(username: String, title: String, imageName: String): UserDTO?
     fun deleteImageToEventInUser(username: String, title: String, imageName: String): UserDTO?
 
+    //User Event Subscriptions -> -------------------------------------------------------------
+    fun addSubscriptionToUser(username: String, title: String, subscriptionUserDTO: SubscriptionUserDTO): UserDTO?
+    //fun dropOutSubscriptionInUser()
+
+
     //User Pharmacy -> -------------------------------------------------------------------------
     fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): UserDTO?
     fun deletePharmacyInUser(username: String, name: String): UserDTO?

@@ -72,7 +72,8 @@ class DataConverter {
                 lat = event.lat,
                 long = event.long,
                 images = event.images.let { event.images?.map { image -> imageToDTO(image) } }?.toMutableList(),
-                videos = event.videos.let { event.videos?.map { video -> videoToDTO(video) } }?.toMutableList()
+                videos = event.videos.let { event.videos?.map { video -> videoToDTO(video) } }?.toMutableList(),
+                userSubscriptions = event.userSubscriptions.let { event.userSubscriptions?.map { subscriptionUser -> subscriptionUserToDTO(subscriptionUser) } }?.toMutableList()
             )
         }
 
@@ -96,7 +97,8 @@ class DataConverter {
                 lat = eventDTO.lat,
                 long = eventDTO.long,
                 images = eventDTO.images.let { eventDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList(),
-                videos = eventDTO.videos.let { eventDTO.videos?.map { videoDTO -> videoFromDTO(videoDTO) } }?.toMutableList()
+                videos = eventDTO.videos.let { eventDTO.videos?.map { videoDTO -> videoFromDTO(videoDTO) } }?.toMutableList(),
+                userSubscriptions = eventDTO.userSubscriptions.let { eventDTO.userSubscriptions?.map { subscriptionUserDTO -> subscriptionUserFromDTO(subscriptionUserDTO) }?.toMutableList()  }
             )
         }
 
@@ -210,31 +212,11 @@ class DataConverter {
                 token = fcmTokenDTO.token
             )
         }
-
-        fun subscriptionToDTO(subscription: Subscription): SubscriptionDTO{
-            return SubscriptionDTO(
-                idSubscription = subscription.idSectionSubscribe,
-                category = subscription.category,
-                title = subscription.title,
-                isSubscribe = subscription.isSubscribe,
-                subscriptionUsers = subscription.subscriptionsUsers.let { subscription.subscriptionsUsers?.map { subscriptionUser -> subscriptionUserToDTO(subscriptionUser) } }!!.toMutableList()
-            )
-        }
-
-        fun subscriptionFromDTO(subscriptionDTO: SubscriptionDTO): Subscription{
-            return Subscription(
-                idSectionSubscribe = subscriptionDTO.idSubscription!!,
-                category = subscriptionDTO.category,
-                title = subscriptionDTO.title,
-                isSubscribe = subscriptionDTO.isSubscribe,
-                subscriptionsUsers = subscriptionDTO.subscriptionUsers.let { subscriptionDTO.subscriptionUsers.map { subscriptionUserDTO -> subscriptionUserFromDTO(subscriptionUserDTO) } }.toMutableList()
-            )
-        }
-
         fun subscriptionUserToDTO(subscriptionUser: SubscriptionUser): SubscriptionUserDTO{
             return SubscriptionUserDTO(
                 idSubscriptionUser = subscriptionUser.idSubscriptionUser,
                 fcmToken = subscriptionUser.fcmToken,
+                title = subscriptionUser.title,
                 name = subscriptionUser.name,
                 mail = subscriptionUser.mail,
                 phone = subscriptionUser.phone,
@@ -246,6 +228,7 @@ class DataConverter {
             return SubscriptionUser(
                 idSubscriptionUser = subscriptionUserDTO.idSubscriptionUser,
                 fcmToken = subscriptionUserDTO.fcmToken,
+                title = subscriptionUserDTO.title,
                 name = subscriptionUserDTO.name,
                 mail = subscriptionUserDTO.mail,
                 phone = subscriptionUserDTO.phone,
