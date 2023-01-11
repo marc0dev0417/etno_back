@@ -19,7 +19,7 @@ fun firebaseMessaging(): FirebaseMessaging {
 	val serviceAccount = FileInputStream(Urls.urlSourceFirebaseCredential)
 
 	try {
-		val options = FirebaseOptions.Builder()
+		val options = FirebaseOptions.builder()
 			.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 			.build()
 
