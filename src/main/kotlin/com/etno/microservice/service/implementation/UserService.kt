@@ -25,6 +25,7 @@ class UserService(
     private val userRepository: UserRepository,
     private val fcmTokenRepository: FCMTokenRepository,
     private val eventRepository: EventRepository,
+    private val subscriptionUser: SubscriptionUserRepository,
     private val imageRepository: ImageRepository,
     private val pharmacyRepository: PharmacyRepository,
     private val tourismRepository: TourismRepository,
@@ -189,6 +190,30 @@ class UserService(
         imageRepository.delete(itemImage!!)
 
         return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun addSubscriptionToUser(
+        username: String,
+        title: String,
+        subscriptionUserDTO: SubscriptionUserDTO
+    ): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+        val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
+        val subscriptionUser = subscriptionUser.findSubscriptionByFcmTokenAndTitle(subscriptionUserDTO.fcmToken!!, title)
+        subscriptionUserDTO.title = title
+
+        if(subscriptionUser == null){
+            when(itemEvent?.seats){
+                in 1 .. itemEvent?.capacity!! -> {
+                    itemEvent.seats = (itemEvent.seats!! - 1)
+                    itemUser?.events?.find { it.title == title }?.userSubscriptions?.add(
+                        DataConverter.subscriptionUserFromDTO(subscriptionUserDTO)
+                    )
+                    itemUser = userRepository.save(itemUser!!)
+                }
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
     }
 
     override fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): UserDTO? {

@@ -40,5 +40,7 @@ data class EventDTO(
 
     @JsonProperty("images") var images: MutableList<ImageDTO>? = mutableListOf(),
 
-    @JsonProperty("videos") var videos: MutableList<VideoDTO>? = mutableListOf()
+    @JsonProperty("videos") var videos: MutableList<VideoDTO>? = mutableListOf(),
+
+    @JsonProperty("userSubscriptions") var userSubscriptions: MutableList<SubscriptionUserDTO>? = mutableListOf()
 )

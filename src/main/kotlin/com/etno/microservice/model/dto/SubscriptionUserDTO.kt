@@ -8,6 +8,8 @@ data class SubscriptionUserDTO(
 
     @JsonProperty("fcmToken") var fcmToken: String ? = null,
 
+    @JsonProperty("title") var title: String ? = null,
+
     @JsonProperty("name") var name: String ? = null,
 
     @JsonProperty("mail") var mail: String ? = null,

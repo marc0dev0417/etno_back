@@ -2,6 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.*
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -232,6 +233,34 @@ interface UserControllerInterface {
         params = ["username", "title", "image"]
     )
     fun deleteImageToEventInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam("title", required = true) title: String, @RequestParam("image") imageName: String): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Add subscription to User",
+        nickname = "AddSubscriptionToUser",
+        notes = "Gonna add a subscription in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/event/subscription"],
+        produces = ["application/json"],
+        method = [RequestMethod.POST],
+        params = ["username", "title"]
+    )
+    fun addSubscriptionToUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "title", required = true) title: String,
+        @RequestBody subscriptionUserDTO: SubscriptionUserDTO
+    ): ResponseEntity<UserDTO>
 
     @ApiOperation(
         value = "add pharmacy in User",

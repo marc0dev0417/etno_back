@@ -9,4 +9,5 @@ import java.util.UUID
 interface SubscriptionUserRepository: JpaRepository<SubscriptionUser, UUID> {
     fun findSubscriptionUserByName(name: String): SubscriptionUser?
     fun findSubscriptionUserByFcmToken(token: String): SubscriptionUser?
+    fun findSubscriptionByFcmTokenAndTitle(fcmToken: String, title: String): SubscriptionUser?
 }
