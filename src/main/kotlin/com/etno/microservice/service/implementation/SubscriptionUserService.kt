@@ -15,6 +15,11 @@ class SubscriptionUserService(
         return subscriptionUserRepository.findAll().map { DataConverter.subscriptionUserToDTO(it) }
     }
 
+    override fun getSubscription(fcmToken: String, title: String): SubscriptionUserDTO? {
+        val userSubscriptionItem = subscriptionUserRepository.findSubscriptionByFcmTokenAndTitle(fcmToken, title)
+        return DataConverter.subscriptionUserToDTO(userSubscriptionItem!!)
+    }
+
     override fun saveSubscriptionUser(subscriptionUserDTO: SubscriptionUserDTO): SubscriptionUserDTO? {
         val itemToSave = DataConverter.subscriptionUserFromDTO(subscriptionUserDTO)
         itemToSave.idSubscriptionUser = UUID.randomUUID()

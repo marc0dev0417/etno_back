@@ -1,5 +1,6 @@
 package com.etno.microservice.service.implementation
 
+import com.etno.microservice.model.SubscriptionUser
 import com.etno.microservice.model.dto.*
 import com.etno.microservice.repository.*
 import com.etno.microservice.security.JwtTokenUtil
@@ -23,7 +24,6 @@ import java.util.*
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val fcmTokenRepository: FCMTokenRepository,
     private val eventRepository: EventRepository,
     private val subscriptionUser: SubscriptionUserRepository,
     private val imageRepository: ImageRepository,
@@ -196,24 +196,73 @@ class UserService(
         username: String,
         title: String,
         subscriptionUserDTO: SubscriptionUserDTO
-    ): UserDTO? {
+    ): SubscriptionUserDTO {
         var itemUser = userRepository.findUserByUsername(username)
         val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
         val subscriptionUser = subscriptionUser.findSubscriptionByFcmTokenAndTitle(subscriptionUserDTO.fcmToken!!, title)
         subscriptionUserDTO.title = title
+        subscriptionUserDTO.isSubscribe = true
 
         if(subscriptionUser == null){
             when(itemEvent?.seats){
                 in 1 .. itemEvent?.capacity!! -> {
                     itemEvent.seats = (itemEvent.seats!! - 1)
+                    subscriptionUserDTO.seats = itemEvent.seats
                     itemUser?.events?.find { it.title == title }?.userSubscriptions?.add(
                         DataConverter.subscriptionUserFromDTO(subscriptionUserDTO)
                     )
                     itemUser = userRepository.save(itemUser!!)
                 }
             }
+        }else{
+            when(itemEvent?.seats){
+                in 1 .. itemEvent?.capacity!! -> {
+                    itemEvent.seats = (itemEvent.seats!! - 1)
+                    subscriptionUserDTO.seats = itemEvent.seats
+                    itemUser?.events?.find { it.title == title }?.userSubscriptions?.find { it.fcmToken == subscriptionUserDTO.fcmToken }.also {
+                        it?.title = subscriptionUserDTO.title
+                        it?.name = subscriptionUserDTO.name
+                        it?.seats = subscriptionUserDTO.seats
+                        it?.phone = subscriptionUserDTO.phone
+                        it?.wallet = subscriptionUserDTO.wallet
+                        it?.isSubscribe = subscriptionUserDTO.isSubscribe
+                    }
+                    itemUser = userRepository.save(itemUser!!)
+                }
+            }
         }
-        return DataConverter.userToDTO(itemUser!!)
+        val findEvent = itemUser?.events?.find { it.title == title }
+        val findUserSubscription = findEvent?.userSubscriptions?.find { it.fcmToken == subscriptionUserDTO.fcmToken }
+        return DataConverter.subscriptionUserToDTO(findUserSubscription!!)
+    }
+
+    override fun dropOutSubscription(
+        username: String,
+        title: String,
+        subscriptionUserDTO: SubscriptionUserDTO
+    ): SubscriptionUserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+        val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
+        val subscriptionUser =
+            subscriptionUser.findSubscriptionByFcmTokenAndTitle(subscriptionUserDTO.fcmToken!!, title)
+
+        if (subscriptionUser != null) {
+            when (itemEvent?.seats) {
+                in 0..itemEvent?.capacity!! -> {
+                    itemEvent.seats = (itemEvent.seats!! + 1)
+                    subscriptionUserDTO.seats = itemEvent.seats
+                    itemUser?.events?.find { it.title == title }?.userSubscriptions?.find { it.fcmToken == subscriptionUserDTO.fcmToken }
+                        .also {
+                            it?.seats = subscriptionUserDTO.seats
+                            it?.isSubscribe = false
+                        }
+                    itemUser = userRepository.save(itemUser!!)
+                }
+            }
+        }
+        val findEvent = itemUser?.events?.find { it.title == title }
+        val findUserSubscription = findEvent?.userSubscriptions?.find { it.fcmToken == subscriptionUserDTO.fcmToken }
+        return DataConverter.subscriptionUserToDTO(findUserSubscription!!)
     }
 
     override fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): UserDTO? {

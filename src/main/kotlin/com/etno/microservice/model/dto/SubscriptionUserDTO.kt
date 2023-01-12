@@ -10,6 +10,8 @@ data class SubscriptionUserDTO(
 
     @JsonProperty("title") var title: String ? = null,
 
+    @JsonProperty("seats") var seats: Int ? = null,
+
     @JsonProperty("name") var name: String ? = null,
 
     @JsonProperty("mail") var mail: String ? = null,

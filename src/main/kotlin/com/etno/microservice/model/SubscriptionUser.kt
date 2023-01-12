@@ -20,6 +20,9 @@ data class SubscriptionUser(
     @Column(name = "title")
     var title: String ? = null,
 
+    @Column(name = "seats")
+    var seats: Int ? = null,
+
     @Column(name = "name")
     var name: String ? = null,
 
