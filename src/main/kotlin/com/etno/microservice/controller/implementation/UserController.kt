@@ -47,8 +47,16 @@ class UserController(
         return ResponseEntity.ok().body(userService.deleteImageToEventInUser(username, title, imageName))
     }
 
-    override fun addSubscriptionToUser(username: String, title: String, subscriptionUserDTO: SubscriptionUserDTO): ResponseEntity<UserDTO> {
+    override fun addSubscriptionToUser(username: String, title: String, subscriptionUserDTO: SubscriptionUserDTO): ResponseEntity<SubscriptionUserDTO> {
         return ResponseEntity.ok().body(userService.addSubscriptionToUser(username, title, subscriptionUserDTO))
+    }
+
+    override fun dropOutSubscription(
+        username: String,
+        title: String,
+        subscriptionUserDTO: SubscriptionUserDTO
+    ): ResponseEntity<SubscriptionUserDTO> {
+        return ResponseEntity.ok().body(userService.dropOutSubscription(username, title, subscriptionUserDTO))
     }
 
     override fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): ResponseEntity<UserDTO> {

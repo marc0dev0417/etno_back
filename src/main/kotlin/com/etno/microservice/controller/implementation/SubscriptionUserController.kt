@@ -14,6 +14,10 @@ class SubscriptionUserController(
         return ResponseEntity.ok().body(subscriptionUserService.getSubscriptionUsers())
     }
 
+    override fun getSubscription(fcmToken: String, title: String): ResponseEntity<SubscriptionUserDTO> {
+        return ResponseEntity.ok().body(subscriptionUserService.getSubscription(fcmToken, title))
+    }
+
     override fun saveSubscriptionUser(subscriptionUserDTO: SubscriptionUserDTO): ResponseEntity<SubscriptionUserDTO> {
         return ResponseEntity.ok().body(subscriptionUserService.saveSubscriptionUser(subscriptionUserDTO))
     }

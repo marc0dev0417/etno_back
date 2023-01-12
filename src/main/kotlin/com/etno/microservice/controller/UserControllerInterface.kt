@@ -239,11 +239,11 @@ interface UserControllerInterface {
         nickname = "AddSubscriptionToUser",
         notes = "Gonna add a subscription in user",
         tags = ["User"],
-        response = UserDTO::class
+        response = SubscriptionUserDTO::class
     )
     @ApiResponses(
         value = [
-            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 201, message = "User", response = SubscriptionUserDTO::class),
             ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
             ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
             ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
@@ -260,7 +260,35 @@ interface UserControllerInterface {
         @RequestParam(name = "username", required = true) username: String,
         @RequestParam(name = "title", required = true) title: String,
         @RequestBody subscriptionUserDTO: SubscriptionUserDTO
-    ): ResponseEntity<UserDTO>
+    ): ResponseEntity<SubscriptionUserDTO>
+
+    @ApiOperation(
+        value = "Drop out subscription in User",
+        nickname = "dropOutSubscription",
+        notes = "Gonna drop out a subscription",
+        tags = ["User"],
+        response = SubscriptionUserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = SubscriptionUserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/dropout/event/subscription"],
+        produces = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["username", "title"]
+    )
+    fun dropOutSubscription(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "title", required = true) title: String,
+        @RequestBody subscriptionUserDTO: SubscriptionUserDTO
+    ): ResponseEntity<SubscriptionUserDTO>
 
     @ApiOperation(
         value = "add pharmacy in User",
@@ -284,6 +312,8 @@ interface UserControllerInterface {
         method = [RequestMethod.POST],
         params = ["username"]
     )
+
+
     fun addPharmacyInUser(@RequestParam(name = "username", required = true) username: String, @RequestBody pharmacyDTO: PharmacyDTO): ResponseEntity<UserDTO>
 
     @ApiOperation(

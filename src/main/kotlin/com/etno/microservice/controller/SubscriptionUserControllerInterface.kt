@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 interface SubscriptionUserControllerInterface {
@@ -35,6 +36,33 @@ interface SubscriptionUserControllerInterface {
         method = [RequestMethod.GET]
     )
     fun getSubscriptionUsers(): ResponseEntity<List<SubscriptionUserDTO>>
+
+    @ApiOperation(
+        value = "Get a user subscription",
+        nickname = "getUserSubscription",
+        notes = "Gonna get a user subscription",
+        tags = ["Subscription User"],
+        response = SubscriptionUserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Subscription User", response = SubscriptionUserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/subscription_users"],
+        produces = ["application/json"],
+        method = [RequestMethod.GET],
+        params = ["fcmToken", "title"]
+    )
+    fun getSubscription(
+        @RequestParam(name = "fcmToken", required = true) fcmToken: String,
+        @RequestParam(name = "title", required = true) title: String
+    ): ResponseEntity<SubscriptionUserDTO>
 
     @ApiOperation(
         value = "Save subscription user",
