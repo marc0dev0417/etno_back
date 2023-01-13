@@ -22,11 +22,18 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+	implementation("jakarta.activation:jakarta.activation-api:2.1.1")
+
 	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
 	implementation("io.springfox:springfox-swagger2:3.0.0")
 
 	// https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+	implementation("org.springframework.boot:spring-boot-starter-mail:3.0.1")
+	// https://mvnrepository.com/artifact/org.springframework/spring-context-support
+	implementation("org.springframework:spring-context-support:6.0.4")
 
 
 	// Security with JWT
@@ -39,7 +46,7 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson
-	implementation("com.google.code.gson:gson:2.10")
+	implementation("com.google.code.gson:gson:2.10.1")
 
 	// https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
 	implementation("com.google.firebase:firebase-admin:9.1.1")

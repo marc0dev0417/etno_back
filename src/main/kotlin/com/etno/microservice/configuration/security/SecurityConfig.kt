@@ -1,4 +1,4 @@
-package com.etno.microservice.configuration
+package com.etno.microservice.configuration.security
 
 import com.etno.microservice.security.JwtRequestFilter
 import com.etno.microservice.service.implementation.jwt.JwtUserDetailsService
@@ -51,6 +51,7 @@ class SecurityConfig() {
             "/swagger-ui.html",
             "/v2/api-docs",
             "/webjars/**",
+            "/sendMail/**",
             "/FCMTokens/**",
             "/events/**",
             "/images/**",

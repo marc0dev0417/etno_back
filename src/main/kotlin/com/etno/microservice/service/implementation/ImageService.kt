@@ -29,6 +29,7 @@ class ImageService(
             "farmacia" -> "pharmacies"
             "muerte" -> "deaths"
             "telefono" -> "phones"
+            "incidente" -> "incidents"
             else -> {"NO PATH :("}
         }
         //error(nameSectionPath)
