@@ -1,4 +1,4 @@
-package com.etno.microservice.configuration
+package com.etno.microservice.configuration.swagger
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

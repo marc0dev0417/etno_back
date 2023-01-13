@@ -32,6 +32,7 @@ fun firebaseMessaging(): FirebaseMessaging {
 	return FirebaseMessaging.getInstance()
 }
 
+
 fun main(args: Array<String>) {
 	runApplication<MicroserviceApplication>(*args)
 	firebaseMessaging()
