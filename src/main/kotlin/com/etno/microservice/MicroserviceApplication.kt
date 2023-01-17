@@ -15,7 +15,6 @@ import java.io.IOException
 class MicroserviceApplication
 
 fun firebaseMessaging(): FirebaseMessaging {
-
 	val serviceAccount = FileInputStream(Urls.urlSourceFirebaseCredential)
 
 	try {
@@ -28,10 +27,9 @@ fun firebaseMessaging(): FirebaseMessaging {
 			return FirebaseMessaging.getInstance(app)
 		}
 
-	}catch (_: IOException){}
+	}catch (_: IOException){  }
 	return FirebaseMessaging.getInstance()
 }
-
 
 fun main(args: Array<String>) {
 	runApplication<MicroserviceApplication>(*args)

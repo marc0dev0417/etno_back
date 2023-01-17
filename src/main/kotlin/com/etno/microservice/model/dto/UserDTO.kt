@@ -20,5 +20,7 @@ data class UserDTO(
 
     @JsonProperty("phones") val phones: MutableList<PhoneDTO> ? = mutableListOf(),
 
-    @JsonProperty("news") var news: MutableList<NewDTO> ? = mutableListOf()
+    @JsonProperty("news") var news: MutableList<NewDTO> ? = mutableListOf(),
+
+    @JsonProperty("incidents") var incidents: MutableList<IncidentDTO> ? = mutableListOf()
 )

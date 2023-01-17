@@ -1,31 +1,28 @@
 package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
-import com.etno.microservice.model.dto.mail.MailDetailsDTO
-import com.etno.microservice.model.dto.mail.MailDetailsSuccessDTO
+import com.etno.microservice.model.dto.IncidentDTO
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.multipart.MultipartFile
 
 @Controller
-interface MailControllerInterface {
+interface IncidenceControllerInterface {
     @ApiOperation(
-        value = "Send a Mail",
-        nickname = "sendMail",
-        notes = "Gonna send a simple mail",
-        tags = ["Mail"],
-        response = MailDetailsDTO::class
+        value = "Get all incidences",
+        nickname = "getIncidents",
+        notes = "Gonna see all incidents",
+        tags = ["Incident"]
     )
     @ApiResponses(
         value = [
-            ApiResponse(code = 201, message = "Mail", response = MailDetailsDTO::class),
+            ApiResponse(code = 201, message = "Incidence", response = IncidentDTO::class),
             ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
             ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
             ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
@@ -33,23 +30,21 @@ interface MailControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/sendMail"],
-        consumes = ["application/json"],
+        value = ["/incidents"],
         produces = ["application/json"],
-        method = [RequestMethod.POST]
+        method = [RequestMethod.GET]
     )
-    fun senMail(@RequestBody mailDetailsDTO: MailDetailsDTO): ResponseEntity<MailDetailsSuccessDTO>
+    fun getIncidences(): ResponseEntity<List<IncidentDTO>>
 
     @ApiOperation(
-        value = "Send a Mail with attachment",
-        nickname = "sendMailWithAttachment",
-        notes = "Gonna send a mail with attachment",
-        tags = ["Mail"],
-        response = MailDetailsDTO::class
+        value = "Get incidents by username, fcmToken and title",
+        nickname = "getIncidentsByUsernameAndFcmTokenAndTitle",
+        notes = "Gonna see all incidents by username, fcmToken and title",
+        tags = ["Incident"]
     )
     @ApiResponses(
         value = [
-            ApiResponse(code = 201, message = "Mail", response = MailDetailsDTO::class),
+            ApiResponse(code = 201, message = "Incidence", response = IncidentDTO::class),
             ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
             ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
             ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
@@ -57,15 +52,13 @@ interface MailControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/sendMail/attachment"],
+        value = ["/incidents/villager"],
         produces = ["application/json"],
-        params = ["address", "message", "subject"],
-        method = [RequestMethod.POST]
+        params = ["username", "fcmToken"],
+        method = [RequestMethod.GET]
     )
-    fun sendMailWithAttachment(
-        @RequestParam(name = "address", required = true) address: String,
-        @RequestParam(name = "message", required = true) message: String,
-        @RequestParam(name = "subject", required = true) subject: String,
-        @RequestParam(name = "attachment", required = true) attachment: MultipartFile,
-    ): ResponseEntity<MailDetailsSuccessDTO>
+    fun getIncidentsByUsernameAndFcmToken(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "fcmToken", required = true) fcmToken: String
+    ): ResponseEntity<List<IncidentDTO>>
 }

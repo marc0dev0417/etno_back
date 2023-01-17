@@ -19,7 +19,8 @@ class DataConverter {
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
                 phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
-                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList()
+                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList(),
+                incidents = user.incidents.let { it?.map { incident -> incidenceToDTO(incident) } }?.toMutableList()
             )
         }
 
@@ -33,7 +34,8 @@ class DataConverter {
                 tourism = userDTO.tourism.let { it?.map { tourismDTO -> tourismFromDTO(tourismDTO) } }?.toMutableList(),
                 deaths = userDTO.deaths.let { it?.map { deathDTO -> deathFromDTO(deathDTO) } }?.toMutableList(),
                 phones = userDTO.phones.let { it?.map { phoneDTO -> phoneFromDTO(phoneDTO) } }?.toMutableList(),
-                news = userDTO.news.let { it?.map { newDTO -> newFromDTO(newDTO) } }?.toMutableList()
+                news = userDTO.news.let { it?.map { newDTO -> newFromDTO(newDTO) } }?.toMutableList(),
+                incidents = userDTO.incidents.let { it?.map { incidentDTO -> incidenceFromDTO(incidentDTO) } }?.toMutableList()
             )
         }
 
@@ -334,6 +336,24 @@ class DataConverter {
                 publicationDate = newDTO.publicationDate,
                 description = newDTO.description,
                 imageUrl = newDTO.imageUrl
+            )
+        }
+        fun incidenceToDTO(incidence: Incident): IncidentDTO{
+            return IncidentDTO(
+                idIncidence = incidence.idIncidence,
+                username = incidence.username,
+                fcmToken = incidence.fcmToken,
+                title = incidence.title,
+                description = incidence.description
+            )
+        }
+        fun incidenceFromDTO(incidentDTO: IncidentDTO): Incident{
+            return Incident(
+                idIncidence = incidentDTO.idIncidence,
+                username = incidentDTO.username,
+                fcmToken = incidentDTO.fcmToken,
+                title = incidentDTO.title,
+                description = incidentDTO.description
             )
         }
     }

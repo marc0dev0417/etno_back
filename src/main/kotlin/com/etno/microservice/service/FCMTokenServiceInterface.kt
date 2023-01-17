@@ -9,5 +9,4 @@ interface FCMTokenServiceInterface {
     fun getFCMTokens(): List<FCMTokenDTO>?
     fun saveFCMToken(fcmTokenDTO: FCMTokenDTO): FCMTokenDTO?
 
-
 }

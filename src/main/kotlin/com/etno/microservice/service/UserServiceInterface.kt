@@ -53,4 +53,7 @@ interface UserServiceInterface {
     fun deleteNewInUser(username: String, title: String): UserDTO?
     fun addImageToNewInUser(username: String, title: String, imageName: String): UserDTO?
     fun deleteImageToNewInUser(username: String, title: String, imageName: String): UserDTO?
+
+    //User incidents -> ---------------------------------------------------------------------
+    fun addIncidentInUser(username: String, incidentDTO: IncidentDTO): UserDTO?
 }
