@@ -1,13 +1,11 @@
 package com.etno.microservice.service.implementation
 
-import com.etno.microservice.model.SubscriptionUser
 import com.etno.microservice.model.dto.*
 import com.etno.microservice.repository.*
 import com.etno.microservice.security.JwtTokenUtil
 import com.etno.microservice.service.UserServiceInterface
 import com.etno.microservice.service.implementation.jwt.JwtUserDetailsService
 import com.etno.microservice.util.DataConverter
-import com.etno.microservice.util.Urls
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -17,7 +15,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import java.text.DateFormat
 import java.util.*
 
@@ -32,6 +29,7 @@ class UserService(
     private val deathRepository: DeathRepository,
     private val phoneRepository: PhoneRepository,
     private val newRepository: NewRepository,
+    private val incidentRepository: IncidenceRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -538,5 +536,26 @@ class UserService(
         val itemUserSaved = userRepository.save(itemUser!!)
         imageRepository.delete(itemImage!!)
         return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun addIncidentInUser(username: String, incidentDTO: IncidentDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+        val itemIncident = incidentRepository.findIncidentByUsernameAndTitle(username, incidentDTO.title!!)
+
+        if(itemIncident == null){
+            incidentDTO.idIncidence = UUID.randomUUID()
+            incidentDTO.username = username
+            itemUser?.incidents?.add(DataConverter.incidenceFromDTO(incidentDTO))
+            itemUser = userRepository.save(itemUser!!)
+        }else{
+            val checkIfExistIncident = itemUser?.incidents?.find { it.title == incidentDTO.title && it.fcmToken == incidentDTO.fcmToken }
+            if(checkIfExistIncident == null){
+                incidentDTO.idIncidence = UUID.randomUUID()
+                incidentDTO.username = username
+                itemUser?.incidents?.add(DataConverter.incidenceFromDTO(incidentDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
     }
 }

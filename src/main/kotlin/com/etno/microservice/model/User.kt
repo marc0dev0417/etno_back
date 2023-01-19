@@ -33,5 +33,8 @@ data class User(
     var phones: MutableList<Phone> ? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var news: MutableList<New> ? = mutableListOf()
+    var news: MutableList<New> ? = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var incidents: MutableList<Incident> ? = mutableListOf()
 )

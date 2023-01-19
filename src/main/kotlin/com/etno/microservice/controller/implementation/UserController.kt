@@ -146,4 +146,8 @@ class UserController(
     override fun deleteImageToNewInUser(username: String, title: String, imageName: String): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.deleteImageToNewInUser(username, title, imageName))
     }
+
+    override fun addIncidentInUser(username: String, incidentDTO: IncidentDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addIncidentInUser(username, incidentDTO))
+    }
 }

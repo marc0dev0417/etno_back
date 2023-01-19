@@ -1,8 +1,7 @@
 package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
-import com.etno.microservice.model.dto.mail.MailDetailsDTO
-import com.etno.microservice.model.dto.mail.MailDetailsSuccessDTO
+import com.etno.microservice.model.dto.BandoDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -11,21 +10,19 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.multipart.MultipartFile
 
 @Controller
-interface MailControllerInterface {
+interface BandoControllerInterface {
     @ApiOperation(
-        value = "Send a Mail",
-        nickname = "sendMail",
-        notes = "Gonna send a simple mail",
-        tags = ["Mail"],
-        response = MailDetailsDTO::class
+        value = "Get all bandos",
+        nickname = "getBandos",
+        notes = "Will show all bandos",
+        tags = ["Bando"],
+        response = BandoDTO::class
     )
     @ApiResponses(
         value = [
-            ApiResponse(code = 201, message = "Mail", response = MailDetailsDTO::class),
+            ApiResponse(code = 201, message = "Bando", response = BandoDTO::class),
             ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
             ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
             ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
@@ -33,39 +30,35 @@ interface MailControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/sendMail"],
+        value = ["/bandos"],
+        produces = ["application/json"],
+        method = [RequestMethod.GET]
+    )
+    fun getBandos(): ResponseEntity<List<BandoDTO>>
+
+    @ApiOperation(
+        value = "Save a Bando",
+        nickname = "saveBando",
+        notes = "Gonna save a bando",
+        tags = ["Bando"],
+        response = BandoDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Bando", response = BandoDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/bandos"],
         consumes = ["application/json"],
         produces = ["application/json"],
         method = [RequestMethod.POST]
     )
-    fun senMail(@RequestBody mailDetailsDTO: MailDetailsDTO): ResponseEntity<MailDetailsSuccessDTO>
-
-    @ApiOperation(
-        value = "Send a Mail with attachment",
-        nickname = "sendMailWithAttachment",
-        notes = "Gonna send a mail with attachment",
-        tags = ["Mail"],
-        response = MailDetailsDTO::class
-    )
-    @ApiResponses(
-        value = [
-            ApiResponse(code = 201, message = "Mail", response = MailDetailsDTO::class),
-            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
-            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
-            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
-            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
-        ]
-    )
-    @RequestMapping(
-        value = ["/sendMail/attachment"],
-        produces = ["application/json"],
-        params = ["address", "message", "subject"],
-        method = [RequestMethod.POST]
-    )
-    fun sendMailWithAttachment(
-        @RequestParam(name = "address", required = true) address: String,
-        @RequestParam(name = "message", required = true) message: String,
-        @RequestParam(name = "subject", required = true) subject: String,
-        @RequestParam(name = "attachment", required = true) attachment: MultipartFile,
-    ): ResponseEntity<MailDetailsSuccessDTO>
+    fun saveBando(
+        @RequestBody bandoDTO: BandoDTO
+    ): ResponseEntity<BandoDTO>
 }

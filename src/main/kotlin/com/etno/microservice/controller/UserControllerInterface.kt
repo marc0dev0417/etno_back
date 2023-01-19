@@ -776,4 +776,33 @@ interface UserControllerInterface {
         @RequestParam(name = "title", required = true) title: String,
         @RequestParam(name = "image", required = true) imageName: String
     ): ResponseEntity<UserDTO>
+
+    // -> --------------------------------------------------------------------------------------------------------------
+    @ApiOperation(
+        value = "add incident in User",
+        nickname = "addIncidentInUser",
+        notes = "You gonna add incident in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/incident"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        method = [RequestMethod.POST],
+        params = ["username"]
+    )
+    fun addIncidentInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody incidentDTO: IncidentDTO
+    ): ResponseEntity<UserDTO>
 }

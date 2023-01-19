@@ -1,12 +1,10 @@
 package com.etno.microservice.service.implementation.firebase
 
-import com.etno.microservice.firebaseMessaging
 import com.etno.microservice.model.dto.firebase.NoteDTO
 import com.etno.microservice.model.dto.firebase.NotificationDTO
 import com.etno.microservice.repository.FCMTokenRepository
 import com.etno.microservice.service.FirebaseMessageServiceInterface
-import com.google.firebase.messaging.ApnsConfig
-import com.google.firebase.messaging.FcmOptions
+import com.etno.microservice.util.firebaseMessaging
 import com.google.firebase.messaging.MulticastMessage
 import com.google.firebase.messaging.Notification
 import org.springframework.stereotype.Service
