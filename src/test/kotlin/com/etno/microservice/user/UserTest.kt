@@ -29,8 +29,7 @@ class UserTest {
         val userDTO = UserDTO(
             null,
             "ecomputer",
-            "12345",
-            "super")
+            "12345")
 
         val objectUser:String = gson.toJson(userDTO, UserDTO::class.java)
 

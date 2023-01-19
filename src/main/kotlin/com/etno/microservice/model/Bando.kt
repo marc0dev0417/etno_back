@@ -1,0 +1,25 @@
+package com.etno.microservice.model
+
+import org.hibernate.annotations.Type
+import java.util.UUID
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.Table
+
+@Entity
+@Table(name = "bandos")
+data class Bando(
+    @Id
+    @Type(type = "uuid-char")
+    var idBando: UUID ? = UUID.randomUUID(),
+
+    @Column(name = "title")
+    var title: String ? = null,
+
+    @Column(name = "description")
+    var description: String ? = null,
+
+    @Column(name = "emitDate")
+    var emitDate: String ? = null
+)

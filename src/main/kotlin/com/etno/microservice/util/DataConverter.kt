@@ -356,5 +356,23 @@ class DataConverter {
                 description = incidentDTO.description
             )
         }
+
+        fun bandoToDTO(bando: Bando): BandoDTO{
+            return BandoDTO(
+                idBando =  bando.idBando,
+                title = bando.title,
+                description = bando.description,
+                emitDate = bando.emitDate
+            )
+        }
+        fun bandoFromDTO(bandoDTO: BandoDTO): Bando{
+            return Bando(
+                idBando = bandoDTO.idBando,
+                title = bandoDTO.title,
+                description = bandoDTO.description,
+                emitDate = bandoDTO.emitDate
+            )
+        }
+
     }
 }
