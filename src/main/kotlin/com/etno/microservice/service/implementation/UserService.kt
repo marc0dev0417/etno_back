@@ -6,6 +6,7 @@ import com.etno.microservice.security.JwtTokenUtil
 import com.etno.microservice.service.UserServiceInterface
 import com.etno.microservice.service.implementation.jwt.JwtUserDetailsService
 import com.etno.microservice.util.DataConverter
+import com.etno.microservice.util.Urls
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 import java.text.DateFormat
 import java.util.*
 
@@ -29,6 +31,8 @@ class UserService(
     private val deathRepository: DeathRepository,
     private val phoneRepository: PhoneRepository,
     private val newRepository: NewRepository,
+    private val bandoRepository: BandoRepository,
+    private val fcmTokenRepository: FCMTokenRepository,
     private val incidentRepository: IncidenceRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
@@ -554,6 +558,50 @@ class UserService(
                 incidentDTO.username = username
                 itemUser?.incidents?.add(DataConverter.incidenceFromDTO(incidentDTO))
                 itemUser = userRepository.save(itemUser!!)
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun addBandosInUser(username: String, bandoDTO: BandoDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+
+        when(bandoRepository.findBandoByUsernameAndTitle(username, bandoDTO.title!!)){
+            null -> {
+                bandoDTO.idBando = UUID.randomUUID()
+                bandoDTO.username = username
+                itemUser?.bandos?.add(DataConverter.bandoFromDTO(bandoDTO))
+                itemUser = userRepository.save(itemUser!!)
+
+                if (fcmTokenRepository.findAll().any { it.username == username }){
+                    val restTemplate = RestTemplate()
+                    val map: Map<String, String> = mapOf(
+                        "subject" to "Publicación de Bando",
+                        "content" to "Bando: ${bandoDTO.title}",
+                        "username" to "${itemUser.username}")
+
+                    val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
+                }
+
+            }
+            else -> {
+                val checkIfExistBando = itemUser?.bandos?.find { it.title == bandoDTO.title }
+                if (checkIfExistBando == null){
+                    bandoDTO.idBando = UUID.randomUUID()
+                    bandoDTO.username = username
+                    itemUser?.bandos?.add(DataConverter.bandoFromDTO(bandoDTO))
+                    itemUser = userRepository.save(itemUser!!)
+
+                    if (fcmTokenRepository.findAll().any { it.username == username }){
+                        val restTemplate = RestTemplate()
+                        val map: Map<String, String> = mapOf(
+                            "subject" to "Publicación de Bando",
+                            "content" to "Bando: ${bandoDTO.title}",
+                            "username" to "${itemUser.username}")
+
+                        val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
+                    }
+                }
             }
         }
         return DataConverter.userToDTO(itemUser!!)

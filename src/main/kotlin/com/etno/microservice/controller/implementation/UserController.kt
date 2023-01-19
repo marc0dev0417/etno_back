@@ -150,4 +150,8 @@ class UserController(
     override fun addIncidentInUser(username: String, incidentDTO: IncidentDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addIncidentInUser(username, incidentDTO))
     }
+
+    override fun addBandoInUser(username: String, bandoDTO: BandoDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addBandosInUser(username, bandoDTO))
+    }
 }

@@ -51,6 +51,8 @@ class SecurityConfig() {
             "/swagger-ui.html",
             "/v2/api-docs",
             "/webjars/**",
+            "/bandos/**",
+            "/links/**",
             "/sendMail/**",
             "/FCMTokens/**",
             "/events/**",

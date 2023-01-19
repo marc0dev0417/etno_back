@@ -17,4 +17,12 @@ class BandoController(
     override fun saveBando(bandoDTO: BandoDTO): ResponseEntity<BandoDTO> {
         return ResponseEntity.ok().body(bandoService.saveBando(bandoDTO))
     }
+
+    override fun getBandosByUsername(username: String): ResponseEntity<List<BandoDTO>> {
+        return ResponseEntity.ok().body(bandoService.getBandosByUsername(username))
+    }
+
+    override fun getBandoByUsername(username: String, title: String): ResponseEntity<BandoDTO> {
+        return ResponseEntity.ok().body(bandoService.getBandoByUsernameAndTitle(username, title))
+    }
 }

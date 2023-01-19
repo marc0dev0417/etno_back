@@ -20,7 +20,8 @@ class DataConverter {
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
                 phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
                 news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList(),
-                incidents = user.incidents.let { it?.map { incident -> incidenceToDTO(incident) } }?.toMutableList()
+                incidents = user.incidents.let { it?.map { incident -> incidenceToDTO(incident) } }?.toMutableList(),
+                bandos = user.bandos.let { it?.map { bando: Bando -> bandoToDTO(bando) } }?.toMutableList()
             )
         }
 
@@ -35,7 +36,8 @@ class DataConverter {
                 deaths = userDTO.deaths.let { it?.map { deathDTO -> deathFromDTO(deathDTO) } }?.toMutableList(),
                 phones = userDTO.phones.let { it?.map { phoneDTO -> phoneFromDTO(phoneDTO) } }?.toMutableList(),
                 news = userDTO.news.let { it?.map { newDTO -> newFromDTO(newDTO) } }?.toMutableList(),
-                incidents = userDTO.incidents.let { it?.map { incidentDTO -> incidenceFromDTO(incidentDTO) } }?.toMutableList()
+                incidents = userDTO.incidents.let { it?.map { incidentDTO -> incidenceFromDTO(incidentDTO) } }?.toMutableList(),
+                bandos = userDTO.bandos.let { it?.map { bandoDTO -> bandoFromDTO(bandoDTO) } }?.toMutableList()
             )
         }
 
@@ -360,6 +362,7 @@ class DataConverter {
         fun bandoToDTO(bando: Bando): BandoDTO{
             return BandoDTO(
                 idBando =  bando.idBando,
+                username = bando.username,
                 title = bando.title,
                 description = bando.description,
                 emitDate = bando.emitDate
@@ -368,11 +371,25 @@ class DataConverter {
         fun bandoFromDTO(bandoDTO: BandoDTO): Bando{
             return Bando(
                 idBando = bandoDTO.idBando,
+                username = bandoDTO.username,
                 title = bandoDTO.title,
                 description = bandoDTO.description,
                 emitDate = bandoDTO.emitDate
             )
         }
-
+        fun linkToDTO(link: Link): LinkDTO{
+            return LinkDTO(
+                idLink = link.idLink,
+                name = link.name,
+                url = link.url
+            )
+        }
+        fun linkFromDTO(linkDTO: LinkDTO): Link{
+            return Link(
+                idLink = linkDTO.idLink,
+                name = linkDTO.name,
+                url = linkDTO.url
+            )
+        }
     }
 }

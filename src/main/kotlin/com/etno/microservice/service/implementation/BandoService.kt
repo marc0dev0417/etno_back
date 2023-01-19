@@ -20,4 +20,12 @@ class BandoService(
         val bandoItemToSaved = bandoRepository.save(bandoItem)
         return DataConverter.bandoToDTO(bandoItemToSaved)
     }
+
+    override fun getBandosByUsername(username: String): List<BandoDTO> {
+        return bandoRepository.findBandosByUsername(username)!!.map { DataConverter.bandoToDTO(it) }
+    }
+
+    override fun getBandoByUsernameAndTitle(username: String, title: String): BandoDTO? {
+        return DataConverter.bandoToDTO(bandoRepository.findBandoByUsernameAndTitle(username, title)!!)
+    }
 }

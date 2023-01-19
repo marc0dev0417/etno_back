@@ -14,6 +14,9 @@ data class Bando(
     @Type(type = "uuid-char")
     var idBando: UUID ? = UUID.randomUUID(),
 
+    @Column(name = "username")
+    var username: String ? = null,
+
     @Column(name = "title")
     var title: String ? = null,
 
