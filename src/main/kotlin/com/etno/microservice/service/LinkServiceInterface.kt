@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service
 interface LinkServiceInterface {
     fun getLinks(): List<LinkDTO>?
     fun saveLink(linkDTO: LinkDTO): LinkDTO?
+    fun findLinksByUsername(username: String): List<LinkDTO>?
 }

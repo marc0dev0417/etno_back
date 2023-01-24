@@ -59,4 +59,10 @@ interface UserServiceInterface {
 
     //User bandos -> ------------------------------------------------------------------------
     fun addBandosInUser(username: String, bandoDTO: BandoDTO): UserDTO?
+
+    //User links -> -------------------------------------------------------------------------
+    fun addLinkInUser(username: String, linkDTO: LinkDTO): UserDTO?
+
+    //User sponsors -> ----------------------------------------------------------------------
+    fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): UserDTO?
 }

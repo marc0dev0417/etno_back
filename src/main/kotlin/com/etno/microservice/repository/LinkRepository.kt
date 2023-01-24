@@ -7,5 +7,6 @@ import java.util.UUID
 
 @Repository
 interface LinkRepository: JpaRepository<Link, UUID> {
-
+    fun findLinksByUsername(username: String): List<Link>?
+    fun findLinkByUsernameAndTitle(username: String, title: String): Link?
 }

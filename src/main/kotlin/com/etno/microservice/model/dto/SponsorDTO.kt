@@ -1,11 +1,10 @@
 package com.etno.microservice.model.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Date
 import java.util.UUID
 
-data class BandoDTO(
-    @JsonProperty("idBando") var idBando: UUID ? = null,
+data class SponsorDTO(
+    @JsonProperty("idSponsor") var idSponsor: UUID? = null,
 
     @JsonProperty("username") var username: String ? = null,
 
@@ -13,7 +12,7 @@ data class BandoDTO(
 
     @JsonProperty("description") var description: String ? = null,
 
-    @JsonProperty("issuedDate") var issuedDate: String ? = null,
+    @JsonProperty("phone") var phone: String ? = null,
 
-    @JsonProperty("imageUrl") var imageUrl: String ? = null
+    @JsonProperty("urlImage") var urlImage: String ? = null
 )

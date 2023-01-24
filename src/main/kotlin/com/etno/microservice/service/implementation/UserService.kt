@@ -34,6 +34,8 @@ class UserService(
     private val bandoRepository: BandoRepository,
     private val fcmTokenRepository: FCMTokenRepository,
     private val incidentRepository: IncidenceRepository,
+    private val linkRepository: LinkRepository,
+    private val sponsorRepository: SponsorRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -576,6 +578,7 @@ class UserService(
                 if (fcmTokenRepository.findAll().any { it.username == username }){
                     val restTemplate = RestTemplate()
                     val map: Map<String, String> = mapOf(
+                        "image" to "${bandoDTO.imageUrl}",
                         "subject" to "Publicación de Bando",
                         "content" to "Bando: ${bandoDTO.title}",
                         "username" to "${itemUser.username}")
@@ -595,12 +598,59 @@ class UserService(
                     if (fcmTokenRepository.findAll().any { it.username == username }){
                         val restTemplate = RestTemplate()
                         val map: Map<String, String> = mapOf(
+                            "image" to "${bandoDTO.imageUrl}",
                             "subject" to "Publicación de Bando",
                             "content" to "Bando: ${bandoDTO.title}",
                             "username" to "${itemUser.username}")
 
                         val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
                     }
+                }
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun addLinkInUser(username: String, linkDTO: LinkDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+
+        when(linkRepository.findLinkByUsernameAndTitle(username = username, title = linkDTO.title!!)){
+            null -> {
+                linkDTO.idLink = UUID.randomUUID()
+                linkDTO.username = username
+                itemUser?.links?.add(DataConverter.linkFromDTO(linkDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+            else -> {
+                val checkIfExistLink = itemUser?.links?.find { it.title == linkDTO.title }
+                if (checkIfExistLink == null){
+                    linkDTO.idLink = UUID.randomUUID()
+                    linkDTO.username = username
+                    itemUser?.links?.add(DataConverter.linkFromDTO(linkDTO))
+                    itemUser = userRepository.save(itemUser!!)
+                }
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+
+        when(sponsorRepository.findSponsorByUsernameAndTitle(username, sponsorDTO.title!!)){
+            null -> {
+                sponsorDTO.idSponsor = UUID.randomUUID()
+                sponsorDTO.username = username
+                itemUser?.sponsors?.add(DataConverter.sponsorFromDTO(sponsorDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+            else -> {
+                val checkIfExistSponsor = itemUser?.sponsors?.find { it.title == sponsorDTO.title }
+                if (checkIfExistSponsor == null){
+                    sponsorDTO.idSponsor = UUID.randomUUID()
+                    sponsorDTO.username = username
+                    itemUser?.sponsors?.add(DataConverter.sponsorFromDTO(sponsorDTO))
+                    itemUser = userRepository.save(itemUser!!)
                 }
             }
         }

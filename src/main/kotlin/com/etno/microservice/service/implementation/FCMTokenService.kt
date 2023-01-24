@@ -1,11 +1,8 @@
 package com.etno.microservice.service.implementation
 
-import com.etno.microservice.model.SubscriptionUser
 import com.etno.microservice.model.dto.FCMTokenDTO
-import com.etno.microservice.model.dto.SectionDTO
 import com.etno.microservice.repository.EventRepository
 import com.etno.microservice.repository.FCMTokenRepository
-import com.etno.microservice.repository.SubscriptionUserRepository
 import com.etno.microservice.service.FCMTokenServiceInterface
 import com.etno.microservice.util.DataConverter
 import org.springframework.stereotype.Service
@@ -14,7 +11,6 @@ import java.util.*
 @Service
 class FCMTokenService(
     private val fcmTokenRepository: FCMTokenRepository,
-    private val subscriptionUserRepository: SubscriptionUserRepository,
     private val eventUserRepository: EventRepository
 ): FCMTokenServiceInterface {
     override fun getFCMTokens(): List<FCMTokenDTO>? {

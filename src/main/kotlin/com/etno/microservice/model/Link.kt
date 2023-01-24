@@ -14,9 +14,12 @@ data class Link(
     @Type(type = "uuid-char")
     var idLink: UUID? = null,
 
-    @Column(name = "name")
-    var name: String ? = null,
+    @Column(name = "username")
+    var username: String ? = null,
 
-    @Column(name = "url")
+    @Column(name = "title", nullable = false)
+    var title: String ? = null,
+
+    @Column(name = "url", nullable = false)
     var url: String ? = null
 )

@@ -20,4 +20,8 @@ class LinkService(
         val itemSaved = linkRepository.save(linkItem)
         return DataConverter.linkToDTO(itemSaved)
     }
+
+    override fun findLinksByUsername(username: String): List<LinkDTO>? {
+        return linkRepository.findLinksByUsername(username)?.map { DataConverter.linkToDTO(it) }
+    }
 }

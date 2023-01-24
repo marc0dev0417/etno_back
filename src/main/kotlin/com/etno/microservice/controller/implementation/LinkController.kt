@@ -14,6 +14,10 @@ class LinkController(
         return ResponseEntity.ok().body(linkService.getLinks())
     }
 
+    override fun findLinksByUsername(username: String): ResponseEntity<List<LinkDTO>> {
+        return ResponseEntity.ok().body(linkService.findLinksByUsername(username))
+    }
+
     override fun saveLink(linkDTO: LinkDTO): ResponseEntity<LinkDTO> {
         return ResponseEntity.ok().body(linkService.saveLink(linkDTO))
     }

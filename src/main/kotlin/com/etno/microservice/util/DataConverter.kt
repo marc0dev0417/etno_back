@@ -21,7 +21,9 @@ class DataConverter {
                 phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
                 news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList(),
                 incidents = user.incidents.let { it?.map { incident -> incidenceToDTO(incident) } }?.toMutableList(),
-                bandos = user.bandos.let { it?.map { bando: Bando -> bandoToDTO(bando) } }?.toMutableList()
+                bandos = user.bandos.let { it?.map { bando: Bando -> bandoToDTO(bando) } }?.toMutableList(),
+                links = user.links.let { it?.map { link -> linkToDTO(link) } }?.toMutableList(),
+                sponsors = user.sponsors.let { it?.map { sponsor -> sponsorToDTO(sponsor) } }?.toMutableList()
             )
         }
 
@@ -37,7 +39,9 @@ class DataConverter {
                 phones = userDTO.phones.let { it?.map { phoneDTO -> phoneFromDTO(phoneDTO) } }?.toMutableList(),
                 news = userDTO.news.let { it?.map { newDTO -> newFromDTO(newDTO) } }?.toMutableList(),
                 incidents = userDTO.incidents.let { it?.map { incidentDTO -> incidenceFromDTO(incidentDTO) } }?.toMutableList(),
-                bandos = userDTO.bandos.let { it?.map { bandoDTO -> bandoFromDTO(bandoDTO) } }?.toMutableList()
+                bandos = userDTO.bandos.let { it?.map { bandoDTO -> bandoFromDTO(bandoDTO) } }?.toMutableList(),
+                links = userDTO.links.let { it?.map { linkDTO -> linkFromDTO(linkDTO) } }?.toMutableList(),
+                sponsors = userDTO.sponsors.let { it?.map { sponsorDTO -> sponsorFromDTO(sponsorDTO) } }?.toMutableList()
             )
         }
 
@@ -360,12 +364,15 @@ class DataConverter {
         }
 
         fun bandoToDTO(bando: Bando): BandoDTO{
+            val localTimeToFormat = LocalDateTime.ofInstant(bando.issuedDate?.toInstant(), ZoneId.systemDefault())
+            val formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM")
             return BandoDTO(
                 idBando =  bando.idBando,
                 username = bando.username,
                 title = bando.title,
                 description = bando.description,
-                emitDate = bando.emitDate
+                issuedDate = localTimeToFormat.format(formatter),
+                imageUrl = bando.imageUrl
             )
         }
         fun bandoFromDTO(bandoDTO: BandoDTO): Bando{
@@ -374,21 +381,45 @@ class DataConverter {
                 username = bandoDTO.username,
                 title = bandoDTO.title,
                 description = bandoDTO.description,
-                emitDate = bandoDTO.emitDate
+                issuedDate = Date(),
+                imageUrl = bandoDTO.imageUrl
             )
         }
         fun linkToDTO(link: Link): LinkDTO{
             return LinkDTO(
                 idLink = link.idLink,
-                name = link.name,
+                username = link.username,
+                title = link.title,
                 url = link.url
             )
         }
         fun linkFromDTO(linkDTO: LinkDTO): Link{
             return Link(
                 idLink = linkDTO.idLink,
-                name = linkDTO.name,
+                username = linkDTO.username,
+                title = linkDTO.title,
                 url = linkDTO.url
+            )
+        }
+
+        fun sponsorToDTO(sponsor: Sponsor): SponsorDTO{
+            return SponsorDTO(
+                idSponsor = sponsor.idSponsor,
+                username = sponsor.username,
+                title = sponsor.title,
+                description = sponsor.description,
+                phone = sponsor.phone,
+                urlImage = sponsor.urlImage
+            )
+        }
+        fun sponsorFromDTO(sponsorDTO: SponsorDTO): Sponsor{
+            return Sponsor(
+                idSponsor = sponsorDTO.idSponsor,
+                username = sponsorDTO.username,
+                title = sponsorDTO.title,
+                description = sponsorDTO.description,
+                phone = sponsorDTO.phone,
+                urlImage = sponsorDTO.urlImage
             )
         }
     }
