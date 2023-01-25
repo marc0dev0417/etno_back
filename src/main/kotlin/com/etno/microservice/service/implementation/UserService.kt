@@ -36,6 +36,7 @@ class UserService(
     private val incidentRepository: IncidenceRepository,
     private val linkRepository: LinkRepository,
     private val sponsorRepository: SponsorRepository,
+    private val adRepository: AdRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -650,6 +651,29 @@ class UserService(
                     sponsorDTO.idSponsor = UUID.randomUUID()
                     sponsorDTO.username = username
                     itemUser?.sponsors?.add(DataConverter.sponsorFromDTO(sponsorDTO))
+                    itemUser = userRepository.save(itemUser!!)
+                }
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun addAdInUser(username: String, adDTO: AdDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+
+        when(adRepository.findAdByUsernameAndTitle(username, adDTO.title!!)){
+            null -> {
+                adDTO.idAd = UUID.randomUUID()
+                adDTO.username = username
+                itemUser?.ads?.add(DataConverter.adFromDTO(adDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+            else -> {
+                val checkIfExistAd = itemUser?.ads?.find { it.title == adDTO.title }
+                if (checkIfExistAd == null){
+                    adDTO.idAd = UUID.randomUUID()
+                    adDTO.username = username
+                    itemUser?.ads?.add(DataConverter.adFromDTO(adDTO))
                     itemUser = userRepository.save(itemUser!!)
                 }
             }

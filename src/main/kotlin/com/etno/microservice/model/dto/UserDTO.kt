@@ -28,5 +28,7 @@ data class UserDTO(
 
     @JsonProperty("links") var links: MutableList<LinkDTO> ? = mutableListOf(),
 
-    @JsonProperty("sponsors") var sponsors: MutableList<SponsorDTO> ? = mutableListOf()
+    @JsonProperty("sponsors") var sponsors: MutableList<SponsorDTO> ? = mutableListOf(),
+
+    @JsonProperty("ads") var ads: MutableList<AdDTO> ? = mutableListOf()
 )

@@ -45,5 +45,8 @@ data class User(
     var links: MutableList<Link> ? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var sponsors: MutableList<Sponsor> ? = mutableListOf()
+    var sponsors: MutableList<Sponsor> ? = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var ads: MutableList<Ad> ? = mutableListOf()
 )

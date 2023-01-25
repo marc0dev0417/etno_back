@@ -162,4 +162,8 @@ class UserController(
     override fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addSponsorInUser(username, sponsorDTO))
     }
+
+    override fun addAdInUser(username: String, adDTO: AdDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addAdInUser(username, adDTO))
+    }
 }

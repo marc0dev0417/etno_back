@@ -53,6 +53,7 @@ class SecurityConfig() {
             "/webjars/**",
             "/bandos/**",
             "/links/**",
+            "/ads/**",
             "/sponsors/**",
             "/sendMail/**",
             "/FCMTokens/**",

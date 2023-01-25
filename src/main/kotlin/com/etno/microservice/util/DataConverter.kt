@@ -23,7 +23,8 @@ class DataConverter {
                 incidents = user.incidents.let { it?.map { incident -> incidenceToDTO(incident) } }?.toMutableList(),
                 bandos = user.bandos.let { it?.map { bando: Bando -> bandoToDTO(bando) } }?.toMutableList(),
                 links = user.links.let { it?.map { link -> linkToDTO(link) } }?.toMutableList(),
-                sponsors = user.sponsors.let { it?.map { sponsor -> sponsorToDTO(sponsor) } }?.toMutableList()
+                sponsors = user.sponsors.let { it?.map { sponsor -> sponsorToDTO(sponsor) } }?.toMutableList(),
+                ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList()
             )
         }
 
@@ -41,7 +42,8 @@ class DataConverter {
                 incidents = userDTO.incidents.let { it?.map { incidentDTO -> incidenceFromDTO(incidentDTO) } }?.toMutableList(),
                 bandos = userDTO.bandos.let { it?.map { bandoDTO -> bandoFromDTO(bandoDTO) } }?.toMutableList(),
                 links = userDTO.links.let { it?.map { linkDTO -> linkFromDTO(linkDTO) } }?.toMutableList(),
-                sponsors = userDTO.sponsors.let { it?.map { sponsorDTO -> sponsorFromDTO(sponsorDTO) } }?.toMutableList()
+                sponsors = userDTO.sponsors.let { it?.map { sponsorDTO -> sponsorFromDTO(sponsorDTO) } }?.toMutableList(),
+                ads = userDTO.ads.let { it?.map { adDTO -> adFromDTO(adDTO) } }?.toMutableList()
             )
         }
 
@@ -53,7 +55,8 @@ class DataConverter {
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
                 phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
-                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList()
+                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList(),
+                ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList()
             )
         }
 
@@ -420,6 +423,27 @@ class DataConverter {
                 description = sponsorDTO.description,
                 phone = sponsorDTO.phone,
                 urlImage = sponsorDTO.urlImage
+            )
+        }
+
+        fun adToDTO(ad: Ad): AdDTO{
+            return AdDTO(
+                idAd = ad.idAd,
+                username = ad.username,
+                title = ad.title,
+                description = ad.description,
+                imageUrl = ad.imageUrl,
+                webUrl = ad.webUrl
+            )
+        }
+        fun adFromDTO(adDTO: AdDTO): Ad{
+            return Ad(
+                idAd = adDTO.idAd,
+                username = adDTO.username,
+                title = adDTO.title,
+                description = adDTO.description,
+                imageUrl = adDTO.imageUrl,
+                webUrl = adDTO.webUrl
             )
         }
     }
