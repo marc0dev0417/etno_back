@@ -9,4 +9,5 @@ import java.util.*
 @Repository
 interface EventRepository: JpaRepository<Event, UUID> {
     fun findEventByTitleAndUsername(title: String, username: String): Event?
+    fun findEventsByUsername(username: String): List<Event>?
 }

@@ -4,14 +4,18 @@ import com.etno.microservice.controller.EventControllerInterface
 import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.service.implementation.EventService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RestController
-
 @RestController
 class EventController(
     private val eventService: EventService
 ): EventControllerInterface {
     override fun getEvents(): ResponseEntity<List<EventDTO>>? {
         return ResponseEntity.ok().body(eventService.getEvents())
+    }
+
+    override fun getEventsFindUsername(username: String): ResponseEntity<List<EventDTO>> {
+        return ResponseEntity.ok().body(eventService.findEventsByUsername(username))
     }
 
     override fun getEventByUsernameAndTitle(username: String, title: String): ResponseEntity<EventDTO> {

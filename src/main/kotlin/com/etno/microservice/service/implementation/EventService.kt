@@ -31,6 +31,10 @@ class EventService(
         return DataConverter.eventToDTO(eventRepository.findEventByTitleAndUsername(title, username)!!)
     }
 
+    override fun findEventsByUsername(username: String): List<EventDTO>? {
+        return eventRepository.findEventsByUsername(username)?.map { DataConverter.eventToDTO(it) }
+    }
+
     override fun saveEvents(eventDTO: EventDTO): EventDTO? {
         val eventItem = DataConverter.eventFromDTO(eventDTO)
         eventItem.idEvent = UUID.randomUUID()
