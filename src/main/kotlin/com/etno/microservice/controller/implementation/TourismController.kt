@@ -14,6 +14,10 @@ class TourismController(
         return ResponseEntity.ok().body(tourismService.getTourism())
     }
 
+    override fun getTourismByUsername(username: String): ResponseEntity<List<TourismDTO>> {
+        return ResponseEntity.ok().body(tourismService.getTourismByUsername(username))
+    }
+
     override fun saveTourism(tourismDTO: TourismDTO): ResponseEntity<TourismDTO>? {
         return ResponseEntity.ok().body(tourismService.saveTourism(tourismDTO))
     }

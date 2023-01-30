@@ -9,6 +9,14 @@ import java.util.*
 
 class DataConverter {
     companion object {
+
+        fun userLoginToDTO(user: User): UserLoginDTO{
+            return UserLoginDTO(
+                idUser = user.idUser,
+                username = user.username,
+                password = user.password
+            )
+        }
         fun userToDTO(user: User): UserDTO {
             return UserDTO(
                 idUser = user.idUser,

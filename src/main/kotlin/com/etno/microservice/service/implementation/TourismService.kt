@@ -23,6 +23,10 @@ class TourismService(
 
         return DataConverter.tourismToDTO(itemSaved)
     }
+
+    override fun getTourismByUsername(username: String): List<TourismDTO>? {
+        return tourismRepository.findTourismByUsername(username)?.map { DataConverter.tourismToDTO(it) }
+    }
     /*
     override fun addImageToTourism(title: String, imageName: String): TourismDTO? {
         val tourismItem = tourismRepository.findTourismByTitle(title)

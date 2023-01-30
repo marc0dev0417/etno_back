@@ -76,7 +76,7 @@ class UserService(
                 responseMap["token_expired"] = jwtTokenUtil.isTokenExpired(token).toString()
                 responseMap["expired_date"] =
                     dataFormatMedium.format(jwtTokenUtil.getExpirationDateFromToken(token)).toString()
-                responseMap["user"] = DataConverter.userToDTO(user!!)
+                responseMap["user"] = DataConverter.userLoginToDTO(user!!)
 
                 return ResponseEntity.ok(responseMap)
             } else {
@@ -350,12 +350,12 @@ class UserService(
     override fun deleteTourismInUser(username: String, title: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemTourism = tourismRepository.findTourismByTitleAndUsername(title, username)
-        val itemImageDelete = imageRepository.findImageByLink(itemTourism?.imageUrl!!)
+//        val itemImageDelete = imageRepository.findImageByLink(itemTourism?.imageUrl!!)
 
         itemUser?.tourism?.remove(itemTourism)
-        imageRepository.delete(itemImageDelete!!)
+       // imageRepository.delete(itemImageDelete!!)
         val itemUserSaved = userRepository.save(itemUser!!)
-        tourismRepository.delete(itemTourism)
+        tourismRepository.delete(itemTourism!!)
         return DataConverter.userToDTO(itemUserSaved)
     }
 
