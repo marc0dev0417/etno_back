@@ -38,6 +38,32 @@ interface PharmacyControllerInterface {
     fun getPharmacies(): ResponseEntity<List<PharmacyDTO>>
 
     @ApiOperation(
+        value = "Get all pharmacies by username",
+        nickname = "getPharmaciesByUsername",
+        notes = "Will prove all pharmacies by username",
+        tags = ["Pharmacy"],
+        response = PharmacyDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Pharmacy", response = PharmacyDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/pharmacies"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.GET]
+    )
+    fun getPharmaciesByUsername(
+        @RequestParam(name = "username", required = true) username: String
+    ): ResponseEntity<List<PharmacyDTO>>
+
+    @ApiOperation(
         value = "Save a pharmacy",
         nickname = "savePharmacy",
         notes = "Will save a pharmacy",

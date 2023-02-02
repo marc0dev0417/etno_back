@@ -16,6 +16,10 @@ class PharmacyController(
         return ResponseEntity.ok().body(pharmacyService.getPharmacies())
     }
 
+    override fun getPharmaciesByUsername(username: String): ResponseEntity<List<PharmacyDTO>> {
+        return ResponseEntity.ok().body(pharmacyService.getPharmaciesByUsername(username))
+    }
+
     override fun savePharmacy(@RequestBody pharmacyDTO: PharmacyDTO): ResponseEntity<PharmacyDTO> {
         return ResponseEntity.ok().body(pharmacyService.savePharmacy(pharmacyDTO))
     }

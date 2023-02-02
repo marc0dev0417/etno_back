@@ -91,7 +91,6 @@ class DataConverter {
                 lat = event.lat,
                 long = event.long,
                 images = event.images.let { event.images?.map { image -> imageToDTO(image) } }?.toMutableList(),
-                videos = event.videos.let { event.videos?.map { video -> videoToDTO(video) } }?.toMutableList(),
                 userSubscriptions = event.userSubscriptions.let { event.userSubscriptions?.map { subscriptionUser -> subscriptionUserToDTO(subscriptionUser) } }?.toMutableList()
             )
         }
@@ -116,7 +115,6 @@ class DataConverter {
                 lat = eventDTO.lat,
                 long = eventDTO.long,
                 images = eventDTO.images.let { eventDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList(),
-                videos = eventDTO.videos.let { eventDTO.videos?.map { videoDTO -> videoFromDTO(videoDTO) } }?.toMutableList(),
                 userSubscriptions = eventDTO.userSubscriptions.let { eventDTO.userSubscriptions?.map { subscriptionUserDTO -> subscriptionUserFromDTO(subscriptionUserDTO) }?.toMutableList()  }
             )
         }

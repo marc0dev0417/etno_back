@@ -22,7 +22,7 @@ data class PharmacyDTO(
 
     @JsonProperty("description") var description: String ? = null,
 
-    @JsonProperty("latitude") var longitude: String ? = null,
+    @JsonProperty("latitude") var longitude: Double ? = null,
 
-    @JsonProperty("longitude") var latitude: String ? = null
+    @JsonProperty("longitude") var latitude: Double ? = null
 )
