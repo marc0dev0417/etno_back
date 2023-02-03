@@ -27,8 +27,8 @@ data class Tourism(
     var imageUrl: String ? = null,
 
     @Column(name = "longitude")
-    var longitude: String? = null,
+    var longitude: Double? = null,
 
     @Column(name = "latitude")
-    var latitude: String? = null
+    var latitude: Double? = null
 )
