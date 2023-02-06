@@ -13,5 +13,5 @@ interface EventServiceInterface {
     fun deleteEventByTitleAndUsername(title: String, username: String): EventDTO?
     fun addImageToEvent(username: String, title: String, imageName: String): EventDTO?
     fun deleteImageToEvent(username: String, title: String, imageName: String): EventDTO?
-    fun getEventsPaginated(pageNum: Int, pageSize: Int): EventPageDTO?
+    fun getEventsPaginated(username: String, pageNum: Int, pageSize: Int): EventPageDTO?
 }

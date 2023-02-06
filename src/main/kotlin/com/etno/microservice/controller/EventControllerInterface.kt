@@ -57,12 +57,13 @@ interface EventControllerInterface {
     @RequestMapping(
         value = ["/events"],
         produces = ["application/json"],
-        params = ["pageNum", "elementSize"],
+        params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]
     )
     fun findEventsPaginated(
-        @RequestParam(name = "pageNum") pageNum: Int,
-        @RequestParam(name = "elementSize") elementSize: Int
+        @RequestParam(name = "username") username: String,
+        @RequestParam(defaultValue = "0", name = "pageNum") pageNum: Int,
+        @RequestParam(defaultValue = "0", name = "elementSize") elementSize: Int
     ): ResponseEntity<EventPageDTO>
 
     @ApiOperation(

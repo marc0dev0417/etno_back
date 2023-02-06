@@ -15,8 +15,8 @@ class EventController(
         return ResponseEntity.ok().body(eventService.getEvents())
     }
 
-    override fun findEventsPaginated(pageNum: Int, elementSize: Int): ResponseEntity<EventPageDTO> {
-        return ResponseEntity.ok().body(eventService.getEventsPaginated(pageNum, elementSize))
+    override fun findEventsPaginated(username: String, pageNum: Int, elementSize: Int): ResponseEntity<EventPageDTO> {
+        return ResponseEntity.ok().body(eventService.getEventsPaginated(username,pageNum, elementSize))
     }
 
     override fun getEventsFindUsername(username: String): ResponseEntity<List<EventDTO>> {
