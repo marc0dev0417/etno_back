@@ -9,6 +9,14 @@ import java.util.*
 
 class DataConverter {
     companion object {
+
+        fun userLoginToDTO(user: User): UserLoginDTO{
+            return UserLoginDTO(
+                idUser = user.idUser,
+                username = user.username,
+                password = user.password
+            )
+        }
         fun userToDTO(user: User): UserDTO {
             return UserDTO(
                 idUser = user.idUser,
@@ -20,7 +28,11 @@ class DataConverter {
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
                 phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
                 news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList(),
-                incidents = user.incidents.let { it?.map { incident -> incidenceToDTO(incident) } }?.toMutableList()
+                incidents = user.incidents.let { it?.map { incident -> incidenceToDTO(incident) } }?.toMutableList(),
+                bandos = user.bandos.let { it?.map { bando: Bando -> bandoToDTO(bando) } }?.toMutableList(),
+                links = user.links.let { it?.map { link -> linkToDTO(link) } }?.toMutableList(),
+                sponsors = user.sponsors.let { it?.map { sponsor -> sponsorToDTO(sponsor) } }?.toMutableList(),
+                ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList()
             )
         }
 
@@ -35,7 +47,11 @@ class DataConverter {
                 deaths = userDTO.deaths.let { it?.map { deathDTO -> deathFromDTO(deathDTO) } }?.toMutableList(),
                 phones = userDTO.phones.let { it?.map { phoneDTO -> phoneFromDTO(phoneDTO) } }?.toMutableList(),
                 news = userDTO.news.let { it?.map { newDTO -> newFromDTO(newDTO) } }?.toMutableList(),
-                incidents = userDTO.incidents.let { it?.map { incidentDTO -> incidenceFromDTO(incidentDTO) } }?.toMutableList()
+                incidents = userDTO.incidents.let { it?.map { incidentDTO -> incidenceFromDTO(incidentDTO) } }?.toMutableList(),
+                bandos = userDTO.bandos.let { it?.map { bandoDTO -> bandoFromDTO(bandoDTO) } }?.toMutableList(),
+                links = userDTO.links.let { it?.map { linkDTO -> linkFromDTO(linkDTO) } }?.toMutableList(),
+                sponsors = userDTO.sponsors.let { it?.map { sponsorDTO -> sponsorFromDTO(sponsorDTO) } }?.toMutableList(),
+                ads = userDTO.ads.let { it?.map { adDTO -> adFromDTO(adDTO) } }?.toMutableList()
             )
         }
 
@@ -47,7 +63,8 @@ class DataConverter {
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
                 phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
-                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList()
+                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList(),
+                ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList()
             )
         }
 
@@ -74,7 +91,6 @@ class DataConverter {
                 lat = event.lat,
                 long = event.long,
                 images = event.images.let { event.images?.map { image -> imageToDTO(image) } }?.toMutableList(),
-                videos = event.videos.let { event.videos?.map { video -> videoToDTO(video) } }?.toMutableList(),
                 userSubscriptions = event.userSubscriptions.let { event.userSubscriptions?.map { subscriptionUser -> subscriptionUserToDTO(subscriptionUser) } }?.toMutableList()
             )
         }
@@ -99,7 +115,6 @@ class DataConverter {
                 lat = eventDTO.lat,
                 long = eventDTO.long,
                 images = eventDTO.images.let { eventDTO.images?.map { imageDTO -> imageFromDTO(imageDTO) } }?.toMutableList(),
-                videos = eventDTO.videos.let { eventDTO.videos?.map { videoDTO -> videoFromDTO(videoDTO) } }?.toMutableList(),
                 userSubscriptions = eventDTO.userSubscriptions.let { eventDTO.userSubscriptions?.map { subscriptionUserDTO -> subscriptionUserFromDTO(subscriptionUserDTO) }?.toMutableList()  }
             )
         }
@@ -358,21 +373,84 @@ class DataConverter {
         }
 
         fun bandoToDTO(bando: Bando): BandoDTO{
+            val localTimeToFormat = LocalDateTime.ofInstant(bando.issuedDate?.toInstant(), ZoneId.systemDefault())
+            val formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM")
             return BandoDTO(
                 idBando =  bando.idBando,
+                username = bando.username,
                 title = bando.title,
                 description = bando.description,
-                emitDate = bando.emitDate
+                issuedDate = localTimeToFormat.format(formatter),
+                imageUrl = bando.imageUrl
             )
         }
         fun bandoFromDTO(bandoDTO: BandoDTO): Bando{
             return Bando(
                 idBando = bandoDTO.idBando,
+                username = bandoDTO.username,
                 title = bandoDTO.title,
                 description = bandoDTO.description,
-                emitDate = bandoDTO.emitDate
+                issuedDate = Date(),
+                imageUrl = bandoDTO.imageUrl
+            )
+        }
+        fun linkToDTO(link: Link): LinkDTO{
+            return LinkDTO(
+                idLink = link.idLink,
+                username = link.username,
+                title = link.title,
+                url = link.url
+            )
+        }
+        fun linkFromDTO(linkDTO: LinkDTO): Link{
+            return Link(
+                idLink = linkDTO.idLink,
+                username = linkDTO.username,
+                title = linkDTO.title,
+                url = linkDTO.url
             )
         }
 
+        fun sponsorToDTO(sponsor: Sponsor): SponsorDTO{
+            return SponsorDTO(
+                idSponsor = sponsor.idSponsor,
+                username = sponsor.username,
+                title = sponsor.title,
+                description = sponsor.description,
+                phone = sponsor.phone,
+                urlImage = sponsor.urlImage
+            )
+        }
+        fun sponsorFromDTO(sponsorDTO: SponsorDTO): Sponsor{
+            return Sponsor(
+                idSponsor = sponsorDTO.idSponsor,
+                username = sponsorDTO.username,
+                title = sponsorDTO.title,
+                description = sponsorDTO.description,
+                phone = sponsorDTO.phone,
+                urlImage = sponsorDTO.urlImage
+            )
+        }
+
+        fun adToDTO(ad: Ad): AdDTO{
+            return AdDTO(
+                idAd = ad.idAd,
+                username = ad.username,
+                title = ad.title,
+                description = ad.description,
+                imageUrl = ad.imageUrl,
+                webUrl = ad.webUrl
+            )
+        }
+        fun adFromDTO(adDTO: AdDTO): Ad{
+            return Ad(
+                idAd = adDTO.idAd,
+                username = adDTO.username,
+                title = adDTO.title,
+                description = adDTO.description,
+                imageUrl = adDTO.imageUrl,
+                webUrl = adDTO.webUrl
+            )
+        }
     }
 }

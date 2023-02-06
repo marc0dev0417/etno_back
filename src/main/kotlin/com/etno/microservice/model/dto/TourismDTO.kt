@@ -16,7 +16,7 @@ data class TourismDTO(
 
     @JsonProperty("imageUrl") var imageUrl: String ? = null,
 
-    @JsonProperty("longitude") var longitude: String ? = null,
+    @JsonProperty("longitude") var longitude: Double ? = null,
 
-    @JsonProperty("latitude") var latitude: String ? = null
+    @JsonProperty("latitude") var latitude: Double ? = null
 )

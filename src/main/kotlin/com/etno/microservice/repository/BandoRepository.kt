@@ -7,5 +7,6 @@ import java.util.UUID
 
 @Repository
 interface BandoRepository : JpaRepository<Bando, UUID> {
-
+    fun findBandoByUsernameAndTitle(username: String, title: String): Bando?
+    fun findBandosByUsername(username: String): List<Bando>?
 }

@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface TourismRepository: JpaRepository<Tourism, UUID> {
     fun findTourismByTitleAndUsername(title: String, username: String): Tourism?
+    fun findTourismByUsername(username: String): List<Tourism>?
 }

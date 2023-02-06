@@ -150,4 +150,20 @@ class UserController(
     override fun addIncidentInUser(username: String, incidentDTO: IncidentDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addIncidentInUser(username, incidentDTO))
     }
+
+    override fun addBandoInUser(username: String, bandoDTO: BandoDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addBandosInUser(username, bandoDTO))
+    }
+
+    override fun addLinkInUser(username: String, linkDTO: LinkDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addLinkInUser(username, linkDTO))
+    }
+
+    override fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addSponsorInUser(username, sponsorDTO))
+    }
+
+    override fun addAdInUser(username: String, adDTO: AdDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addAdInUser(username, adDTO))
+    }
 }

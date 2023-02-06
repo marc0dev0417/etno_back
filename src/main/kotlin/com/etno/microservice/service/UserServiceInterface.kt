@@ -56,4 +56,16 @@ interface UserServiceInterface {
 
     //User incidents -> ---------------------------------------------------------------------
     fun addIncidentInUser(username: String, incidentDTO: IncidentDTO): UserDTO?
+
+    //User bandos -> ------------------------------------------------------------------------
+    fun addBandosInUser(username: String, bandoDTO: BandoDTO): UserDTO?
+
+    //User links -> -------------------------------------------------------------------------
+    fun addLinkInUser(username: String, linkDTO: LinkDTO): UserDTO?
+
+    //User sponsors -> ----------------------------------------------------------------------
+    fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): UserDTO?
+
+    //User Ad -> ----------------------------------------------------------------------------
+    fun addAdInUser(username: String, adDTO: AdDTO): UserDTO?
 }

@@ -29,4 +29,8 @@ class PharmacyService(
         val pharmacySaved = pharmacyRepository.save(DataConverter.pharmacyFromDTO(pharmacyDTO))
         return DataConverter.pharmacyToDTO(pharmacySaved)
     }
+
+    override fun getPharmaciesByUsername(username: String): List<PharmacyDTO>? {
+        return pharmacyRepository.findPharmacyByUsername(username)?.map { DataConverter.pharmacyToDTO(it) }
+    }
 }

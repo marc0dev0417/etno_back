@@ -16,13 +16,13 @@ class FirebaseCloudMessageService(
 ): FirebaseMessageServiceInterface {
 
    override fun sendNotification(note: NoteDTO): NotificationDTO? {
-
         //val listFmc = fcmTokenRepository.findAll().let { fcmTokenRepository.findAll().map { it.token } }
         val listFmc = fcmTokenRepository.findAll().filter { it.username == note.username }.map { it.token }
 
         val message = MulticastMessage
             .builder()
             .setNotification(Notification.builder()
+                .setImage(note.image)
                 .setTitle(note.subject)
                 .setBody(note.content)
                 .build())

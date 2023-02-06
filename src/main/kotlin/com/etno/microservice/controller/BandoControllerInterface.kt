@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 interface BandoControllerInterface {
@@ -60,5 +61,54 @@ interface BandoControllerInterface {
     )
     fun saveBando(
         @RequestBody bandoDTO: BandoDTO
+    ): ResponseEntity<BandoDTO>
+
+    @ApiOperation(
+        value = "Get all bandos by username",
+        nickname = "getBandosByUsername",
+        notes = "Gonna find bandos by username"
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Bando", response = BandoDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/bandos/filtered"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.GET]
+    )
+    fun getBandosByUsername(
+        @RequestParam(name = "username", required = true) username: String
+    ): ResponseEntity<List<BandoDTO>>
+
+    @ApiOperation(
+        value = "Get bando by username",
+        nickname = "getBandoByUsername",
+        notes = "Gonna get a bando by username"
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Bando", response = BandoDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/bandos"],
+        produces = ["application/json"],
+        params = ["username", "title"],
+        method = [RequestMethod.GET]
+    )
+    fun getBandoByUsername(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "title", required = true) title: String
     ): ResponseEntity<BandoDTO>
 }

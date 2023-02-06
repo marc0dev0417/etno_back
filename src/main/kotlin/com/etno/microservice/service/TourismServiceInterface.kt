@@ -8,4 +8,5 @@ interface TourismServiceInterface {
     fun getTourism(): List<TourismDTO>?
     fun saveTourism(tourismDTO: TourismDTO): TourismDTO?
     //fun addImageToTourism(title: String, imageName: String): TourismDTO?
+    fun getTourismByUsername(username: String): List<TourismDTO>?
 }

@@ -1,7 +1,7 @@
 package com.etno.microservice.model
 
 import org.hibernate.annotations.Type
-import java.util.UUID
+import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -14,12 +14,18 @@ data class Bando(
     @Type(type = "uuid-char")
     var idBando: UUID ? = UUID.randomUUID(),
 
+    @Column(name = "username")
+    var username: String ? = null,
+
     @Column(name = "title")
     var title: String ? = null,
 
     @Column(name = "description")
     var description: String ? = null,
 
-    @Column(name = "emitDate")
-    var emitDate: String ? = null
+    @Column(name = "issuedDate")
+    var issuedDate: Date ? = null,
+
+    @Column(name = "imageUrl")
+    var imageUrl: String ? = null
 )

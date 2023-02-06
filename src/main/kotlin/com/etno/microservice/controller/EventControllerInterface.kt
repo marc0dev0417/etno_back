@@ -38,6 +38,32 @@ interface EventControllerInterface {
     fun getEvents(): ResponseEntity<List<EventDTO>>?
 
     @ApiOperation(
+        value = "Get all events by username",
+        nickname = "getEventsByUsername",
+        notes = "Will show events by username",
+        tags = ["Event"],
+        response = EventDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Event", response = EventDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/events"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.GET]
+    )
+    fun getEventsFindUsername(
+        @RequestParam(name = "username", required = true) username: String
+    ): ResponseEntity<List<EventDTO>>
+
+    @ApiOperation(
         value = "Get a Event by username and title",
         nickname = "getEvent",
         notes = "You gonna find a event by username and title",
@@ -113,7 +139,7 @@ interface EventControllerInterface {
     fun addImageToEvent(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String, @RequestParam(name = "image", required = true) imageName: String): ResponseEntity<EventDTO>?
 
     @ApiOperation(
-        value = "delete a even",
+        value = "delete a event",
         nickname = "deleteEvent",
         notes = "Endpoint to delete an event",
         tags = ["Event"],

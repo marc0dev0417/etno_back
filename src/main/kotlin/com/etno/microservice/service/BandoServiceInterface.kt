@@ -7,4 +7,6 @@ import org.springframework.stereotype.Service
 interface BandoServiceInterface {
     fun getBando() : List<BandoDTO>?
     fun saveBando(bandoDTO: BandoDTO): BandoDTO
+    fun getBandosByUsername(username: String): List<BandoDTO>
+    fun getBandoByUsernameAndTitle(username: String, title: String): BandoDTO?
 }

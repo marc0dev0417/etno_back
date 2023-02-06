@@ -39,8 +39,8 @@ data class Pharmacy(
     var description: String ? = null,
 
     @Column(name = "latitude")
-    var longitude: String ? = null,
+    var longitude: Double ? = null,
 
     @Column(name = "longitude")
-    var latitude: String ? = null
+    var latitude: Double ? = null
 )

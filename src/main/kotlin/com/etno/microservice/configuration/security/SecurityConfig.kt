@@ -17,6 +17,7 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -45,12 +46,16 @@ class SecurityConfig() {
     @Throws(Exception::class)
     @Bean
     fun configure(http: HttpSecurity?): SecurityFilterChain {
-        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/users/villagers", "/users/add/incident", "/users/add/event/subscription", "/users/dropout/event/subscription", "/send-notification",
+        http?.csrf()?.disable()?.authorizeRequests()?.antMatchers("/register", "/login", "/users/villagers", "/users/**", "/users/add/incident", "/users/add/event/subscription", "/users/dropout/event/subscription", "/send-notification",
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v2/api-docs",
             "/webjars/**",
+            "/bandos/**",
+            "/links/**",
+            "/ads/**",
+            "/sponsors/**",
             "/sendMail/**",
             "/FCMTokens/**",
             "/events/**",

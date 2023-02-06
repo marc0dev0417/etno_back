@@ -12,5 +12,5 @@ data class NotificationDTO(
 
    @JsonProperty("content") var content: String? = null,
 
-   @JsonProperty("imageUrl") var imageUrl: String? = null
+   @JsonProperty("image") var imageUrl: String? = null
 )

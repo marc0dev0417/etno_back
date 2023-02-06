@@ -798,11 +798,124 @@ interface UserControllerInterface {
         value = ["/users/add/incident"],
         produces = ["application/json"],
         consumes = ["application/json"],
-        method = [RequestMethod.POST],
-        params = ["username"]
+        params = ["username"],
+        method = [RequestMethod.POST]
     )
     fun addIncidentInUser(
         @RequestParam(name = "username", required = true) username: String,
         @RequestBody incidentDTO: IncidentDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add bando in User",
+        nickname = "addBandoInUser",
+        notes = "Gonna add bando in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/bando"],
+        consumes = ["application/json"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.POST]
+    )
+    fun addBandoInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody bandoDTO: BandoDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add link in User",
+        nickname = "addLinkInUser",
+        notes = "Gonna add link in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/link"],
+        consumes = ["application/json"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.POST]
+    )
+    fun addLinkInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody linkDTO: LinkDTO
+    ): ResponseEntity<UserDTO>
+
+
+    @ApiOperation(
+        value = "add sponsor in User",
+        nickname = "addSponsorInUser",
+        notes = "Gonna add sponsor in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/sponsor"],
+        consumes = ["application/json"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.POST]
+    )
+    fun addSponsorInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody sponsorDTO: SponsorDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "add add in User",
+        nickname = "addAdInUser",
+        notes = "Gonna add ad in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/ad"],
+        consumes = ["application/json"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.POST]
+    )
+    fun addAdInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody adDTO: AdDTO
     ): ResponseEntity<UserDTO>
 }

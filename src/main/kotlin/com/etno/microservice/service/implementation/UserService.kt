@@ -6,6 +6,7 @@ import com.etno.microservice.security.JwtTokenUtil
 import com.etno.microservice.service.UserServiceInterface
 import com.etno.microservice.service.implementation.jwt.JwtUserDetailsService
 import com.etno.microservice.util.DataConverter
+import com.etno.microservice.util.Urls
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 import java.text.DateFormat
 import java.util.*
 
@@ -29,7 +31,12 @@ class UserService(
     private val deathRepository: DeathRepository,
     private val phoneRepository: PhoneRepository,
     private val newRepository: NewRepository,
+    private val bandoRepository: BandoRepository,
+    private val fcmTokenRepository: FCMTokenRepository,
     private val incidentRepository: IncidenceRepository,
+    private val linkRepository: LinkRepository,
+    private val sponsorRepository: SponsorRepository,
+    private val adRepository: AdRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -69,7 +76,7 @@ class UserService(
                 responseMap["token_expired"] = jwtTokenUtil.isTokenExpired(token).toString()
                 responseMap["expired_date"] =
                     dataFormatMedium.format(jwtTokenUtil.getExpirationDateFromToken(token)).toString()
-                responseMap["user"] = DataConverter.userToDTO(user!!)
+                responseMap["user"] = DataConverter.userLoginToDTO(user!!)
 
                 return ResponseEntity.ok(responseMap)
             } else {
@@ -343,12 +350,12 @@ class UserService(
     override fun deleteTourismInUser(username: String, title: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemTourism = tourismRepository.findTourismByTitleAndUsername(title, username)
-        val itemImageDelete = imageRepository.findImageByLink(itemTourism?.imageUrl!!)
+//        val itemImageDelete = imageRepository.findImageByLink(itemTourism?.imageUrl!!)
 
         itemUser?.tourism?.remove(itemTourism)
-        imageRepository.delete(itemImageDelete!!)
+       // imageRepository.delete(itemImageDelete!!)
         val itemUserSaved = userRepository.save(itemUser!!)
-        tourismRepository.delete(itemTourism)
+        tourismRepository.delete(itemTourism!!)
         return DataConverter.userToDTO(itemUserSaved)
     }
 
@@ -554,6 +561,121 @@ class UserService(
                 incidentDTO.username = username
                 itemUser?.incidents?.add(DataConverter.incidenceFromDTO(incidentDTO))
                 itemUser = userRepository.save(itemUser!!)
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun addBandosInUser(username: String, bandoDTO: BandoDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+
+        when(bandoRepository.findBandoByUsernameAndTitle(username, bandoDTO.title!!)){
+            null -> {
+                bandoDTO.idBando = UUID.randomUUID()
+                bandoDTO.username = username
+                itemUser?.bandos?.add(DataConverter.bandoFromDTO(bandoDTO))
+                itemUser = userRepository.save(itemUser!!)
+
+                if (fcmTokenRepository.findAll().any { it.username == username }){
+                    val restTemplate = RestTemplate()
+                    val map: Map<String, String> = mapOf(
+                        "image" to "${bandoDTO.imageUrl}",
+                        "subject" to "Publicación de Bando",
+                        "content" to "Bando: ${bandoDTO.title}",
+                        "username" to "${itemUser.username}")
+
+                    val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
+                }
+
+            }
+            else -> {
+                val checkIfExistBando = itemUser?.bandos?.find { it.title == bandoDTO.title }
+                if (checkIfExistBando == null){
+                    bandoDTO.idBando = UUID.randomUUID()
+                    bandoDTO.username = username
+                    itemUser?.bandos?.add(DataConverter.bandoFromDTO(bandoDTO))
+                    itemUser = userRepository.save(itemUser!!)
+
+                    if (fcmTokenRepository.findAll().any { it.username == username }){
+                        val restTemplate = RestTemplate()
+                        val map: Map<String, String> = mapOf(
+                            "image" to "${bandoDTO.imageUrl}",
+                            "subject" to "Publicación de Bando",
+                            "content" to "Bando: ${bandoDTO.title}",
+                            "username" to "${itemUser.username}")
+
+                        val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
+                    }
+                }
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun addLinkInUser(username: String, linkDTO: LinkDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+
+        when(linkRepository.findLinkByUsernameAndTitle(username = username, title = linkDTO.title!!)){
+            null -> {
+                linkDTO.idLink = UUID.randomUUID()
+                linkDTO.username = username
+                itemUser?.links?.add(DataConverter.linkFromDTO(linkDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+            else -> {
+                val checkIfExistLink = itemUser?.links?.find { it.title == linkDTO.title }
+                if (checkIfExistLink == null){
+                    linkDTO.idLink = UUID.randomUUID()
+                    linkDTO.username = username
+                    itemUser?.links?.add(DataConverter.linkFromDTO(linkDTO))
+                    itemUser = userRepository.save(itemUser!!)
+                }
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+
+        when(sponsorRepository.findSponsorByUsernameAndTitle(username, sponsorDTO.title!!)){
+            null -> {
+                sponsorDTO.idSponsor = UUID.randomUUID()
+                sponsorDTO.username = username
+                itemUser?.sponsors?.add(DataConverter.sponsorFromDTO(sponsorDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+            else -> {
+                val checkIfExistSponsor = itemUser?.sponsors?.find { it.title == sponsorDTO.title }
+                if (checkIfExistSponsor == null){
+                    sponsorDTO.idSponsor = UUID.randomUUID()
+                    sponsorDTO.username = username
+                    itemUser?.sponsors?.add(DataConverter.sponsorFromDTO(sponsorDTO))
+                    itemUser = userRepository.save(itemUser!!)
+                }
+            }
+        }
+        return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun addAdInUser(username: String, adDTO: AdDTO): UserDTO? {
+        var itemUser = userRepository.findUserByUsername(username)
+
+        when(adRepository.findAdByUsernameAndTitle(username, adDTO.title!!)){
+            null -> {
+                adDTO.idAd = UUID.randomUUID()
+                adDTO.username = username
+                itemUser?.ads?.add(DataConverter.adFromDTO(adDTO))
+                itemUser = userRepository.save(itemUser!!)
+            }
+            else -> {
+                val checkIfExistAd = itemUser?.ads?.find { it.title == adDTO.title }
+                if (checkIfExistAd == null){
+                    adDTO.idAd = UUID.randomUUID()
+                    adDTO.username = username
+                    itemUser?.ads?.add(DataConverter.adFromDTO(adDTO))
+                    itemUser = userRepository.save(itemUser!!)
+                }
             }
         }
         return DataConverter.userToDTO(itemUser!!)

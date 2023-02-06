@@ -6,4 +6,5 @@ import java.util.UUID
 
 interface NewRepository: JpaRepository<New, UUID> {
     fun findNewByUsernameAndTitle(username: String, title: String): New?
+    fun findNewsByUsername(username: String): List<New>?
 }

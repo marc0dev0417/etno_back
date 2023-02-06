@@ -38,6 +38,32 @@ interface TourismControllerInterface {
     fun getTourism(): ResponseEntity<List<TourismDTO>>?
 
     @ApiOperation(
+        value = "get a tourism list by username",
+        nickname = "getTourismByUsername",
+        notes = "Endpoint to get tourism list",
+        tags = ["Tourism"],
+        response = TourismDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Tourism", response = TourismDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/tourism"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.GET]
+    )
+    fun getTourismByUsername(
+        @RequestParam(name = "username", required = true) username: String
+    ): ResponseEntity<List<TourismDTO>>
+
+    @ApiOperation(
         value = "save a tourism",
         nickname = "saveTourism",
         notes = "Endpoint where you will save a tourism",
