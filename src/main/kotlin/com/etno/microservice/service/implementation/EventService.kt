@@ -78,7 +78,6 @@ class EventService(
         return DataConverter.eventToDTO(eventItem)
     }
 
-
     override fun getEventsPaginated(username: String, pageNum: Int, pageSize: Int): EventPageDTO? {
         val pageable = PageRequest.of(pageNum, pageSize)
         val pagedResult = eventRepository.findEventsPageableByUsername(username, pageable)
