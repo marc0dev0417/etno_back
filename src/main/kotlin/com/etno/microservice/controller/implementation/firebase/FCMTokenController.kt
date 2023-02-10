@@ -2,7 +2,6 @@ package com.etno.microservice.controller.implementation.firebase
 
 import com.etno.microservice.controller.FCMTokenControllerInterface
 import com.etno.microservice.model.dto.FCMTokenDTO
-import com.etno.microservice.model.dto.SectionDTO
 import com.etno.microservice.service.implementation.FCMTokenService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
