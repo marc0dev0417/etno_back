@@ -13,4 +13,8 @@ class DeathController(
     override fun findDeaths(): ResponseEntity<List<DeathDTO>> {
        return ResponseEntity.ok().body(deathService.getDeaths())
     }
+
+    override fun findDeathsByUsername(username: String): ResponseEntity<List<DeathDTO>> {
+        return ResponseEntity.ok().body(deathService.getDeathsByUsername(username))
+    }
 }

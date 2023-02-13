@@ -8,4 +8,5 @@ import java.util.UUID
 @Repository
 interface DeathRepository: JpaRepository<Death, UUID> {
     fun findDeathByUsernameAndName(username: String, name: String): Death?
+    fun findDeathsByUsername(username: String): List<Death>?
 }

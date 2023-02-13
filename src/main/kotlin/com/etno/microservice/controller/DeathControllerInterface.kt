@@ -34,4 +34,28 @@ interface DeathControllerInterface {
         method = [RequestMethod.GET]
     )
     fun findDeaths(): ResponseEntity<List<DeathDTO>>
+
+    @ApiOperation(
+        value = "Get all deaths by username",
+        nickname = "getDeathsByUsername",
+        notes = "Will show all deaths by username",
+        tags = ["Deaths"],
+        response = DeathDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Death", response = DeathDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/deaths"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.GET]
+    )
+    fun findDeathsByUsername(username: String): ResponseEntity<List<DeathDTO>>
 }
