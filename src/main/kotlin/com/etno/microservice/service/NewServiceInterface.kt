@@ -8,4 +8,5 @@ interface NewServiceInterface {
     fun getNews(): List<NewDTO>
     fun getNewsByUsername(username: String): List<NewDTO>?
     fun getNewByUsernameAndTitle(username: String, title: String): NewDTO?
+    fun getNewByUsernameAndCategory(username: String, category: String): List<NewDTO>?
 }

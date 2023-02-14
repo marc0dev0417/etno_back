@@ -17,4 +17,8 @@ class NewController(
     override fun getNewsByUsername(username: String): ResponseEntity<List<NewDTO>> {
         return ResponseEntity.ok().body(newService.getNewsByUsername(username))
     }
+
+    override fun findNewsByUsernameAndCategory(username: String, category: String): ResponseEntity<List<NewDTO>> {
+        return ResponseEntity.ok().body(newService.getNewByUsernameAndCategory(username, category))
+    }
 }

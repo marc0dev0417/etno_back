@@ -21,4 +21,8 @@ class NewService(
     override fun getNewByUsernameAndTitle(username: String, title: String): NewDTO? {
         return DataConverter.newToDTO(newRepository.findNewByUsernameAndTitle(username, title)!!)
     }
+
+    override fun getNewByUsernameAndCategory(username: String, category: String): List<NewDTO>? {
+        return newRepository.findNewsByUsernameAndCategory(username, category)?.map { DataConverter.newToDTO(it) }
+    }
 }
