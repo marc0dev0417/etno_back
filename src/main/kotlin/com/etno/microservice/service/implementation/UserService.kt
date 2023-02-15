@@ -586,7 +586,6 @@ class UserService(
 
                     val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
                 }
-
             }
             else -> {
                 val checkIfExistBando = itemUser?.bandos?.find { it.title == bandoDTO.title }
