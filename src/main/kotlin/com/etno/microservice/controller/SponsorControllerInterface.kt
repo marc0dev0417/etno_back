@@ -2,6 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.SponsorDTO
+import com.etno.microservice.model.dto.pagination.SponsorPageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -13,6 +14,34 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 interface SponsorControllerInterface {
+    @ApiOperation(
+            value = "Get sponsors by paginated",
+            nickname = "getSponsorPaginated",
+            notes = "Will show sponsors paginated",
+            tags = ["Sponsor"],
+            response = SponsorDTO::class
+    )
+    @ApiResponses(
+            value = [
+                ApiResponse(code = 201, message = "Sponsor", response = SponsorPageDTO::class),
+                ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+                ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+                ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+                ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+            ]
+    )
+    @RequestMapping(
+            value = ["/sponsors"],
+            produces = ["application/json"],
+            params = ["username", "pageNum", "elementSize"],
+            method = [RequestMethod.GET]
+    )
+    fun findSponsorPaginated(
+            @RequestParam(name = "username") username: String,
+            @RequestParam(defaultValue = "0", name = "pageNum") pageNum: Int,
+            @RequestParam(defaultValue = "0", name = "elementSize") elementSize: Int
+    ): ResponseEntity<SponsorPageDTO>
+
     @ApiOperation(
         value = "Get all sponsors",
         nickname = "getSponsors",

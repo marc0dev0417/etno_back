@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "news")
-data class New(
+data class News(
     @Id
     @Type(type = "uuid-char")
     var idNew: UUID ? = UUID.randomUUID(),

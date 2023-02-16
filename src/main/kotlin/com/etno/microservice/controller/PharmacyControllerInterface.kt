@@ -2,6 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.PharmacyDTO
+import com.etno.microservice.model.dto.pagination.PharmacyPageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -15,12 +16,42 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 interface PharmacyControllerInterface {
     @ApiOperation(
+        value = "Get pharmacies by paginated",
+        nickname = "getPharmacyPaginated",
+        notes = "Will show pharmacies paginated",
+        tags = ["Pharmacy"],
+        response = PharmacyDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Pharmacy", response = PharmacyPageDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/pharmacies"],
+        produces = ["application/json"],
+        params = ["username", "pageNum", "elementSize"],
+        method = [RequestMethod.GET]
+    )
+    fun findPharmacyPaginated(
+        @RequestParam(name = "username") username: String,
+        @RequestParam(defaultValue = "0", name = "pageNum") pageNum: Int,
+        @RequestParam(defaultValue = "0", name = "elementSize") elementSize: Int
+    ): ResponseEntity<PharmacyPageDTO>
+
+
+    @ApiOperation(
         value = "Get all pharmacies",
         nickname = "getPharmacies",
         notes = "Will prove all pharmacies",
         tags = ["Pharmacy"],
         response = PharmacyDTO::class
     )
+
     @ApiResponses(
         value = [
             ApiResponse(code = 201, message = "Pharmacy", response = PharmacyDTO::class),

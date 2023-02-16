@@ -29,8 +29,8 @@ class UserService(
     private val pharmacyRepository: PharmacyRepository,
     private val tourismRepository: TourismRepository,
     private val deathRepository: DeathRepository,
-    private val phoneRepository: PhoneRepository,
-    private val newRepository: NewRepository,
+    private val serviceRepository: ServiceRepository,
+    private val newsRepository: NewsRepository,
     private val bandoRepository: BandoRepository,
     private val fcmTokenRepository: FCMTokenRepository,
     private val incidentRepository: IncidenceRepository,
@@ -295,12 +295,14 @@ class UserService(
     override fun deletePharmacyInUser(username: String, name: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(name, username)
-        val itemImageDelete = imageRepository.findImageByLink(itemPharmacy?.imageUrl!!)
 
+        if(itemPharmacy?.imageUrl != null){
+            val itemImageDelete = imageRepository.findImageByLink(itemPharmacy?.imageUrl!!)
+            imageRepository.delete(itemImageDelete!!)
+        }
         itemUser?.pharmacies?.remove(itemPharmacy)
-        imageRepository.delete(itemImageDelete!!)
         val itemSaved = userRepository.save(itemUser!!)
-        pharmacyRepository.delete(itemPharmacy)
+        pharmacyRepository.delete(itemPharmacy!!)
         return DataConverter.userToDTO(itemSaved)
     }
 
@@ -405,12 +407,15 @@ class UserService(
     override fun deleteDeathInUser(username: String, name: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemDeath = deathRepository.findDeathByUsernameAndName(username, name)
-        val itemImageDelete = imageRepository.findImageByLink(itemDeath?.imageUrl!!)
+
+        if(itemDeath?.imageUrl != null){
+            val itemImageDelete = imageRepository.findImageByLink(itemDeath?.imageUrl!!)
+            imageRepository.delete(itemImageDelete!!)
+        }
 
         itemUser?.deaths?.remove(itemDeath)
-        imageRepository.delete(itemImageDelete!!)
         val itemUserSaved = userRepository.save(itemUser!!)
-        deathRepository.delete(itemDeath)
+        deathRepository.delete(itemDeath!!)
         return DataConverter.userToDTO(itemUserSaved)
     }
 
@@ -436,97 +441,104 @@ class UserService(
         return DataConverter.userToDTO(itemUserSaved)
     }
 
-    override fun addPhoneInUser(username: String, phoneDTO: PhoneDTO): UserDTO? {
+    override fun addServiceInUser(username: String, serviceDTO: ServiceDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
-        val itemPhone = phoneRepository.findPhoneByUsernameAndOwner(username, phoneDTO.owner!!)
+        val itemService = serviceRepository.findServiceByUsernameAndOwner(username, serviceDTO.owner!!)
 
-        if(itemPhone == null){
-            phoneDTO.idPhone = UUID.randomUUID()
-            phoneDTO.username = itemUser?.username
-            phoneDTO.category = phoneDTO.category
-            itemUser?.phones?.add(DataConverter.phoneFromDTO(phoneDTO))
+        if(itemService == null){
+            serviceDTO.idService = UUID.randomUUID()
+            serviceDTO.username = itemUser?.username
+            serviceDTO.category = serviceDTO.category
+            itemUser?.services?.add(DataConverter.serviceFromDTO(serviceDTO))
             itemUser = userRepository.save(itemUser!!)
         }else{
-            val checkIfExistPhone = itemUser?.phones?.find { it.owner == itemPhone.owner }
-            if(checkIfExistPhone == null){
-                phoneDTO.idPhone = UUID.randomUUID()
-                phoneDTO.username = itemUser?.username
-                itemUser?.phones?.add(DataConverter.phoneFromDTO(phoneDTO))
+            val checkIfExistService = itemUser?.services?.find { it.owner == itemService.owner }
+            if(checkIfExistService == null){
+                serviceDTO.idService = UUID.randomUUID()
+                serviceDTO.username = itemUser?.username
+                itemUser?.services?.add(DataConverter.serviceFromDTO(serviceDTO))
                 itemUser = userRepository.save(itemUser!!)
             }
         }
         return DataConverter.userToDTO(itemUser!!)
     }
 
-    override fun deletePhoneInUser(username: String, owner: String): UserDTO? {
+    override fun deleteServiceInUser(username: String, owner: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemPhone = phoneRepository.findPhoneByUsernameAndOwner(username, owner)
-        val itemImageDelete = imageRepository.findImageByLink(itemPhone?.imageUrl!!)
+        val itemService = serviceRepository.findServiceByUsernameAndOwner(username, owner)
 
-        itemUser?.phones?.remove(itemPhone)
-        imageRepository.delete(itemImageDelete!!)
+        if(itemService?.imageUrl != null){
+            val itemImageDelete = imageRepository.findImageByLink(itemService.imageUrl!!)
+            imageRepository.delete(itemImageDelete!!)
+        }
+
+
+        itemUser?.services?.remove(itemService)
+
         val itemSaved = userRepository.save(itemUser!!)
-        phoneRepository.delete(itemPhone)
+        serviceRepository.delete(itemService!!)
         return DataConverter.userToDTO(itemSaved)
     }
 
-    override fun addImageToPhoneInUser(username: String, owner: String, imageName: String): UserDTO? {
+    override fun addImageToServiceInUser(username: String, owner: String, imageName: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemPhone = phoneRepository.findPhoneByUsernameAndOwner(username, owner)
+        val itemService = serviceRepository.findServiceByUsernameAndOwner(username, owner)
         val itemImage = imageRepository.findImageByName(imageName)
 
-        itemUser?.phones?.find { it.owner == itemPhone?.owner }?.imageUrl = itemImage?.link
+        itemUser?.services?.find { it.owner == itemService?.owner }?.imageUrl = itemImage?.link
         val itemUserSaved = userRepository.save(itemUser!!)
         return DataConverter.userToDTO(itemUserSaved)
     }
 
-    override fun deleteImageToPhoneInUser(username: String, owner: String, imageName: String): UserDTO? {
+    override fun deleteImageToServiceInUser(username: String, owner: String, imageName: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemPhone = phoneRepository.findPhoneByUsernameAndOwner(username, owner)
+        val itemServices = serviceRepository.findServiceByUsernameAndOwner(username, owner)
         val itemImage = imageRepository.findImageByName(imageName)
 
-        itemUser?.phones?.find { it.owner == itemPhone?.owner }?.imageUrl = ""
+        itemUser?.services?.find { it.owner == itemServices?.owner }?.imageUrl = ""
         val itemUserSaved = userRepository.save(itemUser!!)
         imageRepository.delete(itemImage!!)
         return DataConverter.userToDTO(itemUserSaved)
     }
 
-    override fun addNewInUser(username: String, newDTO: NewDTO): UserDTO? {
+    override fun addNewsInUser(username: String, newsDTO: NewsDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
-        val itemNew = newRepository.findNewByUsernameAndTitle(username, newDTO.title!!)
+        val itemNew = newsRepository.findNewByUsernameAndTitle(username, newsDTO.title!!)
 
         if(itemNew == null){
-            newDTO.idNew = UUID.randomUUID()
-            newDTO.username = itemUser?.username
-            itemUser?.news?.add(DataConverter.newFromDTO(newDTO))
+            newsDTO.idNew = UUID.randomUUID()
+            newsDTO.username = itemUser?.username
+            itemUser?.news?.add(DataConverter.newsFromDTO(newsDTO))
             itemUser = userRepository.save(itemUser!!)
         }else{
             val checkIfExistPhone = itemUser?.news?.find { it.title == itemNew.title }
             if(checkIfExistPhone == null){
-                newDTO.idNew = UUID.randomUUID()
-                newDTO.username = itemUser?.username
-                itemUser?.news?.add(DataConverter.newFromDTO(newDTO))
+                newsDTO.idNew = UUID.randomUUID()
+                newsDTO.username = itemUser?.username
+                itemUser?.news?.add(DataConverter.newsFromDTO(newsDTO))
                 itemUser = userRepository.save(itemUser!!)
             }
         }
         return DataConverter.userToDTO(itemUser!!)
     }
 
-    override fun deleteNewInUser(username: String, title: String): UserDTO? {
+    override fun deleteNewsInUser(username: String, title: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemNew = newRepository.findNewByUsernameAndTitle(username, title)
-        val itemImageDelete = imageRepository.findImageByLink(itemNew?.imageUrl!!)
+        val itemNew = newsRepository.findNewByUsernameAndTitle(username, title)
 
+        if (itemNew?.imageUrl != null){
+            val itemImageDelete = imageRepository.findImageByLink(itemNew.imageUrl!!)
+            imageRepository.delete(itemImageDelete!!)
+        }
         itemUser?.news?.remove(itemNew)
-        imageRepository.delete(itemImageDelete!!)
         val itemSaved = userRepository.save(itemUser!!)
-        newRepository.delete(itemNew)
+        newsRepository.delete(itemNew!!)
         return DataConverter.userToDTO(itemSaved)
     }
 
-    override fun addImageToNewInUser(username: String, title: String, imageName: String): UserDTO? {
+    override fun addImageToNewsInUser(username: String, title: String, imageName: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemNew = newRepository.findNewByUsernameAndTitle(username, title)
+        val itemNew = newsRepository.findNewByUsernameAndTitle(username, title)
         val itemImage = imageRepository.findImageByName(imageName)
 
         itemUser?.news?.find { it.title == itemNew?.title }?.imageUrl = itemImage?.link
@@ -534,9 +546,9 @@ class UserService(
         return DataConverter.userToDTO(itemUserSaved)
     }
 
-    override fun deleteImageToNewInUser(username: String, title: String, imageName: String): UserDTO? {
+    override fun deleteImageToNewsInUser(username: String, title: String, imageName: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemNew = newRepository.findNewByUsernameAndTitle(username, title)
+        val itemNew = newsRepository.findNewByUsernameAndTitle(username, title)
         val itemImage = imageRepository.findImageByName(imageName)
 
         itemUser?.news?.find { it.title == itemNew?.title }?.imageUrl = ""
@@ -566,7 +578,7 @@ class UserService(
         return DataConverter.userToDTO(itemUser!!)
     }
 
-    override fun addBandosInUser(username: String, bandoDTO: BandoDTO): UserDTO? {
+    override fun addBandoInUser(username: String, bandoDTO: BandoDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
 
         when(bandoRepository.findBandoByUsernameAndTitle(username, bandoDTO.title!!)){
@@ -586,6 +598,7 @@ class UserService(
 
                     val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
                 }
+
             }
             else -> {
                 val checkIfExistBando = itemUser?.bandos?.find { it.title == bandoDTO.title }
@@ -611,6 +624,42 @@ class UserService(
         return DataConverter.userToDTO(itemUser!!)
     }
 
+    override fun deleteBandoInUser(username: String, title: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemBando = bandoRepository.findBandoByUsernameAndTitle(username, title)
+
+        if(itemBando?.imageUrl != null){
+            val itemImageDelete = imageRepository.findImageByLink(itemBando?.imageUrl!!)
+            imageRepository.delete(itemImageDelete!!)
+        }
+        itemUser?.bandos?.remove(itemBando)
+        val itemSaved = userRepository.save(itemUser!!)
+        bandoRepository.delete(itemBando!!)
+        return DataConverter.userToDTO(itemSaved)
+
+    }
+
+    override fun addImageToBandoInUser(username: String, title: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemBando = bandoRepository.findBandoByUsernameAndTitle(username, title)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.bandos?.find { it.title == itemBando?.title }?.imageUrl = itemImage?.link
+        val itemUserSaved = userRepository.save(itemUser!!)
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun deleteImageToBandoInUser(username: String, title: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemBando = bandoRepository.findBandoByUsernameAndTitle(username, title)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.bandos?.find { it.title == itemBando?.title }?.imageUrl = ""
+        val itemUserSaved = userRepository.save(itemUser!!)
+        imageRepository.delete(itemImage!!)
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
     override fun addLinkInUser(username: String, linkDTO: LinkDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
 
@@ -633,6 +682,17 @@ class UserService(
         }
         return DataConverter.userToDTO(itemUser!!)
     }
+    override fun deleteLinkInUser(username: String, title: String ): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemLink = linkRepository.findLinkByUsernameAndTitle(username, title)
+       itemUser?.links?.remove(itemLink)
+        val itemSaved = userRepository.save(itemUser!!)
+        linkRepository.delete(itemLink!!)
+        return DataConverter.userToDTO(itemSaved)
+    }
+
+
+
 
     override fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
@@ -655,6 +715,41 @@ class UserService(
             }
         }
         return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun deleteSponsorInUser(username: String, title: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemSponsor = sponsorRepository.findSponsorByUsernameAndTitle(username, title)
+
+        if(itemSponsor?.urlImage != null){
+            val itemImageDelete = imageRepository.findImageByLink(itemSponsor?.urlImage!!)
+            imageRepository.delete(itemImageDelete!!)
+        }
+        itemUser?.sponsors?.remove(itemSponsor)
+        val itemSaved = userRepository.save(itemUser!!)
+        sponsorRepository.delete(itemSponsor!!)
+        return DataConverter.userToDTO(itemSaved)
+    }
+
+    override fun addImageToSponsorInUser(username: String, title: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemSponsor = sponsorRepository.findSponsorByUsernameAndTitle(username, title)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.sponsors?.find { it.title == itemSponsor?.title }?.urlImage = itemImage?.link
+        val itemUserSaved = userRepository.save(itemUser!!)
+        return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun deleteImageToSponsorInUser(username: String, title: String, imageName: String): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemSponsor = bandoRepository.findBandoByUsernameAndTitle(username, title)
+        val itemImage = imageRepository.findImageByName(imageName)
+
+        itemUser?.sponsors?.find { it.title == itemSponsor?.title }?.urlImage = ""
+        val itemUserSaved = userRepository.save(itemUser!!)
+        imageRepository.delete(itemImage!!)
+        return DataConverter.userToDTO(itemUserSaved)
     }
 
     override fun addAdInUser(username: String, adDTO: AdDTO): UserDTO? {
