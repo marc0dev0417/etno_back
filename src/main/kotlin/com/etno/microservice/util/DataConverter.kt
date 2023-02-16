@@ -26,8 +26,8 @@ class DataConverter {
                 pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
-                phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
-                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList(),
+                services = user.services.let { it?.map { service -> serviceToDTO(service) } }?.toMutableList(),
+                news = user.news.let { it?.map { new -> newsToDTO(new) } }?.toMutableList(),
                 incidents = user.incidents.let { it?.map { incident -> incidenceToDTO(incident) } }?.toMutableList(),
                 bandos = user.bandos.let { it?.map { bando: Bando -> bandoToDTO(bando) } }?.toMutableList(),
                 links = user.links.let { it?.map { link -> linkToDTO(link) } }?.toMutableList(),
@@ -45,8 +45,8 @@ class DataConverter {
                 pharmacies = userDTO.pharmacies.let { it?.map { pharmacyDTO -> pharmacyFromDTO(pharmacyDTO) } }?.toMutableList(),
                 tourism = userDTO.tourism.let { it?.map { tourismDTO -> tourismFromDTO(tourismDTO) } }?.toMutableList(),
                 deaths = userDTO.deaths.let { it?.map { deathDTO -> deathFromDTO(deathDTO) } }?.toMutableList(),
-                phones = userDTO.phones.let { it?.map { phoneDTO -> phoneFromDTO(phoneDTO) } }?.toMutableList(),
-                news = userDTO.news.let { it?.map { newDTO -> newFromDTO(newDTO) } }?.toMutableList(),
+                services = userDTO.services.let { it?.map { serviceDTO -> serviceFromDTO(serviceDTO) } }?.toMutableList(),
+                news = userDTO.news.let { it?.map { newDTO -> newsFromDTO(newDTO) } }?.toMutableList(),
                 incidents = userDTO.incidents.let { it?.map { incidentDTO -> incidenceFromDTO(incidentDTO) } }?.toMutableList(),
                 bandos = userDTO.bandos.let { it?.map { bandoDTO -> bandoFromDTO(bandoDTO) } }?.toMutableList(),
                 links = userDTO.links.let { it?.map { linkDTO -> linkFromDTO(linkDTO) } }?.toMutableList(),
@@ -62,8 +62,8 @@ class DataConverter {
                 pharmacies = user.pharmacies.let { it?.map { pharmacy -> pharmacyToDTO(pharmacy) } }?.toMutableList(),
                 tourism = user.tourism.let { it?.map { tourism -> tourismToDTO(tourism) } }?.toMutableList(),
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
-                phones = user.phones.let { it?.map { phone -> phoneToDTO(phone) } }?.toMutableList(),
-                news = user.news.let { it?.map { new -> newToDTO(new) } }?.toMutableList(),
+                services = user.services.let { it?.map { service -> serviceToDTO(service) } }?.toMutableList(),
+                news = user.news.let { it?.map { new -> newsToDTO(new) } }?.toMutableList(),
                 ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList()
             )
         }
@@ -308,49 +308,49 @@ class DataConverter {
             )
         }
 
-        fun phoneToDTO(phone: Phone): PhoneDTO{
-            return PhoneDTO(
-                idPhone = phone.idPhone,
-                username = phone.username,
-                category = phone.category,
-                owner = phone.owner,
-                number = phone.number,
-                schedule = phone.schedule,
-                imageUrl = phone.imageUrl
+        fun serviceToDTO(service: Service): ServiceDTO{
+            return ServiceDTO(
+                idService = service.idService,
+                username = service.username,
+                category = service.category,
+                owner = service.owner,
+                number = service.number,
+                schedule = service.schedule,
+                imageUrl = service.imageUrl
             )
         }
-        fun phoneFromDTO(phoneDTO: PhoneDTO): Phone{
-            return Phone(
-                idPhone = phoneDTO.idPhone,
-                username = phoneDTO.username,
-                category = phoneDTO.category,
-                owner = phoneDTO.owner,
-                number = phoneDTO.number,
-                schedule = phoneDTO.schedule,
-                imageUrl = phoneDTO.imageUrl
+        fun serviceFromDTO(serviceDTO: ServiceDTO): Service{
+            return Service(
+                idService = serviceDTO.idService,
+                username = serviceDTO.username,
+                category = serviceDTO.category,
+                owner = serviceDTO.owner,
+                number = serviceDTO.number,
+                schedule = serviceDTO.schedule,
+                imageUrl = serviceDTO.imageUrl
             )
         }
 
-        fun newToDTO(new: New): NewDTO {
-            return NewDTO(
-                idNew = new.idNew,
-                username = new.username,
-                category = new.category,
-                title = new.title,
-                publicationDate = new.publicationDate,
-                description = new.description,
-                imageUrl = new.imageUrl
+        fun newsToDTO(news: News): NewsDTO {
+            return NewsDTO(
+                idNew = news.idNew,
+                username = news.username,
+                category = news.category,
+                title = news.title,
+                publicationDate = news.publicationDate,
+                description = news.description,
+                imageUrl = news.imageUrl
             )
         }
-        fun newFromDTO(newDTO: NewDTO): New{
-            return New(
-                idNew = newDTO.idNew,
-                username = newDTO.username,
-                category = newDTO.category,
-                title = newDTO.title,
-                publicationDate = newDTO.publicationDate,
-                description = newDTO.description,
-                imageUrl = newDTO.imageUrl
+        fun newsFromDTO(newsDTO: NewsDTO): News{
+            return News(
+                idNew = newsDTO.idNew,
+                username = newsDTO.username,
+                category = newsDTO.category,
+                title = newsDTO.title,
+                publicationDate = newsDTO.publicationDate,
+                description = newsDTO.description,
+                imageUrl = newsDTO.imageUrl
             )
         }
         fun incidenceToDTO(incidence: Incident): IncidentDTO{

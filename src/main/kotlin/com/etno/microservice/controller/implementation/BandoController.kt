@@ -2,6 +2,7 @@ package com.etno.microservice.controller.implementation
 
 import com.etno.microservice.controller.BandoControllerInterface
 import com.etno.microservice.model.dto.BandoDTO
+import com.etno.microservice.model.dto.pagination.BandoPageDTO
 import com.etno.microservice.service.implementation.BandoService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -10,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController
 class BandoController(
     private val bandoService: BandoService
 ): BandoControllerInterface {
+    override fun findBandoPaginated(username: String, pageNum: Int, elementSize: Int): ResponseEntity<BandoPageDTO> {
+        return ResponseEntity.ok().body(bandoService.getBandoPaginated(username,pageNum,elementSize))
+    }
+
     override fun getBandos(): ResponseEntity<List<BandoDTO>> {
         return ResponseEntity.ok().body(bandoService.getBando())
     }

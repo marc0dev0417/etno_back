@@ -6,14 +6,13 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
-import javax.validation.constraints.NotNull
 
 @Entity
-@Table(name = "phones")
-data class Phone(
+@Table(name = "services")
+data class Service(
     @Id
     @Type(type = "uuid-char")
-    var idPhone: UUID ? = UUID.randomUUID(),
+    var idService: UUID ? = UUID.randomUUID(),
 
     @Column(name = "username")
     var username: String ? = null,

@@ -65,7 +65,7 @@ class SecurityConfig() {
             "/tourism/**",
             "/pharmacies/**",
             "/deaths/**",
-            "/phones/**",
+            "/services/**",
             "/news/**",
             "/subscription_users")
             ?.permitAll()?.anyRequest()?.authenticated()?.and()?.exceptionHandling()

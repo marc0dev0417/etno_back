@@ -43,28 +43,37 @@ interface UserServiceInterface {
     fun deleteImageToDeathInUser(username: String, name: String, imageName: String): UserDTO?
 
     //User Phone -> ---------------------------------------------------------------------------
-    fun addPhoneInUser(username: String, phoneDTO: PhoneDTO): UserDTO?
-    fun deletePhoneInUser(username: String, owner: String): UserDTO?
-    fun addImageToPhoneInUser(username: String, owner: String, imageName: String): UserDTO?
-    fun deleteImageToPhoneInUser(username: String, owner: String, imageName: String): UserDTO?
+    fun addServiceInUser(username: String, serviceDTO: ServiceDTO): UserDTO?
+    fun deleteServiceInUser(username: String, owner: String): UserDTO?
+    fun addImageToServiceInUser(username: String, owner: String, imageName: String): UserDTO?
+    fun deleteImageToServiceInUser(username: String, owner: String, imageName: String): UserDTO?
 
     //User New -> ---------------------------------------------------------------------------
-    fun addNewInUser(username: String, newDTO: NewDTO): UserDTO?
-    fun deleteNewInUser(username: String, title: String): UserDTO?
-    fun addImageToNewInUser(username: String, title: String, imageName: String): UserDTO?
-    fun deleteImageToNewInUser(username: String, title: String, imageName: String): UserDTO?
+    fun addNewsInUser(username: String, newsDTO: NewsDTO): UserDTO?
+    fun deleteNewsInUser(username: String, title: String): UserDTO?
+    fun addImageToNewsInUser(username: String, title: String, imageName: String): UserDTO?
+    fun deleteImageToNewsInUser(username: String, title: String, imageName: String): UserDTO?
 
     //User incidents -> ---------------------------------------------------------------------
     fun addIncidentInUser(username: String, incidentDTO: IncidentDTO): UserDTO?
 
     //User bandos -> ------------------------------------------------------------------------
-    fun addBandosInUser(username: String, bandoDTO: BandoDTO): UserDTO?
+    fun addBandoInUser(username: String, bandoDTO: BandoDTO): UserDTO?
+    fun deleteBandoInUser(username: String, title: String): UserDTO?
+    fun addImageToBandoInUser(username: String, title: String, imageName: String): UserDTO?
+    fun deleteImageToBandoInUser(username: String, title: String, imageName: String): UserDTO?
 
     //User links -> -------------------------------------------------------------------------
     fun addLinkInUser(username: String, linkDTO: LinkDTO): UserDTO?
+    fun deleteLinkInUser(username: String, title: String): UserDTO?
+
+
 
     //User sponsors -> ----------------------------------------------------------------------
     fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): UserDTO?
+    fun deleteSponsorInUser(username: String, title: String): UserDTO?
+    fun addImageToSponsorInUser(username: String, title: String, imageName: String): UserDTO?
+    fun deleteImageToSponsorInUser(username: String, title: String, imageName: String): UserDTO?
 
     //User Ad -> ----------------------------------------------------------------------------
     fun addAdInUser(username: String, adDTO: AdDTO): UserDTO?
