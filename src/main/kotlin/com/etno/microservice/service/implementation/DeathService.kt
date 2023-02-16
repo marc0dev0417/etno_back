@@ -13,4 +13,8 @@ class DeathService(
     override fun getDeaths(): List<DeathDTO>? {
         return deathRepository.findAll().map { DataConverter.deathToDTO(it) }
     }
+
+    override fun getDeathsByUsername(username: String): List<DeathDTO>? {
+        return deathRepository.findDeathsByUsername(username)?.map { DataConverter.deathToDTO(it) }
+    }
 }

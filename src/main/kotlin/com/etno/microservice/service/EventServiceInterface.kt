@@ -1,6 +1,7 @@
 package com.etno.microservice.service
 
 import com.etno.microservice.model.dto.EventDTO
+import com.etno.microservice.model.dto.pagination.EventPageDTO
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,4 +13,5 @@ interface EventServiceInterface {
     fun deleteEventByTitleAndUsername(title: String, username: String): EventDTO?
     fun addImageToEvent(username: String, title: String, imageName: String): EventDTO?
     fun deleteImageToEvent(username: String, title: String, imageName: String): EventDTO?
+    fun getEventsPaginated(username: String, pageNum: Int, pageSize: Int): EventPageDTO?
 }

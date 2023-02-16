@@ -17,6 +17,4 @@ class IncidenceService(
     override fun findIncidentByUsernameAndFcmToken(username: String, fcmToken: String): List<IncidentDTO>? {
         return incidenceRepository.findIncidentsByUsernameAndFcmToken(username, fcmToken)?.map { DataConverter.incidenceToDTO(it) }
     }
-
-
 }

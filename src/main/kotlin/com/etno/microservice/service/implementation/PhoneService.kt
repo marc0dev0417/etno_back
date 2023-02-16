@@ -5,7 +5,10 @@ import com.etno.microservice.model.dto.PhoneDTO
 import com.etno.microservice.repository.PhoneRepository
 import com.etno.microservice.service.PhoneServiceInterface
 import com.etno.microservice.util.DataConverter
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import java.awt.print.Pageable
 
 @Service
 class PhoneService(
@@ -18,4 +21,6 @@ class PhoneService(
     override fun getPhonesByUsernameAndCategory(username: String, category: String): List<PhoneDTO>? {
         return phoneRepository.findPhoneByUsernameAndCategory(username, category)?.map { DataConverter.phoneToDTO(it) }
     }
+
+
 }

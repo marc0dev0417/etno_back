@@ -68,4 +68,5 @@ interface UserServiceInterface {
 
     //User Ad -> ----------------------------------------------------------------------------
     fun addAdInUser(username: String, adDTO: AdDTO): UserDTO?
+    fun deleteAdInUser(username: String, title: String): UserDTO?
 }

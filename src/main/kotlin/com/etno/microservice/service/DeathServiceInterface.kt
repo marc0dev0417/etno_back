@@ -6,4 +6,5 @@ import org.springframework.stereotype.Service
 @Service
 interface DeathServiceInterface {
     fun getDeaths(): List<DeathDTO>?
+    fun getDeathsByUsername(username: String): List<DeathDTO>?
 }

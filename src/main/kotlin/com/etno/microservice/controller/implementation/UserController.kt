@@ -166,4 +166,8 @@ class UserController(
     override fun addAdInUser(username: String, adDTO: AdDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addAdInUser(username, adDTO))
     }
+
+    override fun deleteAdInUser(username: String, title: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteAdInUser(username, title))
+    }
 }

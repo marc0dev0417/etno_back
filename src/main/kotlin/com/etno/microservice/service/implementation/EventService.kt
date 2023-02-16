@@ -3,12 +3,14 @@ package com.etno.microservice.service.implementation
 import com.etno.microservice.exception.Constants
 import com.etno.microservice.exception.handler.ListEmptyException
 import com.etno.microservice.model.dto.EventDTO
+import com.etno.microservice.model.dto.pagination.EventPageDTO
 import com.etno.microservice.repository.EventRepository
 import com.etno.microservice.repository.FCMTokenRepository
 import com.etno.microservice.repository.ImageRepository
 import com.etno.microservice.service.EventServiceInterface
 import com.etno.microservice.util.DataConverter
 import com.etno.microservice.util.Urls
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -74,5 +76,25 @@ class EventService(
         eventRepository.save(eventItem!!)
 
         return DataConverter.eventToDTO(eventItem)
+    }
+
+    override fun getEventsPaginated(username: String, pageNum: Int, pageSize: Int): EventPageDTO? {
+        val pageable = PageRequest.of(pageNum, pageSize)
+        val pagedResult = eventRepository.findEventsPageableByUsername(username, pageable)
+        return if (pagedResult!!.hasContent()){
+            EventPageDTO(
+                content = pagedResult.content.toList().map { DataConverter.eventToDTO(it) },
+                totalElements = pagedResult.totalElements,
+                totalPages = pagedResult.totalPages,
+                pageNum = pagedResult.number
+            )
+        }else{
+            EventPageDTO(
+                content = emptyList(),
+                totalElements = pagedResult.totalElements,
+                totalPages = pagedResult.totalPages,
+                pageNum = pagedResult.number
+            )
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.etno.microservice.controller.implementation
 
 import com.etno.microservice.controller.EventControllerInterface
 import com.etno.microservice.model.dto.EventDTO
+import com.etno.microservice.model.dto.pagination.EventPageDTO
 import com.etno.microservice.service.implementation.EventService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -12,6 +13,10 @@ class EventController(
 ): EventControllerInterface {
     override fun getEvents(): ResponseEntity<List<EventDTO>>? {
         return ResponseEntity.ok().body(eventService.getEvents())
+    }
+
+    override fun findEventsPaginated(username: String, pageNum: Int, elementSize: Int): ResponseEntity<EventPageDTO> {
+        return ResponseEntity.ok().body(eventService.getEventsPaginated(username,pageNum, elementSize))
     }
 
     override fun getEventsFindUsername(username: String): ResponseEntity<List<EventDTO>> {

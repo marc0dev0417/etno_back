@@ -2,6 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.EventDTO
+import com.etno.microservice.model.dto.pagination.EventPageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -36,6 +37,34 @@ interface EventControllerInterface {
         method = [RequestMethod.GET]
     )
     fun getEvents(): ResponseEntity<List<EventDTO>>?
+
+    @ApiOperation(
+        value = "Get events by paginated",
+        nickname = "getEventsPaginated",
+        notes = "Will show events paginated",
+        tags = ["Event"],
+        response = EventDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Event", response = EventPageDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/events"],
+        produces = ["application/json"],
+        params = ["username", "pageNum", "elementSize"],
+        method = [RequestMethod.GET]
+    )
+    fun findEventsPaginated(
+        @RequestParam(name = "username") username: String,
+        @RequestParam(defaultValue = "0", name = "pageNum") pageNum: Int,
+        @RequestParam(defaultValue = "0", name = "elementSize") elementSize: Int
+    ): ResponseEntity<EventPageDTO>
 
     @ApiOperation(
         value = "Get all events by username",
