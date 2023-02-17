@@ -629,7 +629,7 @@ class UserService(
         val itemBando = bandoRepository.findBandoByUsernameAndTitle(username, title)
 
         if(itemBando?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemBando?.imageUrl!!)
+            val itemImageDelete = imageRepository.findImageByLink(itemBando.imageUrl!!)
             imageRepository.delete(itemImageDelete!!)
         }
         itemUser?.bandos?.remove(itemBando)
@@ -778,12 +778,16 @@ class UserService(
     override fun deleteAdInUser(username: String, title: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemAd = adRepository.findAdByUsernameAndTitle(username, title)
-        val itemImageDelete = imageRepository.findImageByLink(itemAd?.imageUrl!!)
+
+        if(itemAd?.imageUrl != null){
+            val itemImageDelete = imageRepository.findImageByLink(itemAd.imageUrl!!)
+            imageRepository.delete(itemImageDelete!!)
+        }
 
         itemUser?.ads?.remove(itemAd)
        // imageRepository.delete(itemImageDelete!!)
         val itemSaved = userRepository.save(itemUser!!)
-        adRepository.delete(itemAd)
+        adRepository.delete(itemAd!!)
         return DataConverter.userToDTO(itemSaved)
     }
 }

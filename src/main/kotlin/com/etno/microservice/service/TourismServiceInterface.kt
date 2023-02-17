@@ -10,6 +10,5 @@ interface TourismServiceInterface {
     fun saveTourism(tourismDTO: TourismDTO): TourismDTO?
     //fun addImageToTourism(title: String, imageName: String): TourismDTO?
     fun getTourismByUsername(username: String): List<TourismDTO>?
-
     fun getTourismPaginated(username: String, pageNum: Int, pageSize : Int): TourismPageDTO?
 }

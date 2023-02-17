@@ -2,6 +2,7 @@ package com.etno.microservice.controller.implementation
 
 import com.etno.microservice.controller.TourismControllerInterface
 import com.etno.microservice.model.dto.TourismDTO
+import com.etno.microservice.model.dto.pagination.TourismPageDTO
 import com.etno.microservice.service.implementation.TourismService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -10,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController
 class TourismController(
     private val tourismService: TourismService
 ): TourismControllerInterface {
+    override fun getPaginatedTourism(username: String, pageNum: Int, elementSize: Int): ResponseEntity<TourismPageDTO> {
+        return ResponseEntity.ok().body(tourismService.getTourismPaginated(username, pageNum, elementSize))
+    }
+
     override fun getTourism(): ResponseEntity<List<TourismDTO>>? {
         return ResponseEntity.ok().body(tourismService.getTourism())
     }
