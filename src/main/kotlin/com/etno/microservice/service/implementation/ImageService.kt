@@ -23,12 +23,15 @@ class ImageService(
     ): ImageDTO? {
         val nameSectionPath: String = when(section){
             "evento" -> "events"
+            "bando" -> "bandos"
+            "anuncio" -> "advertisements"
+            "servicio" -> "services"
             "fiesta" -> "festivities"
             "turismo" -> "tourism"
             "noticia" -> "news"
             "farmacia" -> "pharmacies"
             "muerte" -> "deaths"
-            "telefono" -> "phones"
+            "servicio" -> "services"
             "incidente" -> "incidents"
             "patrocinador" -> "sponsors"
             else -> {"NO PATH :("}
@@ -71,11 +74,13 @@ class ImageService(
             "evento" -> "events"
             "fiesta" -> "festivities"
             "turismo" -> "tourism"
+            "anuncio" -> "advertisements"
             "noticia" -> "news"
             "muerte" -> "deaths"
             "farmacia" -> "pharmacies"
             "telefono" -> "phones"
             "patrocinador" -> "sponsors"
+            "services" -> "services"
             else -> {"NO PATH :("}
         }
 

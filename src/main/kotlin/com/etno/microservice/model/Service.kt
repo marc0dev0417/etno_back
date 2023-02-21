@@ -26,6 +26,12 @@ data class Service(
     @Column(name = "number")
     var number: String ? = null,
 
+    @Column(name = "description")
+    var description: String ? = null,
+    
+    @Column(name = "webUrl")
+    var webUrl: String ? = null,
+
     @Column(name = "schedule")
     var schedule: String ? = null,
 

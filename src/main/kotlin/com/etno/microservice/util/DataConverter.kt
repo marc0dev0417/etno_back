@@ -315,6 +315,8 @@ class DataConverter {
                 category = service.category,
                 owner = service.owner,
                 number = service.number,
+                description = service.description,
+                webUrl = service.webUrl,
                 schedule = service.schedule,
                 imageUrl = service.imageUrl
             )
@@ -326,6 +328,8 @@ class DataConverter {
                 category = serviceDTO.category,
                 owner = serviceDTO.owner,
                 number = serviceDTO.number,
+                description = serviceDTO.description,
+                webUrl = serviceDTO.webUrl,
                 schedule = serviceDTO.schedule,
                 imageUrl = serviceDTO.imageUrl
             )

@@ -1,7 +1,7 @@
 package com.etno.microservice.model.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.UUID
+import java.util.*
 
 data class ServiceDTO(
     @JsonProperty("idService") var idService: UUID ? = UUID.randomUUID(),
@@ -13,6 +13,10 @@ data class ServiceDTO(
     @JsonProperty("owner") var owner: String ? = null,
 
     @JsonProperty("number") var number: String ? = null,
+
+    @JsonProperty("description") var description: String ? = null,
+
+    @JsonProperty("webUrl") var webUrl: String ? = null,
 
     @JsonProperty("schedule") var schedule: String ? = null,
 
