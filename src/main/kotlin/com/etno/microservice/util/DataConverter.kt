@@ -268,7 +268,11 @@ class DataConverter {
                 schedule = pharmacy.schedule,
                 description = pharmacy.description,
                 longitude = pharmacy.longitude,
-                latitude = pharmacy.latitude
+                latitude = pharmacy.latitude,
+                startDate = pharmacy.startDate,
+                durationDays = pharmacy.durationDays,
+                frequencyInDays = pharmacy.frequencyInDays,
+                dates = pharmacy.dates.let { pharmacy.dates?.map { pharmacyDate -> pharmacyDateToDTO(pharmacyDate) } }?.toMutableList()
             )
         }
         fun pharmacyFromDTO(pharmacyDTO: PharmacyDTO): Pharmacy{
@@ -283,9 +287,43 @@ class DataConverter {
                 schedule = pharmacyDTO.schedule,
                 description = pharmacyDTO.description,
                 longitude = pharmacyDTO.longitude,
-                latitude = pharmacyDTO.latitude
+                latitude = pharmacyDTO.latitude,
+                startDate = pharmacyDTO.startDate,
+                durationDays = pharmacyDTO.durationDays,
+                frequencyInDays = pharmacyDTO.frequencyInDays,
+                dates = pharmacyDTO.dates.let { pharmacyDTO.dates?.map { pharmacyDateDTO -> pharmacyDateFromDTO(pharmacyDateDTO) } }?.toMutableList()
             )
         }
+
+        fun pharmacyDateToDTO(pharmacyDate: PharmacyDate): PharmacyDateDTO {
+            return PharmacyDateDTO(
+                idPharmacyDate = pharmacyDate.idPharmacyDate,
+                username = pharmacyDate.username,
+                namePharmacy = pharmacyDate.namePharmacy,
+                date = pharmacyDate.date
+            )
+        }
+        fun pharmacyDateFromDTO(pharmacyDateDTO: PharmacyDateDTO): PharmacyDate {
+            return PharmacyDate(
+                idPharmacyDate = pharmacyDateDTO.idPharmacyDate,
+                username = pharmacyDateDTO.username,
+                namePharmacy = pharmacyDateDTO.namePharmacy,
+                date = pharmacyDateDTO.date
+            )
+        }
+
+         fun sumDate(date: Date, days: Int): Date? {
+            val calendar = Calendar.getInstance();
+            calendar.time = date; // Configuramos la fecha que se recibe
+            calendar.add(Calendar.DAY_OF_YEAR, days);  // numero de días a añadir, o restar en caso de días<0
+            return calendar.time; // Devuelve el objeto Date con los nuevos días añadidos
+        }
+         fun getMounth(date: Date): Int {
+            val calendar = Calendar.getInstance()
+            calendar.time = date;
+            return calendar.get(Calendar.MONTH) + 1;
+        }
+
 
         fun deathToDTO(death: Death): DeathDTO{
             return DeathDTO(

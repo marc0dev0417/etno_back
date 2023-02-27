@@ -1,7 +1,7 @@
 package com.etno.microservice.model.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.UUID
+import java.util.*
 
 data class PharmacyDTO(
     @JsonProperty("idPharmacy") var idPharmacy: UUID ? = null,
@@ -24,5 +24,13 @@ data class PharmacyDTO(
 
     @JsonProperty("latitude") var longitude: Double ? = null,
 
-    @JsonProperty("longitude") var latitude: Double ? = null
+    @JsonProperty("longitude") var latitude: Double ? = null,
+
+    @JsonProperty("startDate") var startDate: Date ? = null,
+
+    @JsonProperty("durationDays") var durationDays: Int ? = null,
+
+    @JsonProperty("frequencyInDays") var frequencyInDays: Int ? = null,
+
+    @JsonProperty("dates") var dates: MutableList<PharmacyDateDTO>? = mutableListOf()
 )

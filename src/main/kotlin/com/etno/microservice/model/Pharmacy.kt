@@ -1,11 +1,8 @@
 package com.etno.microservice.model
 
 import org.hibernate.annotations.Type
-import java.util.UUID
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import java.util.*
+import javax.persistence.*
 
 @Entity
 @Table(name = "pharmacies")
@@ -42,5 +39,17 @@ data class Pharmacy(
     var longitude: Double ? = null,
 
     @Column(name = "longitude")
-    var latitude: Double ? = null
+    var latitude: Double ? = null,
+
+    @Column(name = "startDate")
+    var startDate: Date ? = null,
+
+    @Column(name = "durationDays")
+    var durationDays: Int ? = null,
+
+    @Column(name = "frequencyInDays")
+    var frequencyInDays: Int ? = null,
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var dates: MutableList<PharmacyDate>? = mutableListOf()
 )

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
+import java.util.*
 
 @Controller
 interface UserControllerInterface {
@@ -158,6 +159,35 @@ interface UserControllerInterface {
     fun addEventInUser(@RequestParam(name = "username", required = true) username: String, @RequestBody eventDTO: EventDTO): ResponseEntity<UserDTO>?
 
     @ApiOperation(
+        value = "Update a event in user",
+        nickname = "updateEventInUser",
+        notes = "You gonna update a event in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/event"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["username", "eventId"]
+    )
+    fun updateEventInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "eventId", required = true) eventId: UUID,
+        @RequestBody eventDTO: EventDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
         value = "Add image to Event in User",
         nickname = "addImageToEventInUser",
         notes = "You can add image to event in user",
@@ -277,12 +307,12 @@ interface UserControllerInterface {
         value = ["/users/dropout/event/subscription"],
         produces = ["application/json"],
         method = [RequestMethod.PUT],
-        params = ["username", "title"]
+        params = ["username", "title", "fcmToken"]
     )
     fun dropOutSubscription(
         @RequestParam(name = "username", required = true) username: String,
         @RequestParam(name = "title", required = true) title: String,
-        @RequestBody subscriptionUserDTO: SubscriptionUserDTO
+        @RequestParam(name = "fcmToken", required = true) fcmToken: String
     ): ResponseEntity<SubscriptionUserDTO>
 
     @ApiOperation(
@@ -1128,5 +1158,266 @@ interface UserControllerInterface {
     fun deleteAdInUser(
         @RequestParam(name = "username") username: String,
         @RequestParam(name = "title") title: String
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a pharmacy in user",
+        nickname = "updatePharmacyInUser",
+        notes = "You gonna update a pharmacy in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/pharmacy"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["username", "pharmacyId"]
+    )
+    fun updatePharmacyInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "pharmacyId", required = true) pharmacyId: UUID,
+        @RequestBody pharmacyDTO: PharmacyDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a tourism in User",
+        nickname = "updateTourismInUser",
+        notes = "You gonna update a tourism in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/tourism"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "tourismId"],
+        method = [RequestMethod.PUT],
+    )
+    fun updateTourismInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "tourismId", required = true) tourismId: UUID,
+        @RequestBody tourismDTO: TourismDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a bando in User",
+        nickname = "updateBandoInUser",
+        notes = "You will update a tourism in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/bando"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "bandoId"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateBandoInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "bandoId", required = true) bandoId: UUID,
+        @RequestBody bandoDTO: BandoDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a death in User",
+        nickname = "updateDeathInUser",
+        notes = "You gonna update a death in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/death"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "deathId"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateDeathInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "deathId", required = true) deathId: UUID,
+        @RequestBody deathDTO: DeathDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a service in User",
+        nickname = "updateServiceInUser",
+        notes = "You gonna update a service in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/service"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "serviceId"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateServiceInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "serviceId", required = true) serviceId: UUID,
+        @RequestBody serviceDTO: ServiceDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a news in User",
+        nickname = "updateNewsInUser",
+        notes = "You gonna update a news in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/news"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "newsId"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateNewsInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "newsId", required = true) newsId: UUID,
+        @RequestBody newsDTO: NewsDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a link in User",
+        nickname = "updateLinkInUser",
+        notes = "You gonna update a link in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/link"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "linkId"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateLinkInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "linkId", required = true) linkId: UUID,
+        @RequestBody linkDTO: LinkDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a sponsor in User",
+        nickname = "updateSponsorInUser",
+        notes = "You will update a sponsor in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/sponsor"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "sponsorId"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateSponsorInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "sponsorId", required = true) sponsorId: UUID,
+        @RequestBody sponsorDTO: SponsorDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update a ad in User",
+        nickname = "updateAdInUser",
+        notes = "You will update an ad in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/ad"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "adId"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateAdInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "adId", required = true) adId: UUID,
+        @RequestBody adDTO: AdDTO
     ): ResponseEntity<UserDTO>
 }

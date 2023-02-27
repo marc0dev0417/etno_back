@@ -4,7 +4,6 @@ import org.hibernate.annotations.Type
 import java.util.*
 import javax.persistence.*
 
-
 @Entity
 @Table(name = "events")
 data class Event(

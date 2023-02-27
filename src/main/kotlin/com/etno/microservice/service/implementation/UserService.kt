@@ -27,6 +27,7 @@ class UserService(
     private val subscriptionUser: SubscriptionUserRepository,
     private val imageRepository: ImageRepository,
     private val pharmacyRepository: PharmacyRepository,
+    private val pharmacyDateRepository: PharmacyDateRepository,
     private val tourismRepository: TourismRepository,
     private val deathRepository: DeathRepository,
     private val serviceRepository: ServiceRepository,
@@ -157,6 +158,20 @@ class UserService(
         }
         return DataConverter.userToDTO(itemUser)
     }
+
+    override fun updatedEventInUser(username: String, eventId: UUID ,eventDTO: EventDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val eventFound = userItem?.events?.find { it.idEvent ==  eventId}
+        if (eventFound != DataConverter.eventFromDTO(eventDTO)){
+            eventDTO.idEvent = eventId
+            eventDTO.username = username
+
+            userItem?.events?.set(userItem.events!!.indexOf(eventFound!!), DataConverter.eventFromDTO(eventDTO))
+             userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
+
     override fun deleteEventInUser(username: String, title: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
@@ -241,24 +256,20 @@ class UserService(
         return DataConverter.subscriptionUserToDTO(findUserSubscription!!)
     }
 
-    override fun dropOutSubscription(
-        username: String,
-        title: String,
-        subscriptionUserDTO: SubscriptionUserDTO
-    ): SubscriptionUserDTO? {
+    override fun dropOutSubscription(username: String, title: String, fcmToken: String): SubscriptionUserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
         val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
         val subscriptionUser =
-            subscriptionUser.findSubscriptionByFcmTokenAndTitle(subscriptionUserDTO.fcmToken!!, title)
+            subscriptionUser.findSubscriptionByFcmTokenAndTitle(fcmToken, title)
 
         if (subscriptionUser != null) {
             when (itemEvent?.seats) {
                 in 0..itemEvent?.capacity!! -> {
                     itemEvent.seats = (itemEvent.seats!! + 1)
-                    subscriptionUserDTO.seats = itemEvent.seats
-                    itemUser?.events?.find { it.title == title }?.userSubscriptions?.find { it.fcmToken == subscriptionUserDTO.fcmToken }
+
+                    itemUser?.events?.find { it.title == title }?.userSubscriptions?.find { it.fcmToken == fcmToken }
                         .also {
-                            it?.seats = subscriptionUserDTO.seats
+                            it?.seats = itemEvent.seats
                             it?.isSubscribe = false
                         }
                     itemUser = userRepository.save(itemUser!!)
@@ -266,25 +277,77 @@ class UserService(
             }
         }
         val findEvent = itemUser?.events?.find { it.title == title }
-        val findUserSubscription = findEvent?.userSubscriptions?.find { it.fcmToken == subscriptionUserDTO.fcmToken }
+        val findUserSubscription = findEvent?.userSubscriptions?.find { it.fcmToken == fcmToken }
         return DataConverter.subscriptionUserToDTO(findUserSubscription!!)
     }
 
-    override fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): UserDTO? {
+    override fun updatePharmacyInUser(username: String, pharmacyId: UUID, pharmacyDTO: PharmacyDTO): UserDTO? {
+        var nowDate: Date
+        var userItem = userRepository.findUserByUsername(username)
+        val pharmacyFound = userItem?.pharmacies?.find { it.idPharmacy == pharmacyId }
+        if (pharmacyFound != DataConverter.pharmacyFromDTO(pharmacyDTO)){
+            pharmacyDTO.idPharmacy = pharmacyId
+            pharmacyDTO.username = username
 
+                if(pharmacyDTO.type == "Guardia"){
+                    pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = pharmacyDTO.startDate))
+                    for (index in 1 ..pharmacyDTO.durationDays!!){
+                        nowDate = DataConverter.sumDate(pharmacyDTO.startDate!!, pharmacyDTO.frequencyInDays!! * index)!!
+                        pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = nowDate))
+                    }
+                    pharmacyDateRepository.saveAll(pharmacyDTO.dates!!.map { p -> DataConverter.pharmacyDateFromDTO(p) })
+                    userItem?.pharmacies?.set(userItem.pharmacies!!.indexOf(pharmacyFound), DataConverter.pharmacyFromDTO(pharmacyDTO))
+                    userItem = userRepository.save(userItem!!)
+                }else{
+                    userItem?.pharmacies?.set(userItem.pharmacies!!.indexOf(pharmacyFound), DataConverter.pharmacyFromDTO(pharmacyDTO))
+                    userItem = userRepository.save(userItem!!)
+                }
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
+
+    override fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): UserDTO? {
+        var nowDate: Date
         var itemUser = userRepository.findUserByUsername(username)
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(pharmacyDTO.name!!, username)
 
         if(itemPharmacy == null){
             pharmacyDTO.idPharmacy = UUID.randomUUID()
             pharmacyDTO.username = itemUser?.username
-            itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
+
+            if(pharmacyDTO.type == "Guardia"){
+                pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = pharmacyDTO.startDate))
+                for (index in 1 ..pharmacyDTO.durationDays!!){
+                    nowDate = DataConverter.sumDate(pharmacyDTO.startDate!!, pharmacyDTO.frequencyInDays!! * index)!!
+                    pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = nowDate))
+                }
+                pharmacyDateRepository.saveAll(pharmacyDTO.dates!!.map { p -> DataConverter.pharmacyDateFromDTO(p) })
+                itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
+            }else{
+                itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
+            }
+
+           // pharmacyDateRepository.saveAll(listDate)
             itemUser = userRepository.save(itemUser!!)
         }else{
             val checkIfExistPharmacy = itemUser?.pharmacies?.find { it.name == itemPharmacy.name }
             if(checkIfExistPharmacy == null){
                 pharmacyDTO.idPharmacy = UUID.randomUUID()
                 pharmacyDTO.username = itemUser?.username
+
+                if(pharmacyDTO.type == "Guardia"){
+                    pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = pharmacyDTO.startDate))
+                    for (index in 1 ..pharmacyDTO.durationDays!!){
+                        nowDate = DataConverter.sumDate(Date(), pharmacyDTO.frequencyInDays!! * index)!!
+                        pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = nowDate))
+                    }
+                    pharmacyDateRepository.saveAll(pharmacyDTO.dates!!.map { p -> DataConverter.pharmacyDateFromDTO(p) })
+                    itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
+                }else{
+                    itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
+                }
+              //  pharmacyDateRepository.saveAll(listDate)
+
                 itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
                itemUser = userRepository.save(itemUser!!)
             }
@@ -297,7 +360,7 @@ class UserService(
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(name, username)
 
         if(itemPharmacy?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemPharmacy?.imageUrl!!)
+            val itemImageDelete = imageRepository.findImageByLink(itemPharmacy.imageUrl!!)
             imageRepository.delete(itemImageDelete!!)
         }
         itemUser?.pharmacies?.remove(itemPharmacy)
@@ -326,6 +389,19 @@ class UserService(
         val itemUserSaved = userRepository.save(itemUser!!)
 
         return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun updateTourismInUser(username: String, tourismId: UUID, tourismDTO: TourismDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val tourismFound = userItem?.tourism?.find { it.idTourism == tourismId }
+        if (tourismFound != DataConverter.tourismFromDTO(tourismDTO)){
+            tourismDTO.idTourism = tourismId
+            tourismDTO.username = username
+
+            userItem?.tourism?.set(userItem.tourism!!.indexOf(tourismFound!!), DataConverter.tourismFromDTO(tourismDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
     }
 
     override fun addTourismInUser(username: String, tourismDTO: TourismDTO): UserDTO? {
@@ -383,6 +459,19 @@ class UserService(
         return DataConverter.userToDTO(itemUserSaved)
     }
 
+    override fun updateDeathInUser(username: String, deathId: UUID, deathDTO: DeathDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val deathFound = userItem?.deaths?.find { it.idDeath == deathId }
+        if (deathFound != DataConverter.deathFromDTO(deathDTO)){
+            deathDTO.idDeath = deathId
+            deathDTO.username = username
+
+            userItem?.deaths?.set(userItem.deaths!!.indexOf(deathFound), DataConverter.deathFromDTO(deathDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
+
     override fun addDeathInUser(username: String, deathDTO: DeathDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
         val itemDeath = deathRepository.findDeathByUsernameAndName(username, deathDTO.name!!)
@@ -409,7 +498,7 @@ class UserService(
         val itemDeath = deathRepository.findDeathByUsernameAndName(username, name)
 
         if(itemDeath?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemDeath?.imageUrl!!)
+            val itemImageDelete = imageRepository.findImageByLink(itemDeath.imageUrl!!)
             imageRepository.delete(itemImageDelete!!)
         }
 
@@ -439,6 +528,19 @@ class UserService(
         imageRepository.delete(itemImage!!)
 
         return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun updateServiceInUser(username: String, serviceId: UUID, serviceDTO: ServiceDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val serviceFound = userItem?.services?.find { it.idService == serviceId }
+        if (serviceFound != DataConverter.serviceFromDTO(serviceDTO)){
+            serviceDTO.idService = serviceId
+            serviceDTO.username = username
+
+            userItem?.services?.set(userItem.services!!.indexOf(serviceFound!!), DataConverter.serviceFromDTO(serviceDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
     }
 
     override fun addServiceInUser(username: String, serviceDTO: ServiceDTO): UserDTO? {
@@ -499,6 +601,19 @@ class UserService(
         val itemUserSaved = userRepository.save(itemUser!!)
         imageRepository.delete(itemImage!!)
         return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun updateNewsInUser(username: String, newsId: UUID, newsDTO: NewsDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val newsFound = userItem?.news?.find { it.idNew == newsId }
+        if (newsFound != DataConverter.newsFromDTO(newsDTO)){
+            newsDTO.idNew = newsId
+            newsDTO.username = username
+
+            userItem?.news?.set(userItem.news!!.indexOf(newsFound!!), DataConverter.newsFromDTO(newsDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
     }
 
     override fun addNewsInUser(username: String, newsDTO: NewsDTO): UserDTO? {
@@ -576,6 +691,19 @@ class UserService(
             }
         }
         return DataConverter.userToDTO(itemUser!!)
+    }
+
+    override fun updateBandoInUser(username: String, bandoId: UUID, bandoDTO: BandoDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val bandoFound = userItem?.bandos?.find { it.idBando == bandoId }
+        if (bandoFound != DataConverter.bandoFromDTO(bandoDTO)){
+            bandoDTO.idBando = bandoId
+            bandoDTO.username = username
+
+            userItem?.bandos?.set(userItem.bandos!!.indexOf(bandoFound!!), DataConverter.bandoFromDTO(bandoDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
     }
 
     override fun addBandoInUser(username: String, bandoDTO: BandoDTO): UserDTO? {
@@ -660,6 +788,19 @@ class UserService(
         return DataConverter.userToDTO(itemUserSaved)
     }
 
+    override fun updateLinkInUser(username: String, linkId: UUID, linkDTO: LinkDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val linkFound = userItem?.links?.find { it.idLink == linkId }
+        if (linkFound != DataConverter.linkFromDTO(linkDTO)){
+            linkDTO.idLink = linkId
+            linkDTO.username = username
+
+            userItem?.links?.set(userItem.links!!.indexOf(linkFound!!), DataConverter.linkFromDTO(linkDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
+
     override fun addLinkInUser(username: String, linkDTO: LinkDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
 
@@ -691,7 +832,18 @@ class UserService(
         return DataConverter.userToDTO(itemSaved)
     }
 
+    override fun updateSponsorInUser(username: String, sponsorId: UUID, sponsorDTO: SponsorDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val sponsorFound = userItem?.sponsors?.find { it.idSponsor == sponsorId }
+        if (sponsorFound != DataConverter.sponsorFromDTO(sponsorDTO)){
+            sponsorDTO.idSponsor = sponsorId
+            sponsorDTO.username = username
 
+            userItem?.sponsors?.set(userItem.sponsors!!.indexOf(sponsorFound!!), DataConverter.sponsorFromDTO(sponsorDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
 
 
     override fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): UserDTO? {
@@ -750,6 +902,19 @@ class UserService(
         val itemUserSaved = userRepository.save(itemUser!!)
         imageRepository.delete(itemImage!!)
         return DataConverter.userToDTO(itemUserSaved)
+    }
+
+    override fun updateAdInUser(username: String, adId: UUID, adDTO: AdDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val adFound = userItem?.ads?.find { it.idAd == adId }
+        if (adFound != DataConverter.adFromDTO(adDTO)){
+            adDTO.idAd = adId
+            adDTO.username = username
+
+            userItem?.ads?.set(userItem.ads!!.indexOf(adFound!!), DataConverter.adFromDTO(adDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
     }
 
     override fun addAdInUser(username: String, adDTO: AdDTO): UserDTO? {

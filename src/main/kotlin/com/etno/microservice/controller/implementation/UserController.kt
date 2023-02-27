@@ -5,6 +5,7 @@ import com.etno.microservice.model.dto.*
 import com.etno.microservice.service.implementation.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
 class UserController(
@@ -34,6 +35,11 @@ class UserController(
         return ResponseEntity.ok().body(userService.addEventInUser(username, eventDTO))
     }
 
+    override fun updateEventInUser(username: String, eventId: UUID, eventDTO: EventDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updatedEventInUser(username, eventId, eventDTO))
+    }
+
+
     override fun addImageToEventInUser(username: String, title: String, image: String): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addImageToEventInUser(username, title, image))
     }
@@ -53,9 +59,9 @@ class UserController(
     override fun dropOutSubscription(
         username: String,
         title: String,
-        subscriptionUserDTO: SubscriptionUserDTO
+        fcmToken: String
     ): ResponseEntity<SubscriptionUserDTO> {
-        return ResponseEntity.ok().body(userService.dropOutSubscription(username, title, subscriptionUserDTO))
+        return ResponseEntity.ok().body(userService.dropOutSubscription(username, title, fcmToken))
     }
 
     override fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): ResponseEntity<UserDTO> {
@@ -196,5 +202,49 @@ class UserController(
 
     override fun deleteAdInUser(username: String, title: String): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.deleteAdInUser(username, title))
+    }
+
+    override fun updatePharmacyInUser(username: String, pharmacyId: UUID, pharmacyDTO: PharmacyDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updatePharmacyInUser(username, pharmacyId, pharmacyDTO))
+    }
+
+    override fun updateTourismInUser(
+        username: String,
+        tourismId: UUID,
+        tourismDTO: TourismDTO
+    ): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateTourismInUser(username, tourismId, tourismDTO))
+    }
+
+    override fun updateBandoInUser(username: String, bandoId: UUID, bandoDTO: BandoDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateBandoInUser(username, bandoId, bandoDTO))
+    }
+
+    override fun updateDeathInUser(username: String, deathId: UUID, deathDTO: DeathDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateDeathInUser(username, deathId, deathDTO))
+    }
+
+    override fun updateServiceInUser(
+        username: String,
+        serviceId: UUID,
+        serviceDTO: ServiceDTO
+    ): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateServiceInUser(username, serviceId, serviceDTO))
+    }
+
+    override fun updateNewsInUser(username: String, newsId: UUID, newsDTO: NewsDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateNewsInUser(username, newsId, newsDTO))
+    }
+
+    override fun updateLinkInUser(username: String, linkId: UUID, linkDTO: LinkDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateLinkInUser(username, linkId, linkDTO))
+    }
+
+    override fun updateSponsorInUser(username: String, sponsorId: UUID, sponsorDTO: SponsorDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateSponsorInUser(username, sponsorId, sponsorDTO))
+    }
+
+    override fun updateAdInUser(username: String, adId: UUID, adDTO: AdDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateAdInUser(username, adId, adDTO))
     }
 }
