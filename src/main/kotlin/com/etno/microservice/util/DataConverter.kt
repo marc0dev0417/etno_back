@@ -9,7 +9,6 @@ import java.util.*
 
 class DataConverter {
     companion object {
-
         fun userLoginToDTO(user: User): UserLoginDTO{
             return UserLoginDTO(
                 idUser = user.idUser,
@@ -79,6 +78,7 @@ class DataConverter {
                 address = event.address,
                 description = event.description,
                 organization = event.organization,
+                hasSubscription = event.hasSubscription,
                 reservePrice = event.reservePrice,
                 seats = event.seats,
                 capacity = event.capacity,
@@ -103,6 +103,7 @@ class DataConverter {
                 address = eventDTO.address,
                 description = eventDTO.description,
                 organization = eventDTO.organization,
+                hasSubscription = eventDTO.hasSubscription,
                 reservePrice = eventDTO.reservePrice,
                 seats = eventDTO.seats,
                 capacity = eventDTO.capacity,
@@ -277,7 +278,7 @@ class DataConverter {
         }
         fun pharmacyFromDTO(pharmacyDTO: PharmacyDTO): Pharmacy{
             return Pharmacy(
-                idPharmacy = pharmacyDTO.idPharmacy!!,
+                idPharmacy = pharmacyDTO.idPharmacy,
                 username = pharmacyDTO.username,
                 type = pharmacyDTO.type,
                 link = pharmacyDTO.link,

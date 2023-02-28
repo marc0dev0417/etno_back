@@ -75,7 +75,7 @@ interface UserServiceInterface {
     //User links -> -------------------------------------------------------------------------
     fun updateLinkInUser(username: String, linkId: UUID, linkDTO: LinkDTO): UserDTO?
     fun addLinkInUser(username: String, linkDTO: LinkDTO): UserDTO?
-    fun deleteLinkInUser(username: String, title: String): UserDTO?
+    fun deleteLinkInUser(username: String, idLink: UUID): UserDTO?
 
 
 

@@ -823,9 +823,9 @@ class UserService(
         }
         return DataConverter.userToDTO(itemUser!!)
     }
-    override fun deleteLinkInUser(username: String, title: String ): UserDTO? {
+    override fun deleteLinkInUser(username: String, idLink: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemLink = linkRepository.findLinkByUsernameAndTitle(username, title)
+        val itemLink = linkRepository.findLinkByUsernameAndIdLink(username, idLink)
        itemUser?.links?.remove(itemLink)
         val itemSaved = userRepository.save(itemUser!!)
         linkRepository.delete(itemLink!!)
@@ -944,13 +944,7 @@ class UserService(
         val itemUser = userRepository.findUserByUsername(username)
         val itemAd = adRepository.findAdByUsernameAndTitle(username, title)
 
-        if(itemAd?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemAd.imageUrl!!)
-            imageRepository.delete(itemImageDelete!!)
-        }
-
         itemUser?.ads?.remove(itemAd)
-       // imageRepository.delete(itemImageDelete!!)
         val itemSaved = userRepository.save(itemUser!!)
         adRepository.delete(itemAd!!)
         return DataConverter.userToDTO(itemSaved)

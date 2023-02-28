@@ -1,7 +1,7 @@
 package com.etno.microservice.model
 
 import org.hibernate.annotations.Type
-import java.util.UUID
+import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -20,7 +20,7 @@ data class Image(
     @Column(name = "section")
     var section: String ? = null,
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     var name: String? = null,
 
     @Column(name = "category")

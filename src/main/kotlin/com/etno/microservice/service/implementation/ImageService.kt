@@ -1,10 +1,12 @@
 package com.etno.microservice.service.implementation
 
 import com.etno.microservice.model.dto.ImageDTO
+import com.etno.microservice.model.dto.pagination.ImagePageDTO
 import com.etno.microservice.repository.ImageRepository
 import com.etno.microservice.service.ImageServiceInterface
 import com.etno.microservice.util.DataConverter
 import com.etno.microservice.util.Urls
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
@@ -91,5 +93,25 @@ class ImageService(
             file.delete()
         }
         return DataConverter.imageToDTO(imageItem!!)
+    }
+
+    override fun getImagesPaginated(locality: String, pageNum: Int, pageSize: Int): ImagePageDTO? {
+        val pageable = PageRequest.of(pageNum, pageSize)
+        val pagedResult = imageRepository.findEventsPageableByLocality(locality, pageable)
+        return if (pagedResult!!.hasContent()){
+            ImagePageDTO(
+                content = pagedResult.content.toList().map { DataConverter.imageToDTO(it) },
+                totalElements = pagedResult.totalElements,
+                totalPages = pagedResult.totalPages,
+                pageNum = pagedResult.number
+            )
+        } else {
+            ImagePageDTO(
+                content = emptyList(),
+                totalElements = pagedResult.totalElements,
+                totalPages = pagedResult.totalPages,
+                pageNum = pagedResult.number
+            )
+        }
     }
 }

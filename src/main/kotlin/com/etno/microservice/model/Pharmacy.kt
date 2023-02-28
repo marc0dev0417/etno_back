@@ -9,7 +9,7 @@ import javax.persistence.*
 data class Pharmacy(
     @Id
     @Type(type = "uuid-char")
-    var idPharmacy: UUID = UUID.randomUUID(),
+    var idPharmacy: UUID? = UUID.randomUUID(),
 
     @Column(name = "username")
     var username: String ? = null,

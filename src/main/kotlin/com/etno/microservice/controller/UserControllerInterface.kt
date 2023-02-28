@@ -987,12 +987,12 @@ interface UserControllerInterface {
     @RequestMapping(
         value = ["/users/delete/link"],
         produces = ["application/json"],
-        params = ["username", "title"],
+        params = ["username", "idLink"],
         method = [RequestMethod.DELETE]
     )
     fun deleteLinkInUser(
         @RequestParam(name = "username") username: String,
-        @RequestParam(name = "title") title: String
+        @RequestParam(name = "idLink") idLink: UUID
     ): ResponseEntity<UserDTO>
 
     // -> --------------------------------------------------------------------------------------------------------------

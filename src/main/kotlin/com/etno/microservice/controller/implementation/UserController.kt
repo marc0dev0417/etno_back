@@ -176,8 +176,8 @@ class UserController(
         return ResponseEntity.ok().body(userService.addLinkInUser(username, linkDTO))
     }
 
-    override fun deleteLinkInUser(username: String, title: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteLinkInUser(username, title))
+    override fun deleteLinkInUser(username: String, idLink: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteLinkInUser(username, idLink))
     }
 
     override fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): ResponseEntity<UserDTO> {

@@ -1,8 +1,8 @@
 package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
-import com.etno.microservice.model.Image
 import com.etno.microservice.model.dto.ImageDTO
+import com.etno.microservice.model.dto.pagination.ImagePageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -115,4 +115,32 @@ interface ImageControllerInterface {
         params = ["locality"]
     )
     fun findImagesByLocality(@RequestParam(name = "locality") locality: String):ResponseEntity<List<ImageDTO>>
+
+    @ApiOperation(
+        value = "Get images by paginated",
+        nickname = "getImagesPaginated",
+        notes = "Will show images paginated",
+        tags = ["Image"],
+        response = ImageDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Image", response = ImagePageDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/images"],
+        produces = ["application/json"],
+        params = ["locality", "pageNum", "elementSize"],
+        method = [RequestMethod.GET]
+    )
+    fun findImagesPaginated(
+        @RequestParam(name = "locality") locality: String,
+        @RequestParam(defaultValue = "0", name = "pageNum") pageNum: Int,
+        @RequestParam(defaultValue = "0", name = "elementSize") elementSize: Int
+    ): ResponseEntity<ImagePageDTO>
 }

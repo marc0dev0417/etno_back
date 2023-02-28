@@ -26,6 +26,9 @@ data class Event(
     @Column(name = "organization")
     var organization: String? = null,
 
+    @Column(name = "hasSubscription")
+    var hasSubscription: Boolean ? = null,
+
     @Column(name = "reservePrice")
     var reservePrice: Double ? = null,
 
