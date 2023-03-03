@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-class UserController(
+class  UserController(
     private val userService: UserService
 ):UserControllerInterface {
     override fun getUsers(): ResponseEntity<List<UserDTO>>? {
@@ -198,6 +198,10 @@ class UserController(
 
     override fun addAdInUser(username: String, adDTO: AdDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addAdInUser(username, adDTO))
+    }
+
+    override fun addReserveInUser(username: String, reserveDTO: ReserveDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addReserveInUser(username, reserveDTO))
     }
 
     override fun deleteAdInUser(username: String, title: String): ResponseEntity<UserDTO> {

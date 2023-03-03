@@ -1132,6 +1132,33 @@ interface UserControllerInterface {
         @RequestBody adDTO: AdDTO
     ): ResponseEntity<UserDTO>
 
+    @ApiOperation(
+        value = "add reserve in User",
+        nickname = "addReserveInUser",
+        notes = "Gonna add reserve in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["users/add/reserve"],
+        consumes = ["application/json"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.POST]
+    )
+    fun addReserveInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody reserveDTO: ReserveDTO
+    ): ResponseEntity<UserDTO>
 
     @ApiOperation(
         value = "delete add in User",
@@ -1183,6 +1210,7 @@ interface UserControllerInterface {
         method = [RequestMethod.PUT],
         params = ["username", "pharmacyId"]
     )
+
     fun updatePharmacyInUser(
         @RequestParam(name = "username", required = true) username: String,
         @RequestParam(name = "pharmacyId", required = true) pharmacyId: UUID,

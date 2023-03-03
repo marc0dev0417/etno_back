@@ -7,4 +7,4 @@ data class NewsPageDTO(
         var totalPages: Int ? = null,
         var totalElements: Long ? = null,
         var pageNum: Int ? = null
-    )
+)

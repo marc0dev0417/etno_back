@@ -6,7 +6,6 @@ import com.etno.microservice.service.MailServiceInterface
 import com.etno.microservice.util.Urls
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.io.FileSystemResource
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -39,7 +38,6 @@ class MailService(
         }catch (_: Exception){
             MailDetailsSuccessDTO("Mail has not been sent successfully")
         }
-
     }
 
     override fun sendMailWithAttachment(

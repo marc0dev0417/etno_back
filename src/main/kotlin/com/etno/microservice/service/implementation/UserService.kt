@@ -18,6 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.text.DateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.TemporalAdjusters.lastDayOfYear
 import java.util.*
 
 @Service
@@ -38,6 +41,8 @@ class UserService(
     private val linkRepository: LinkRepository,
     private val sponsorRepository: SponsorRepository,
     private val adRepository: AdRepository,
+    private val reserveRepository: ReserveRepository,
+    private val placeRepository: PlaceRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -175,13 +180,7 @@ class UserService(
     override fun deleteEventInUser(username: String, title: String): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
         val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
-
         itemUser?.events?.remove(itemEvent!!)
-
-        itemEvent?.images?.forEach {
-           val itemImage = imageRepository.findImageByLink(it.link!!)
-           imageRepository.delete(itemImage!!)
-        }
 
         val itemSaved = userRepository.save(itemUser!!)
         eventRepository.delete(itemEvent!!)
@@ -308,6 +307,9 @@ class UserService(
 
     override fun addPharmacyInUser(username: String, pharmacyDTO: PharmacyDTO): UserDTO? {
         var nowDate: Date
+        val now = LocalDate.now()
+        val lastDay = now.with(lastDayOfYear())
+        val getDayLast = Date.from(lastDay.atStartOfDay(ZoneId.systemDefault()).toInstant())
         var itemUser = userRepository.findUserByUsername(username)
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(pharmacyDTO.name!!, username)
 
@@ -320,7 +322,12 @@ class UserService(
                 for (index in 1 ..pharmacyDTO.durationDays!!){
                     nowDate = DataConverter.sumDate(pharmacyDTO.startDate!!, pharmacyDTO.frequencyInDays!! * index)!!
                     pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = nowDate))
+
+                    if (nowDate.after(getDayLast)){
+                        break
+                    }
                 }
+                pharmacyDTO.dates?.removeLast()
                 pharmacyDateRepository.saveAll(pharmacyDTO.dates!!.map { p -> DataConverter.pharmacyDateFromDTO(p) })
                 itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
             }else{
@@ -340,14 +347,16 @@ class UserService(
                     for (index in 1 ..pharmacyDTO.durationDays!!){
                         nowDate = DataConverter.sumDate(Date(), pharmacyDTO.frequencyInDays!! * index)!!
                         pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = nowDate))
+                        if (nowDate.after(getDayLast)){
+                            break
+                        }
                     }
+                    pharmacyDTO.dates?.removeLast()
                     pharmacyDateRepository.saveAll(pharmacyDTO.dates!!.map { p -> DataConverter.pharmacyDateFromDTO(p) })
                     itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
                 }else{
                     itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
                 }
-              //  pharmacyDateRepository.saveAll(listDate)
-
                 itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
                itemUser = userRepository.save(itemUser!!)
             }
@@ -359,10 +368,6 @@ class UserService(
         val itemUser = userRepository.findUserByUsername(username)
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(name, username)
 
-        if(itemPharmacy?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemPharmacy.imageUrl!!)
-            imageRepository.delete(itemImageDelete!!)
-        }
         itemUser?.pharmacies?.remove(itemPharmacy)
         val itemSaved = userRepository.save(itemUser!!)
         pharmacyRepository.delete(itemPharmacy!!)
@@ -497,11 +502,6 @@ class UserService(
         val itemUser = userRepository.findUserByUsername(username)
         val itemDeath = deathRepository.findDeathByUsernameAndName(username, name)
 
-        if(itemDeath?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemDeath.imageUrl!!)
-            imageRepository.delete(itemImageDelete!!)
-        }
-
         itemUser?.deaths?.remove(itemDeath)
         val itemUserSaved = userRepository.save(itemUser!!)
         deathRepository.delete(itemDeath!!)
@@ -569,14 +569,7 @@ class UserService(
         val itemUser = userRepository.findUserByUsername(username)
         val itemService = serviceRepository.findServiceByUsernameAndOwner(username, owner)
 
-        if(itemService?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemService.imageUrl!!)
-            imageRepository.delete(itemImageDelete!!)
-        }
-
-
         itemUser?.services?.remove(itemService)
-
         val itemSaved = userRepository.save(itemUser!!)
         serviceRepository.delete(itemService!!)
         return DataConverter.userToDTO(itemSaved)
@@ -641,10 +634,6 @@ class UserService(
         val itemUser = userRepository.findUserByUsername(username)
         val itemNew = newsRepository.findNewByUsernameAndTitle(username, title)
 
-        if (itemNew?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemNew.imageUrl!!)
-            imageRepository.delete(itemImageDelete!!)
-        }
         itemUser?.news?.remove(itemNew)
         val itemSaved = userRepository.save(itemUser!!)
         newsRepository.delete(itemNew!!)
@@ -756,10 +745,6 @@ class UserService(
         val itemUser = userRepository.findUserByUsername(username)
         val itemBando = bandoRepository.findBandoByUsernameAndTitle(username, title)
 
-        if(itemBando?.imageUrl != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemBando.imageUrl!!)
-            imageRepository.delete(itemImageDelete!!)
-        }
         itemUser?.bandos?.remove(itemBando)
         val itemSaved = userRepository.save(itemUser!!)
         bandoRepository.delete(itemBando!!)
@@ -948,5 +933,30 @@ class UserService(
         val itemSaved = userRepository.save(itemUser!!)
         adRepository.delete(itemAd!!)
         return DataConverter.userToDTO(itemSaved)
+    }
+
+    override fun addReserveInUser(username: String, reserveDTO: ReserveDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+
+        when(reserveRepository.findReserveByUsernameAndName(username, reserveDTO.name!!)){
+            null -> {
+                reserveDTO.idReserve = UUID.randomUUID()
+                reserveDTO.username = username
+                reserveDTO.place?.idPlace = UUID.randomUUID()
+                userItem?.reserves?.add(DataConverter.reserveFromDTO(reserveDTO))
+                userItem = userRepository.save(userItem!!)
+            }
+            else -> {
+                val checkIfExistReserve = userItem?.reserves?.find { it.name == reserveDTO.name }
+                if (checkIfExistReserve == null) {
+                    reserveDTO.idReserve = UUID.randomUUID()
+                    reserveDTO.username = username
+                    reserveDTO.place?.idPlace = UUID.randomUUID()
+                    userItem?.reserves?.add(DataConverter.reserveFromDTO(reserveDTO))
+                    userItem = userRepository.save(userItem!!)
+                }
+            }
+        }
+        return DataConverter.userToDTO(userItem!!)
     }
 }

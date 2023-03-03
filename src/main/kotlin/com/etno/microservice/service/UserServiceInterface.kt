@@ -78,7 +78,6 @@ interface UserServiceInterface {
     fun deleteLinkInUser(username: String, idLink: UUID): UserDTO?
 
 
-
     //User sponsors -> ----------------------------------------------------------------------
     fun updateSponsorInUser(username: String, sponsorId: UUID, sponsorDTO: SponsorDTO): UserDTO?
     fun addSponsorInUser(username: String, sponsorDTO: SponsorDTO): UserDTO?
@@ -86,8 +85,13 @@ interface UserServiceInterface {
     fun addImageToSponsorInUser(username: String, title: String, imageName: String): UserDTO?
     fun deleteImageToSponsorInUser(username: String, title: String, imageName: String): UserDTO?
 
+
     //User Ad -> ----------------------------------------------------------------------------
     fun updateAdInUser(username: String, adId: UUID, adDTO: AdDTO): UserDTO?
     fun addAdInUser(username: String, adDTO: AdDTO): UserDTO?
     fun deleteAdInUser(username: String, title: String): UserDTO?
+
+
+    //User reserve -> -----------------------------------------------------------------------
+    fun addReserveInUser(username: String, reserveDTO: ReserveDTO): UserDTO?
 }

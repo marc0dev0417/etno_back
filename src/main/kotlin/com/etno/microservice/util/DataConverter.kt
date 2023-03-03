@@ -31,7 +31,8 @@ class DataConverter {
                 bandos = user.bandos.let { it?.map { bando: Bando -> bandoToDTO(bando) } }?.toMutableList(),
                 links = user.links.let { it?.map { link -> linkToDTO(link) } }?.toMutableList(),
                 sponsors = user.sponsors.let { it?.map { sponsor -> sponsorToDTO(sponsor) } }?.toMutableList(),
-                ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList()
+                ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList(),
+                reserves = user.reserves.let { it?.map { reserve -> reserveToDTO(reserve) } }?.toMutableList()
             )
         }
 
@@ -50,7 +51,8 @@ class DataConverter {
                 bandos = userDTO.bandos.let { it?.map { bandoDTO -> bandoFromDTO(bandoDTO) } }?.toMutableList(),
                 links = userDTO.links.let { it?.map { linkDTO -> linkFromDTO(linkDTO) } }?.toMutableList(),
                 sponsors = userDTO.sponsors.let { it?.map { sponsorDTO -> sponsorFromDTO(sponsorDTO) } }?.toMutableList(),
-                ads = userDTO.ads.let { it?.map { adDTO -> adFromDTO(adDTO) } }?.toMutableList()
+                ads = userDTO.ads.let { it?.map { adDTO -> adFromDTO(adDTO) } }?.toMutableList(),
+                reserves = userDTO.reserves.let { it?.map { reserveDTO -> reserveFromDTO(reserveDTO) } }?.toMutableList()
             )
         }
 
@@ -63,7 +65,8 @@ class DataConverter {
                 deaths = user.deaths.let { it?.map { death -> deathToDTO(death) } }?.toMutableList(),
                 services = user.services.let { it?.map { service -> serviceToDTO(service) } }?.toMutableList(),
                 news = user.news.let { it?.map { new -> newsToDTO(new) } }?.toMutableList(),
-                ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList()
+                ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList(),
+                reserves = user.reserves.let { it?.map { reserve -> reserveToDTO(reserve) } }?.toMutableList()
             )
         }
 
@@ -493,6 +496,65 @@ class DataConverter {
                 description = adDTO.description,
                 imageUrl = adDTO.imageUrl,
                 webUrl = adDTO.webUrl
+            )
+        }
+
+        fun reserveToDTO(reserve: Reserve): ReserveDTO{
+            return ReserveDTO(
+                idReserve = reserve.idReserve,
+                username = reserve.username,
+                name = reserve.name,
+                hall = reserve.hall,
+                email = reserve.email,
+                phone = reserve.phone,
+                isPrivate = reserve.isPrivate,
+                place = placeToDTO(reserve.place!!),
+                date = reserve.date
+            )
+        }
+        fun reserveFromDTO(reserveDTO: ReserveDTO): Reserve {
+            return Reserve(
+                idReserve = reserveDTO.idReserve,
+                username = reserveDTO.username,
+                name = reserveDTO.name,
+                hall = reserveDTO.hall,
+                email = reserveDTO.email,
+                phone = reserveDTO.phone,
+                isPrivate = reserveDTO.isPrivate,
+                place = placeFromDTO(reserveDTO.place!!),
+                date = reserveDTO.date
+            )
+        }
+
+        fun reserveScheduleToDTO(reserveSchedule: ReserveSchedule): ReserveScheduleDTO {
+            return ReserveScheduleDTO(
+                idReserveSchedule = reserveSchedule.idReserveSchedule,
+                date = reserveSchedule.date
+            )
+        }
+        fun reserveScheduleFromDTO(reserveScheduleDTO: ReserveScheduleDTO): ReserveSchedule {
+            return ReserveSchedule(
+                idReserveSchedule = reserveScheduleDTO.idReserveSchedule,
+                date = reserveScheduleDTO.date
+            )
+        }
+
+        fun placeToDTO(place: Place): PlaceDTO {
+            return PlaceDTO(
+                idPlace = place.idPlace,
+                username = place.username,
+                placeName = place.placeName,
+                latitude = place.latitude,
+                longitude = place.longitude
+            )
+        }
+        fun placeFromDTO(placeDTO: PlaceDTO): Place {
+            return Place(
+                idPlace = placeDTO.idPlace,
+                username = placeDTO.username,
+                placeName = placeDTO.placeName,
+                latitude = placeDTO.latitude,
+                longitude = placeDTO.longitude
             )
         }
     }
