@@ -6,4 +6,5 @@ import org.springframework.stereotype.Service
 @Service
 interface ReserveServiceInterface {
     fun getReserves(): List<ReserveDTO>?
+    fun getReservesByUsername(username: String): List<ReserveDTO>
 }

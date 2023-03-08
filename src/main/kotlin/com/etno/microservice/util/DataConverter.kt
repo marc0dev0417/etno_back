@@ -405,7 +405,9 @@ class DataConverter {
                 username = incidence.username,
                 fcmToken = incidence.fcmToken,
                 title = incidence.title,
-                description = incidence.description
+                description = incidence.description,
+                isSolved = incidence.isSolved,
+                solution = incidence.solution
             )
         }
         fun incidenceFromDTO(incidentDTO: IncidentDTO): Incident{
@@ -414,7 +416,9 @@ class DataConverter {
                 username = incidentDTO.username,
                 fcmToken = incidentDTO.fcmToken,
                 title = incidentDTO.title,
-                description = incidentDTO.description
+                description = incidentDTO.description,
+                isSolved = incidentDTO.isSolved,
+                solution = incidentDTO.solution
             )
         }
 
@@ -504,12 +508,15 @@ class DataConverter {
                 idReserve = reserve.idReserve,
                 username = reserve.username,
                 name = reserve.name,
+                description = reserve.description,
                 hall = reserve.hall,
                 email = reserve.email,
                 phone = reserve.phone,
                 isPrivate = reserve.isPrivate,
                 place = placeToDTO(reserve.place!!),
-                date = reserve.date
+                date = reserve.date,
+                reserveUsers = reserve.reserveUsers.let { reserve.reserveUsers?.map { reserveUserToDTO(it) } }?.toMutableList(),
+                isReserved = reserve.isReserved
             )
         }
         fun reserveFromDTO(reserveDTO: ReserveDTO): Reserve {
@@ -517,12 +524,15 @@ class DataConverter {
                 idReserve = reserveDTO.idReserve,
                 username = reserveDTO.username,
                 name = reserveDTO.name,
+                description = reserveDTO.description,
                 hall = reserveDTO.hall,
                 email = reserveDTO.email,
                 phone = reserveDTO.phone,
                 isPrivate = reserveDTO.isPrivate,
                 place = placeFromDTO(reserveDTO.place!!),
-                date = reserveDTO.date
+                date = reserveDTO.date,
+                reserveUsers = reserveDTO.reserveUsers.let { reserveDTO.reserveUsers?.map { reserveUserFromDTO(it) } }?.toMutableList(),
+                isReserved = reserveDTO.isReserved
             )
         }
 
@@ -543,18 +553,54 @@ class DataConverter {
             return PlaceDTO(
                 idPlace = place.idPlace,
                 username = place.username,
-                placeName = place.placeName,
+                name = place.name,
                 latitude = place.latitude,
-                longitude = place.longitude
+                longitude = place.longitude,
+                halls = place.halls.let { place.halls?.map { hallToDTO(it) } }?.toMutableList()
             )
         }
         fun placeFromDTO(placeDTO: PlaceDTO): Place {
             return Place(
                 idPlace = placeDTO.idPlace,
                 username = placeDTO.username,
-                placeName = placeDTO.placeName,
+                name = placeDTO.name,
                 latitude = placeDTO.latitude,
-                longitude = placeDTO.longitude
+                longitude = placeDTO.longitude,
+                halls = placeDTO.halls.let { placeDTO.halls?.map { hallFromDTO(it) } }?.toMutableList()
+            )
+        }
+
+        fun hallToDTO(hall: Hall): HallDTO {
+            return HallDTO(
+                idHall = hall.idHall,
+                username = hall.username,
+                name = hall.name
+            )
+        }
+        fun hallFromDTO(hallDTO: HallDTO): Hall {
+            return Hall(
+                idHall = hallDTO.idHall,
+                username = hallDTO.username,
+                name = hallDTO.name
+            )
+        }
+
+        fun reserveUserToDTO(reserveUser: ReserveUser): ReserveUserDTO {
+            return ReserveUserDTO(
+                idReserveUser = reserveUser.idReserveUser,
+                fcmToken = reserveUser.fcmToken,
+                data = reserveUser.data,
+                place = reserveUser.place?.let { placeToDTO(it) },
+                isReserved = reserveUser.isReserved
+            )
+        }
+        fun reserveUserFromDTO(reserveUserDTO: ReserveUserDTO): ReserveUser {
+            return ReserveUser(
+                idReserveUser = reserveUserDTO.idReserveUser,
+                fcmToken = reserveUserDTO.fcmToken,
+                data = reserveUserDTO.data,
+                place = reserveUserDTO.place?.let { placeFromDTO(it) },
+                isReserved = reserveUserDTO.isReserved
             )
         }
     }

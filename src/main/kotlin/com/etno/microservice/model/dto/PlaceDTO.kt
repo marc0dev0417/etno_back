@@ -6,11 +6,13 @@ import java.util.*
 data class PlaceDTO(
     @JsonProperty("idPlace") var idPlace: UUID? = null,
 
-    @JsonProperty("username") val username: String ? = null,
+    @JsonProperty("username") var username: String ? = null,
 
-    @JsonProperty("placeName") val placeName: String ? = null,
+    @JsonProperty("name") val name: String ? = null,
 
     @JsonProperty("latitude") val latitude: Double ? = null,
 
-    @JsonProperty("longitude") val longitude: Double ? = null
+    @JsonProperty("longitude") val longitude: Double ? = null,
+
+    @JsonProperty("halls") val halls: MutableList<HallDTO> ? = null
 )

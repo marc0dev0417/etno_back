@@ -13,4 +13,8 @@ class ReserveController(
     override fun getReserves(): ResponseEntity<List<ReserveDTO>> {
         return ResponseEntity.ok().body(reserveService.getReserves())
     }
+
+    override fun getReservesByUsername(username: String): ResponseEntity<List<ReserveDTO>> {
+        return ResponseEntity.ok().body(reserveService.getReservesByUsername(username))
+    }
 }

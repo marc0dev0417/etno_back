@@ -7,5 +7,6 @@ import java.util.*
 
 @Repository
 interface PlaceRepository: JpaRepository<Place, UUID> {
-
+    fun findPlaceByUsernameAndName(username: String, name: String): Place ?
+    fun findPlacesByUsername(username: String): List<Place>?
 }

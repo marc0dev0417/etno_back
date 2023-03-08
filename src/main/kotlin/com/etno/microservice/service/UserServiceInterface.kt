@@ -93,5 +93,8 @@ interface UserServiceInterface {
 
 
     //User reserve -> -----------------------------------------------------------------------
-    fun addReserveInUser(username: String, reserveDTO: ReserveDTO): UserDTO?
+    fun addReserveInUser(username: String, reserveDTO: ReserveDTO, placeName: String, hallName: String): UserDTO?
+    fun addReserveDataUser(username: String, reserveName: String, reserveUserDTO: ReserveUserDTO): UserDTO?
+
+    fun confirmReserve(username: String, idReserve: UUID): UserDTO?
 }

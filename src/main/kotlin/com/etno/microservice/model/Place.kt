@@ -2,10 +2,7 @@ package com.etno.microservice.model
 
 import org.hibernate.annotations.Type
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "places")
@@ -17,12 +14,15 @@ data class Place(
     @Column(name = "username")
     var username: String ? = null,
 
-    @Column(name = "placeName")
-    var placeName: String ? = null,
+    @Column(name = "name")
+    var name: String ? = null,
 
     @Column(name = "latitude")
     var latitude: Double ? = null,
 
     @Column(name = "longitude")
     var longitude: Double ? = null,
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var halls: MutableList<Hall> ? = mutableListOf()
 )

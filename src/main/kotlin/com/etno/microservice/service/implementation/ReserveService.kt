@@ -13,4 +13,8 @@ class ReserveService(
     override fun getReserves(): List<ReserveDTO>? {
         return reserveRepository.findAll().map { DataConverter.reserveToDTO(it) }
     }
+
+    override fun getReservesByUsername(username: String): List<ReserveDTO> {
+        return reserveRepository.getReservesByUsername(username)!!.map { DataConverter.reserveToDTO(it) }
+    }
 }

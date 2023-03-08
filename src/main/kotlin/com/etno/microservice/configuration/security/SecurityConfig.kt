@@ -55,6 +55,7 @@ class SecurityConfig() {
             "/links/**",
             "/reserves/**",
             "/places/**",
+            "/halls/**",
             "/ads/**",
             "/sponsors/**",
             "/sendMail/**",

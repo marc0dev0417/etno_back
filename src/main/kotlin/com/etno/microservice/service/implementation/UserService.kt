@@ -43,6 +43,7 @@ class UserService(
     private val adRepository: AdRepository,
     private val reserveRepository: ReserveRepository,
     private val placeRepository: PlaceRepository,
+    private val hallRepository: HallRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -935,14 +936,24 @@ class UserService(
         return DataConverter.userToDTO(itemSaved)
     }
 
-    override fun addReserveInUser(username: String, reserveDTO: ReserveDTO): UserDTO? {
+    override fun addReserveInUser(
+        username: String,
+        reserveDTO: ReserveDTO,
+        placeName: String,
+        hallName: String
+    ): UserDTO? {
         var userItem = userRepository.findUserByUsername(username)
+        val hallItem = hallRepository.findHallByUsernameAndName(username, hallName)
+        val placeItem = placeRepository.findPlaceByUsernameAndName(username, placeName)
 
         when(reserveRepository.findReserveByUsernameAndName(username, reserveDTO.name!!)){
             null -> {
                 reserveDTO.idReserve = UUID.randomUUID()
                 reserveDTO.username = username
-                reserveDTO.place?.idPlace = UUID.randomUUID()
+                reserveDTO.place = DataConverter.placeToDTO(placeItem!!)
+                reserveDTO.place!!.halls?.add(DataConverter.hallToDTO(hallItem!!))
+                reserveDTO.hall = hallItem?.name
+                reserveDTO.isReserved = false
                 userItem?.reserves?.add(DataConverter.reserveFromDTO(reserveDTO))
                 userItem = userRepository.save(userItem!!)
             }
@@ -951,12 +962,43 @@ class UserService(
                 if (checkIfExistReserve == null) {
                     reserveDTO.idReserve = UUID.randomUUID()
                     reserveDTO.username = username
-                    reserveDTO.place?.idPlace = UUID.randomUUID()
+                    reserveDTO.place = DataConverter.placeToDTO(placeItem!!)
+                    reserveDTO.place!!.halls?.add(DataConverter.hallToDTO(hallItem!!))
+                    reserveDTO.hall = hallItem?.name
+                    reserveDTO.isReserved = false
                     userItem?.reserves?.add(DataConverter.reserveFromDTO(reserveDTO))
                     userItem = userRepository.save(userItem!!)
                 }
             }
         }
         return DataConverter.userToDTO(userItem!!)
+    }
+
+    override fun addReserveDataUser(username: String, reserveName: String, reserveUserDTO: ReserveUserDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val reserveItem = reserveRepository.findReserveByUsernameAndName(username, reserveName)
+
+        if (reserveItem?.reserveUsers!!.isEmpty()){
+            reserveUserDTO.idReserveUser = UUID.randomUUID()
+            reserveItem.reserveUsers?.add(DataConverter.reserveUserFromDTO(reserveUserDTO))
+             userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
+
+    override fun confirmReserve(username: String, idReserve: UUID): UserDTO? {
+        val userItem = userRepository.findUserByUsername(username)
+        userItem?.reserves?.find { it.idReserve == idReserve }.also {
+            it?.isReserved = true
+
+            if (it?.reserveUsers!!.isNotEmpty()){
+                it.reserveUsers!![0].also { reserveUser ->
+                    reserveUser.isReserved = true
+                    reserveUser.place = it.place
+                }
+            }
+        }
+        val userToSave = userRepository.save(userItem!!)
+        return DataConverter.userToDTO(userToSave)
     }
 }

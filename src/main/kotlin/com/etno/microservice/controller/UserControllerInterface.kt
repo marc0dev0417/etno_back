@@ -1152,11 +1152,13 @@ interface UserControllerInterface {
         value = ["users/add/reserve"],
         consumes = ["application/json"],
         produces = ["application/json"],
-        params = ["username"],
+        params = ["username", "hallName", "placeName"],
         method = [RequestMethod.POST]
     )
     fun addReserveInUser(
         @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "hallName", required = true) hallName: String,
+        @RequestParam(name = "placeName", required = true) placeName: String,
         @RequestBody reserveDTO: ReserveDTO
     ): ResponseEntity<UserDTO>
 
@@ -1447,5 +1449,61 @@ interface UserControllerInterface {
         @RequestParam(name = "username", required = true) username: String,
         @RequestParam(name = "adId", required = true) adId: UUID,
         @RequestBody adDTO: AdDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Add datas of reserve user in Reserve",
+        nickname = "addDataUserInUser",
+        notes = "Will add data of user in reserve",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/reserve"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "reserveName"],
+        method = [RequestMethod.PUT]
+    )
+    fun addReserveUserToReserve(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "reserveName", required = true) reserveName: String,
+        @RequestBody reserveUser: ReserveUserDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Confirm reserve to User",
+        nickname = "confirmReserve",
+        notes = "Gonna confirm reserve",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/confirm/reserve"],
+        produces = ["application/json"],
+        params = ["username", "idReserve"],
+        method = [RequestMethod.PUT]
+    )
+    fun confirmReserve(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "idReserve", required = true) idReserve: UUID
     ): ResponseEntity<UserDTO>
 }

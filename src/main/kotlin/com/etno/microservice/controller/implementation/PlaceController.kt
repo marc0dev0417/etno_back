@@ -13,4 +13,12 @@ class PlaceController(
     override fun getPlaces(): ResponseEntity<List<PlaceDTO>> {
         return ResponseEntity.ok().body(placeService.getPlaces())
     }
+
+    override fun getPlacesByUsername(username: String): ResponseEntity<List<PlaceDTO>> {
+        return ResponseEntity.ok().body(placeService.getPlacesByUsername(username))
+    }
+
+    override fun savePlace(placeDTO: PlaceDTO): ResponseEntity<PlaceDTO> {
+        return ResponseEntity.ok().body(placeService.savePlace(placeDTO))
+    }
 }

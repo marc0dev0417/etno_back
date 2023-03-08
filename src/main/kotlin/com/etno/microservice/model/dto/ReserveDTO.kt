@@ -10,15 +10,21 @@ data class ReserveDTO(
 
     @JsonProperty("name") val name: String ? = null,
 
+    @JsonProperty("description") val description: String ? = null,
+
     @JsonProperty("email") val email: String ? = null,
 
     @JsonProperty("phone") val phone: String ? = null,
 
     @JsonProperty("isPrivate") val isPrivate: Boolean ? = null,
 
-    @JsonProperty("place") val place: PlaceDTO ? = null,
+    @JsonProperty("place") var place: PlaceDTO ? = null,
 
-    @JsonProperty("hall") val hall: String ? = null,
+    @JsonProperty("hall") var hall: String ? = null,
 
-    @JsonProperty("date") val date: String ? = null
+    @JsonProperty("date") val date: String ? = null,
+
+    @JsonProperty("reserveUsers") var reserveUsers: MutableList<ReserveUserDTO> ? = mutableListOf(),
+
+    @JsonProperty("isReserved") var isReserved: Boolean ? = null
 )

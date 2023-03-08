@@ -17,6 +17,9 @@ data class Reserve(
     @Column(name = "name")
     var name: String ? = null,
 
+    @Column(name = "description")
+    var description: String ? = null,
+
     @Column(name = "hall")
     var hall: String ? = null,
 
@@ -29,14 +32,18 @@ data class Reserve(
     @Column(name = "isPrivate")
     var isPrivate: Boolean ? = null,
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], optional = true)
-    @MapsId
-    @JoinColumn(name = "idPlace", nullable = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], optional = true)
     var place: Place ? = null,
 
     @Column(name = "date")
     var date: String ? = null,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var reserveSchedules: MutableList<ReserveSchedule> ? = mutableListOf()
+    var reserveSchedules: MutableList<ReserveSchedule> ? = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var reserveUsers: MutableList<ReserveUser> ? = mutableListOf(),
+
+    @Column(name = "isReserved")
+    var isReserved: Boolean ? = null
 )

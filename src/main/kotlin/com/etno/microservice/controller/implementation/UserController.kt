@@ -200,9 +200,15 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addAdInUser(username, adDTO))
     }
 
-    override fun addReserveInUser(username: String, reserveDTO: ReserveDTO): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.addReserveInUser(username, reserveDTO))
+    override fun addReserveInUser(
+        username: String,
+        hallName: String,
+        placeName: String,
+        reserveDTO: ReserveDTO
+    ): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addReserveInUser(username, reserveDTO, placeName, hallName))
     }
+
 
     override fun deleteAdInUser(username: String, title: String): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.deleteAdInUser(username, title))
@@ -250,5 +256,17 @@ class  UserController(
 
     override fun updateAdInUser(username: String, adId: UUID, adDTO: AdDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.updateAdInUser(username, adId, adDTO))
+    }
+
+    override fun addReserveUserToReserve(
+        username: String,
+        reserveName: String,
+        reserveUser: ReserveUserDTO
+    ): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addReserveDataUser(username, reserveName, reserveUser))
+    }
+
+    override fun confirmReserve(username: String, idReserve: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.confirmReserve(username, idReserve))
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 interface ReserveControllerInterface {
@@ -34,4 +35,29 @@ interface ReserveControllerInterface {
         method = [RequestMethod.GET]
     )
     fun getReserves(): ResponseEntity<List<ReserveDTO>>
+
+
+    @ApiOperation(
+        value = "Get reserves by username",
+        nickname = "getReservesByUsername",
+        notes = "You can get reserves by username",
+        tags = ["Reserve"],
+        response = ReserveDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Reserve", response = ReserveDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["reserves"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.GET]
+    )
+    fun getReservesByUsername(@RequestParam(name = "username", required = true) username: String): ResponseEntity<List<ReserveDTO>>
 }
