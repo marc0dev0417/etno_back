@@ -24,6 +24,8 @@ data class ReserveDTO(
 
     @JsonProperty("date") val date: String ? = null,
 
+    @JsonProperty("reserveSchedules") var reserveSchedules: MutableList<ReserveScheduleDTO> ? = null,
+
     @JsonProperty("reserveUsers") var reserveUsers: MutableList<ReserveUserDTO> ? = mutableListOf(),
 
     @JsonProperty("isReserved") var isReserved: Boolean ? = null

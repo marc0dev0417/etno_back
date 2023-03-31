@@ -31,7 +31,7 @@ interface ServiceControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/services"],
+        value = ["/services/paginated"],
         produces = ["application/json"],
         params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

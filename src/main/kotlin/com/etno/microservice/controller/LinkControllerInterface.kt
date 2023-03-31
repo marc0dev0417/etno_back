@@ -32,7 +32,7 @@ interface LinkControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/links"],
+        value = ["/links/paginated"],
         produces = ["application/json"],
         params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

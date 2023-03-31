@@ -32,7 +32,10 @@ class DataConverter {
                 links = user.links.let { it?.map { link -> linkToDTO(link) } }?.toMutableList(),
                 sponsors = user.sponsors.let { it?.map { sponsor -> sponsorToDTO(sponsor) } }?.toMutableList(),
                 ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList(),
-                reserves = user.reserves.let { it?.map { reserve -> reserveToDTO(reserve) } }?.toMutableList()
+                reserves = user.reserves.let { it?.map { reserve -> reserveToDTO(reserve) } }?.toMutableList(),
+                customLinks = user.customLinks.let { it?.map { customLink -> customLinkToDTO(customLink) } }?.toMutableList(),
+                places = user.places.let { it?.map { place -> placeToDTO(place) } }?.toMutableList(),
+                quizzes = user.quizzes.let { it?.map { quiz -> quizToDTO(quiz) } }?.toMutableList()
             )
         }
 
@@ -52,7 +55,10 @@ class DataConverter {
                 links = userDTO.links.let { it?.map { linkDTO -> linkFromDTO(linkDTO) } }?.toMutableList(),
                 sponsors = userDTO.sponsors.let { it?.map { sponsorDTO -> sponsorFromDTO(sponsorDTO) } }?.toMutableList(),
                 ads = userDTO.ads.let { it?.map { adDTO -> adFromDTO(adDTO) } }?.toMutableList(),
-                reserves = userDTO.reserves.let { it?.map { reserveDTO -> reserveFromDTO(reserveDTO) } }?.toMutableList()
+                reserves = userDTO.reserves.let { it?.map { reserveDTO -> reserveFromDTO(reserveDTO) } }?.toMutableList(),
+                customLinks = userDTO.customLinks.let { it?.map { customLinkDTO -> customLinkFromDTO(customLinkDTO) } }?.toMutableList(),
+                places = userDTO.places.let { it?.map { placeDTO -> placeFromDTO(placeDTO) } }?.toMutableList(),
+                quizzes = userDTO.quizzes.let { it?.map { quizDTO -> quizFromDTO(quizDTO) } }?.toMutableList()
             )
         }
 
@@ -66,7 +72,8 @@ class DataConverter {
                 services = user.services.let { it?.map { service -> serviceToDTO(service) } }?.toMutableList(),
                 news = user.news.let { it?.map { new -> newsToDTO(new) } }?.toMutableList(),
                 ads = user.ads.let { it?.map { ad -> adToDTO(ad) } }?.toMutableList(),
-                reserves = user.reserves.let { it?.map { reserve -> reserveToDTO(reserve) } }?.toMutableList()
+                reserves = user.reserves.let { it?.map { reserve -> reserveToDTO(reserve) } }?.toMutableList(),
+                quizzes = user.quizzes.let { it?.map { quiz -> quizToDTO(quiz) } }?.toMutableList()
             )
         }
 
@@ -270,7 +277,7 @@ class DataConverter {
                 imageUrl = pharmacy.imageUrl,
                 phone = pharmacy.phone,
                 schedule = pharmacy.schedule,
-                description = pharmacy.description,
+                direction = pharmacy.direction,
                 longitude = pharmacy.longitude,
                 latitude = pharmacy.latitude,
                 startDate = pharmacy.startDate,
@@ -289,7 +296,7 @@ class DataConverter {
                 name = pharmacyDTO.name,
                 phone = pharmacyDTO.phone,
                 schedule = pharmacyDTO.schedule,
-                description = pharmacyDTO.description,
+                direction = pharmacyDTO.direction,
                 longitude = pharmacyDTO.longitude,
                 latitude = pharmacyDTO.latitude,
                 startDate = pharmacyDTO.startDate,
@@ -301,7 +308,7 @@ class DataConverter {
 
         fun pharmacyDateToDTO(pharmacyDate: PharmacyDate): PharmacyDateDTO {
             return PharmacyDateDTO(
-                idPharmacyDate = pharmacyDate.idPharmacyDate,
+                idPharmacyDate = UUID.randomUUID(),
                 username = pharmacyDate.username,
                 namePharmacy = pharmacyDate.namePharmacy,
                 date = pharmacyDate.date
@@ -309,7 +316,7 @@ class DataConverter {
         }
         fun pharmacyDateFromDTO(pharmacyDateDTO: PharmacyDateDTO): PharmacyDate {
             return PharmacyDate(
-                idPharmacyDate = pharmacyDateDTO.idPharmacyDate,
+                idPharmacyDate = UUID.randomUUID(),
                 username = pharmacyDateDTO.username,
                 namePharmacy = pharmacyDateDTO.namePharmacy,
                 date = pharmacyDateDTO.date
@@ -513,8 +520,9 @@ class DataConverter {
                 email = reserve.email,
                 phone = reserve.phone,
                 isPrivate = reserve.isPrivate,
-                place = placeToDTO(reserve.place!!),
+                place = reserve.place?.let { placeToDTO(it) },
                 date = reserve.date,
+                reserveSchedules = reserve.reserveSchedules.let { reserve.reserveSchedules?.map { reserveScheduleToDTO(it) } }?.toMutableList(),
                 reserveUsers = reserve.reserveUsers.let { reserve.reserveUsers?.map { reserveUserToDTO(it) } }?.toMutableList(),
                 isReserved = reserve.isReserved
             )
@@ -529,8 +537,9 @@ class DataConverter {
                 email = reserveDTO.email,
                 phone = reserveDTO.phone,
                 isPrivate = reserveDTO.isPrivate,
-                place = placeFromDTO(reserveDTO.place!!),
+                place = reserveDTO.place?.let { placeFromDTO(it) },
                 date = reserveDTO.date,
+                reserveSchedules = reserveDTO.reserveSchedules.let { reserveDTO.reserveSchedules?.map { reserveScheduleFromDTO(it) } }?.toMutableList(),
                 reserveUsers = reserveDTO.reserveUsers.let { reserveDTO.reserveUsers?.map { reserveUserFromDTO(it) } }?.toMutableList(),
                 isReserved = reserveDTO.isReserved
             )
@@ -553,6 +562,7 @@ class DataConverter {
             return PlaceDTO(
                 idPlace = place.idPlace,
                 username = place.username,
+                imageUrl = place.imageUrl,
                 name = place.name,
                 latitude = place.latitude,
                 longitude = place.longitude,
@@ -563,6 +573,7 @@ class DataConverter {
             return Place(
                 idPlace = placeDTO.idPlace,
                 username = placeDTO.username,
+                imageUrl = placeDTO.imageUrl,
                 name = placeDTO.name,
                 latitude = placeDTO.latitude,
                 longitude = placeDTO.longitude,
@@ -591,7 +602,13 @@ class DataConverter {
                 fcmToken = reserveUser.fcmToken,
                 data = reserveUser.data,
                 place = reserveUser.place?.let { placeToDTO(it) },
-                isReserved = reserveUser.isReserved
+                isReserved = reserveUser.isReserved,
+                description = reserveUser.description,
+                reservePhone = reserveUser.reservePhone,
+                latitude = reserveUser.latitude,
+                longitude = reserveUser.longitude,
+                date = reserveUser.date,
+                reserveSchedules = reserveUser.reserveSchedules.let { reserveUser.reserveSchedules?.map { reserveScheduleToDTO(it) } }?.toMutableList()
             )
         }
         fun reserveUserFromDTO(reserveUserDTO: ReserveUserDTO): ReserveUser {
@@ -600,7 +617,99 @@ class DataConverter {
                 fcmToken = reserveUserDTO.fcmToken,
                 data = reserveUserDTO.data,
                 place = reserveUserDTO.place?.let { placeFromDTO(it) },
-                isReserved = reserveUserDTO.isReserved
+                isReserved = reserveUserDTO.isReserved,
+                description = reserveUserDTO.description,
+                reservePhone = reserveUserDTO.reservePhone,
+                latitude = reserveUserDTO.latitude,
+                longitude = reserveUserDTO.longitude,
+                date = reserveUserDTO.date,
+                reserveSchedules = reserveUserDTO.reserveSchedules.let { reserveUserDTO.reserveSchedules?.map { reserveScheduleFromDTO(it) } }?.toMutableList()
+            )
+        }
+
+        fun customLinkToDTO(customLink: CustomLink): CustomLinkDTO {
+            return CustomLinkDTO(
+                idCustomLink = customLink.idCustomLink,
+                username = customLink.username,
+                name = customLink.name,
+                webUrl = customLink.webUrl,
+                iconName = customLink.iconName
+            )
+        }
+
+        fun customLinkFromDTO(customLinkDTO: CustomLinkDTO): CustomLink {
+            return CustomLink(
+                idCustomLink = customLinkDTO.idCustomLink,
+                username = customLinkDTO.username,
+                name = customLinkDTO.name,
+                webUrl = customLinkDTO.webUrl,
+                iconName = customLinkDTO.iconName
+            )
+        }
+
+        fun quizToDTO(quiz: Quiz): QuizDTO {
+            return QuizDTO(
+                idQuiz = quiz.idQuiz,
+                username = quiz.username,
+                question = quiz.question,
+                answerOne = quiz.answerOne,
+                resultOne = quiz.resultOne,
+                answerTwo = quiz.answerTwo,
+                resultTwo = quiz.resultTwo,
+                answerThree = quiz.answerThree,
+                resultThree = quiz.resultThree,
+                answerFour = quiz.answerFour,
+                resultFour = quiz.resultFour,
+                isActive = quiz.isActive,
+                datePicker = quiz.datePicker
+            )
+        }
+        fun quizFromDTO(quizDTO: QuizDTO): Quiz {
+            return Quiz(
+                idQuiz = quizDTO.idQuiz,
+                username = quizDTO.username,
+                question = quizDTO.question,
+                answerOne = quizDTO.answerOne,
+                resultOne = 0,
+                answerTwo = quizDTO.answerTwo,
+                resultTwo = 0,
+                answerThree = quizDTO.answerThree,
+                resultThree = 0,
+                answerFour = quizDTO.answerFour,
+                resultFour = 0,
+                isActive = quizDTO.isActive,
+                datePicker = quizDTO.datePicker
+            )
+        }
+
+        fun quizResultToDTO(quizResult: QuizResult): QuizResultDTO {
+            return QuizResultDTO(
+                idQuizResult = quizResult.idQuizResult,
+                username = quizResult.username,
+                question = quizResult.question,
+                answerOne = quizResult.answerOne,
+                resultOne = quizResult.resultOne,
+                answerTwo = quizResult.answerTwo,
+                resultTwo = quizResult.resultTwo,
+                answerThree = quizResult.answerThree,
+                resultThree = quizResult.resultThree,
+                answerFour = quizResult.answerFour,
+                resultFour = quizResult.resultFour
+            )
+        }
+        fun quizResultFromDTO(quizResultDTO: QuizResultDTO): QuizResult {
+            return QuizResult(
+                idQuizResult = quizResultDTO.idQuizResult,
+                username = quizResultDTO.username,
+                question = quizResultDTO.question,
+                answerOne = quizResultDTO.answerOne,
+                resultOne = quizResultDTO.resultOne,
+                answerTwo = quizResultDTO.answerTwo,
+                resultTwo = quizResultDTO.resultTwo,
+                answerThree = quizResultDTO.answerThree,
+                resultThree = quizResultDTO.resultThree,
+                answerFour = quizResultDTO.answerFour,
+                resultFour = quizResultDTO.resultFour
             )
         }
     }

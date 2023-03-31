@@ -31,7 +31,7 @@ interface DeathControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/deaths"],
+        value = ["/deaths/paginated"],
         produces = ["application/json"],
         params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

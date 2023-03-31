@@ -4,11 +4,9 @@ import com.etno.microservice.controller.MailControllerInterface
 import com.etno.microservice.model.dto.mail.MailDetailsDTO
 import com.etno.microservice.model.dto.mail.MailDetailsSuccessDTO
 import com.etno.microservice.service.implementation.mail.MailService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 
 @RestController
 class MailController(
@@ -22,7 +20,7 @@ class MailController(
         @RequestParam(name = "address", required = true) address: String,
         @RequestParam(name = "message", required = true) message: String,
         @RequestParam(name = "subject", required = true) subject: String,
-        @RequestParam(name = "attachment", required = true) attachment: MultipartFile
+        @RequestParam(name = "attachment", required = true) attachment: String
     ): ResponseEntity<MailDetailsSuccessDTO> {
         return ResponseEntity.ok().body(mailService.sendMailWithAttachment(address, message, subject, attachment))
     }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-class  UserController(
+class UserController(
     private val userService: UserService
 ):UserControllerInterface {
     override fun getUsers(): ResponseEntity<List<UserDTO>>? {
@@ -44,8 +44,8 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addImageToEventInUser(username, title, image))
     }
 
-    override fun deleteEventInUser(username: String, title: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteEventInUser(username, title))
+    override fun deleteEventInUser(username: String, idEvent: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteEventInUser(username, idEvent))
     }
 
     override fun deleteImageToEventInUser(username: String, title: String, imageName: String): ResponseEntity<UserDTO> {
@@ -68,8 +68,8 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addPharmacyInUser(username, pharmacyDTO))
     }
 
-    override fun deletePharmacyInUser(username: String, name: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deletePharmacyInUser(username, name))
+    override fun deletePharmacyInUser(username: String, idPharmacy: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deletePharmacyInUser(username, idPharmacy))
     }
 
     override fun addImageToPharmacyInUser(username: String, name: String, imageName: String): ResponseEntity<UserDTO> {
@@ -92,8 +92,8 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addImageToTourismInUser(username, title, imageName))
     }
 
-    override fun deleteTourismInUser(username: String, title: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteTourismInUser(username, title))
+    override fun deleteTourismInUser(username: String, idTourism: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteTourismInUser(username, idTourism))
     }
 
     override fun deleteImageToTourismInUser(
@@ -108,8 +108,8 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addDeathInUser(username, deathDTO))
     }
 
-    override fun deleteDeathInUser(username: String, name: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteDeathInUser(username, name))
+    override fun deleteDeathInUser(username: String, idDeath: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteDeathInUser(username, idDeath))
     }
 
     override fun addImageToDeathInUser(username: String, name: String, imageName: String): ResponseEntity<UserDTO> {
@@ -124,8 +124,8 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addServiceInUser(username, serviceDTO))
     }
 
-    override fun deleteServiceInUser(username: String, owner: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteServiceInUser(username, owner))
+    override fun deleteServiceInUser(username: String, idService: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteServiceInUser(username, idService))
     }
 
     override fun addImageToServiceInUser(username: String, owner: String, imageName: String): ResponseEntity<UserDTO> {
@@ -140,8 +140,8 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addNewsInUser(username, newsDTO))
     }
 
-    override fun deleteNewsInUser(username: String, title: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteNewsInUser(username, title))
+    override fun deleteNewsInUser(username: String, idNews: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteNewsInUser(username, idNews))
     }
 
     override fun addImageToNewsInUser(username: String, title: String, imageName: String): ResponseEntity<UserDTO> {
@@ -156,12 +156,16 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addIncidentInUser(username, incidentDTO))
     }
 
+    override fun solveSolution(username: String, incidentId: UUID, solution: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.solveIncidence(username, incidentId, solution))
+    }
+
     override fun addBandoInUser(username: String, bandoDTO: BandoDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.addBandoInUser(username, bandoDTO))
     }
 
-    override fun deleteBandoInUser(username: String, title: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteBandoInUser(username, title))
+    override fun deleteBandoInUser(username: String, idBando: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteBandoInUser(username, idBando))
     }
 
     override fun addImageToBandoInUser(username: String, title: String, imageName: String): ResponseEntity<UserDTO> {
@@ -184,8 +188,8 @@ class  UserController(
         return ResponseEntity.ok().body(userService.addSponsorInUser(username, sponsorDTO))
     }
 
-    override fun deleteSponsorInUser(username: String, title: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteSponsorInUser(username, title))
+    override fun deleteSponsorInUser(username: String, idSponsor: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteSponsorInUser(username, idSponsor))
     }
 
     override fun addImageToSponsorInUser(username: String, title: String, imageName: String): ResponseEntity<UserDTO> {
@@ -202,16 +206,15 @@ class  UserController(
 
     override fun addReserveInUser(
         username: String,
-        hallName: String,
-        placeName: String,
+        idHall: UUID,
+        idPlace: UUID,
         reserveDTO: ReserveDTO
     ): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.addReserveInUser(username, reserveDTO, placeName, hallName))
+        return ResponseEntity.ok().body(userService.addReserveInUser(username, reserveDTO, idPlace, idHall))
     }
 
-
-    override fun deleteAdInUser(username: String, title: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok().body(userService.deleteAdInUser(username, title))
+    override fun deleteAdInUser(username: String, idAd: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteAdInUser(username, idAd))
     }
 
     override fun updatePharmacyInUser(username: String, pharmacyId: UUID, pharmacyDTO: PharmacyDTO): ResponseEntity<UserDTO> {
@@ -268,5 +271,57 @@ class  UserController(
 
     override fun confirmReserve(username: String, idReserve: UUID): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(userService.confirmReserve(username, idReserve))
+    }
+
+    override fun deletePlaceFromUser(username: String, idPlace: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deletePlaceFromUser(username, idPlace))
+    }
+
+    override fun deleteReserveFromUser(username: String, idReserve: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteReserveFromUser(username, idReserve))
+    }
+
+    override fun updatePlaceInUser(username: String, placeId: UUID, placeDTO: PlaceDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updatePlaceInUser(username, placeId, placeDTO))
+    }
+
+    override fun addPlaceInUser(username: String, placeDTO: PlaceDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addPlaceInUser(username, placeDTO))
+    }
+
+    override fun addLinkCustomInUser(username: String, customLinkDTO: CustomLinkDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addLinkCustomInUser(username, customLinkDTO))
+    }
+
+    override fun deleteCustomLink(username: String, idCustomLink: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteLinkCustomInUser(username, idCustomLink))
+    }
+
+    override fun updateCustomLinkInUser(
+        username: String,
+        idCustomLink: UUID,
+        customLinkDTO: CustomLinkDTO
+    ): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateLinkCustomInUser(username, idCustomLink, customLinkDTO))
+    }
+
+    override fun getSectionDetails(username: String): ResponseEntity<SectionDetailsDTO> {
+        return ResponseEntity.ok().body(userService.getSectionDetails(username))
+    }
+
+    override fun addQuizInUser(username: String, quizDTO: QuizDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.addQuizInUser(username, quizDTO))
+    }
+
+    override fun updateQuizInUser(username: String, idQuiz: UUID, quizDTO: QuizDTO): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateQuizInUser(username, idQuiz, quizDTO))
+    }
+
+    override fun updateResultQuiz(username: String, idQuiz: UUID, option: Int): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.updateResultQuizInUser(username, idQuiz, option))
+    }
+
+    override fun deleteQuiz(username: String, idQuiz: UUID): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(userService.deleteQuizFromUser(username, idQuiz))
     }
 }

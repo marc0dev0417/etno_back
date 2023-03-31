@@ -2,9 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.AdDTO
-import com.etno.microservice.model.dto.EventDTO
 import com.etno.microservice.model.dto.pagination.AdPageDTO
-import com.etno.microservice.model.dto.pagination.EventPageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -57,7 +55,7 @@ interface AdControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/ads"],
+        value = ["/ads/paginated"],
         produces = ["application/json"],
         params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

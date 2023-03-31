@@ -20,7 +20,7 @@ data class Event(
     @Column(name = "address")
     var address: String? = null,
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     var description: String? = null,
 
     @Column(name = "organization")
@@ -57,10 +57,10 @@ data class Event(
     var time: String? = null,
 
     @Column(name = "latitude")
-    var lat: String? = null,
+    var lat: Double? = null,
 
     @Column(name = "longitude")
-    var long: String? = null,
+    var long: Double? = null,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var images: MutableList<Image>? = mutableListOf(),

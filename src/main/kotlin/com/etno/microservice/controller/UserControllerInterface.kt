@@ -231,9 +231,9 @@ interface UserControllerInterface {
         value = ["/users/delete/event"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["username", "title"]
+        params = ["username", "idEvent"]
     )
-    fun deleteEventInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<UserDTO>
+    fun deleteEventInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "idEvent", required = true) idEvent: UUID): ResponseEntity<UserDTO>
 
     @ApiOperation(
         value = "Delete image of event in user",
@@ -361,9 +361,9 @@ interface UserControllerInterface {
         value = ["/users/delete/pharmacy"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["username", "name"]
+        params = ["username", "idPharmacy"]
     )
-    fun deletePharmacyInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "name", required = true) name: String): ResponseEntity<UserDTO>
+    fun deletePharmacyInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "idPharmacy", required = true) idPharmacy: UUID): ResponseEntity<UserDTO>
 
     @ApiOperation(
         value = "Add image to Pharmacy isn User",
@@ -481,9 +481,9 @@ interface UserControllerInterface {
         value = ["/users/delete/tourism"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["username", "title"]
+        params = ["username", "idTourism"]
     )
-    fun deleteTourismInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<UserDTO>
+    fun deleteTourismInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "idTourism", required = true) idTourism: UUID): ResponseEntity<UserDTO>
 
     @ApiOperation(
         value = "Delete image of tourism in user",
@@ -553,9 +553,9 @@ interface UserControllerInterface {
         value = ["/users/delete/death"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["username", "name"]
+        params = ["username", "idDeath"]
     )
-    fun deleteDeathInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "name", required = true) name: String): ResponseEntity<UserDTO>
+    fun deleteDeathInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "idDeath", required = true) idDeath: UUID): ResponseEntity<UserDTO>
 
     @ApiOperation(
         value = "add image to death in User",
@@ -650,9 +650,9 @@ interface UserControllerInterface {
         value = ["/users/delete/service"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["username", "owner"]
+        params = ["username", "idService"]
     )
-    fun deleteServiceInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "owner", required = true) owner: String): ResponseEntity<UserDTO>
+    fun deleteServiceInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "idService", required = true) idService: UUID): ResponseEntity<UserDTO>
 
     @ApiOperation(
         value = "add image to service in user",
@@ -746,9 +746,9 @@ interface UserControllerInterface {
         value = ["/users/delete/news"],
         produces = ["application/json"],
         method = [RequestMethod.DELETE],
-        params = ["username", "title"]
+        params = ["username", "idNews"]
     )
-    fun deleteNewsInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "title", required = true) title: String): ResponseEntity<UserDTO>
+    fun deleteNewsInUser(@RequestParam(name = "username", required = true) username: String, @RequestParam(name = "idNews", required = true) idNews: UUID): ResponseEntity<UserDTO>
 
     @ApiOperation(
         value = "add image to news in User",
@@ -832,6 +832,34 @@ interface UserControllerInterface {
     ): ResponseEntity<UserDTO>
 
     @ApiOperation(
+        value= "solve incidence",
+        nickname = "solveIncidence",
+        notes = "You gonna solve incidence",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response =  UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value= ["/users/solve/incidence"],
+        produces = ["application/json"],
+        params = ["username", "incidentId" , "solution"],
+        method = [RequestMethod.PUT]
+    )
+    fun solveSolution(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "incidentId", required = true) incidentId: UUID,
+        @RequestParam(name = "solution", required = true) solution: String
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
         value = "add bando in User",
         nickname = "addBandoInUser",
         notes = "Gonna add bando in User",
@@ -878,12 +906,12 @@ interface UserControllerInterface {
     @RequestMapping(
         value = ["/users/delete/bando"],
         produces = ["application/json"],
-        params = ["username", "title"],
+        params = ["username", "idBando"],
         method = [RequestMethod.DELETE]
     )
     fun deleteBandoInUser(
         @RequestParam(name = "username") username: String,
-        @RequestParam(name = "title") title: String
+        @RequestParam(name = "idBando") idBando: UUID
     ): ResponseEntity<UserDTO>
 
     @ApiOperation(
@@ -1043,12 +1071,12 @@ interface UserControllerInterface {
     @RequestMapping(
         value = ["/users/delete/sponsor"],
         produces = ["application/json"],
-        params = ["username", "title"],
+        params = ["username", "idSponsor"],
         method = [RequestMethod.DELETE]
     )
     fun deleteSponsorInUser(
         @RequestParam(name = "username") username: String,
-        @RequestParam(name = "title") title: String
+        @RequestParam(name = "idSponsor") idSponsor: UUID
     ): ResponseEntity<UserDTO>
 
     @ApiOperation(
@@ -1152,13 +1180,13 @@ interface UserControllerInterface {
         value = ["users/add/reserve"],
         consumes = ["application/json"],
         produces = ["application/json"],
-        params = ["username", "hallName", "placeName"],
+        params = ["username", "idHall", "idPlace"],
         method = [RequestMethod.POST]
     )
     fun addReserveInUser(
         @RequestParam(name = "username", required = true) username: String,
-        @RequestParam(name = "hallName", required = true) hallName: String,
-        @RequestParam(name = "placeName", required = true) placeName: String,
+        @RequestParam(name = "idHall", required = true) idHall: UUID,
+        @RequestParam(name = "idPlace", required = true) idPlace: UUID,
         @RequestBody reserveDTO: ReserveDTO
     ): ResponseEntity<UserDTO>
 
@@ -1181,12 +1209,12 @@ interface UserControllerInterface {
     @RequestMapping(
         value = ["/users/delete/ad"],
         produces = ["application/json"],
-        params = ["username", "title"],
+        params = ["username", "idAd"],
         method = [RequestMethod.DELETE]
     )
     fun deleteAdInUser(
         @RequestParam(name = "username") username: String,
-        @RequestParam(name = "title") title: String
+        @RequestParam(name = "idAd") idAd: UUID
     ): ResponseEntity<UserDTO>
 
     @ApiOperation(
@@ -1505,5 +1533,338 @@ interface UserControllerInterface {
     fun confirmReserve(
         @RequestParam(name = "username", required = true) username: String,
         @RequestParam(name = "idReserve", required = true) idReserve: UUID
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "delete place from User",
+        nickname = "deletePlaceFromUser",
+        notes = "Gonna delete place from User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/delete/place"],
+        produces = ["application/json"],
+        params = ["username", "idPlace"],
+        method = [RequestMethod.DELETE]
+    )
+    fun deletePlaceFromUser(
+        @RequestParam(name = "username") username: String,
+        @RequestParam(name = "idPlace") idPlace: UUID
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "delete reserve from User",
+        nickname = "deleteReserveFromUser",
+        notes = "Gonna delete reserve in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/delete/reserve"],
+        produces = ["application/json"],
+        params = ["username", "idReserve"],
+        method = [RequestMethod.DELETE]
+    )
+    fun deleteReserveFromUser(
+        @RequestParam(name = "username") username: String,
+        @RequestParam(name = "idReserve") idReserve: UUID
+    ): ResponseEntity<UserDTO>
+    @ApiOperation(
+        value = "Update a place in user",
+        nickname = "updatePlaceInUser",
+        notes = "You gonna update a place in user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/place"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        method = [RequestMethod.PUT],
+        params = ["username", "placeId"]
+    )
+    fun updatePlaceInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "placeId", required = true) placeId: UUID,
+        @RequestBody placeDTO: PlaceDTO
+    ): ResponseEntity<UserDTO>
+
+
+    @ApiOperation(
+        value = "add place in User",
+        nickname = "addPlaceInUser",
+        notes = "Gonna add place in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["users/add/place"],
+        consumes = ["application/json"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.POST]
+    )
+    fun addPlaceInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody placeDTO: PlaceDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Add custom link in User",
+        nickname = "addLinkCustomInUser",
+        notes = "Gonna add a custom link in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/custom_link"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.POST]
+    )
+    fun addLinkCustomInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody customLinkDTO: CustomLinkDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Delete custom link in user",
+        nickname = "deleteLinkCustomInUser",
+        notes = "Gonna remove a custom link in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server Error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/remove/custom_link"],
+        produces = ["application/json"],
+        params = ["username", "idCustomLink"],
+        method = [RequestMethod.DELETE]
+    )
+    fun deleteCustomLink(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "idCustomLink", required = true) idCustomLink: UUID
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "update custom link in User",
+        nickname = "updateCustomLinkInUser",
+        notes = "Gonna update custom link user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/custom_link"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "idCustomLink"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateCustomLinkInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "idCustomLink", required = true) idCustomLink: UUID,
+        @RequestBody customLinkDTO: CustomLinkDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "See section details",
+        nickname = "seeSectionDetails",
+        notes = "Gonna see section details",
+        tags = ["Section Details"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Error Server", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/section_details"],
+        produces = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.GET]
+    )
+    fun getSectionDetails(
+        @RequestParam(name = "username", required = true) username: String
+    ): ResponseEntity<SectionDetailsDTO>
+
+    @ApiOperation(
+        value = "Add quiz in User",
+        nickname = "addQuizInUser",
+        notes = "Gonna add a quiz in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/add/quiz"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username"],
+        method = [RequestMethod.POST]
+    )
+    fun addQuizInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestBody quizDTO: QuizDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "update quiz in User",
+        nickname = "updateQuizInUser",
+        notes = "Gonna update custom quiz user",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/quiz"],
+        produces = ["application/json"],
+        consumes = ["application/json"],
+        params = ["username", "idQuiz"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateQuizInUser(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "idQuiz", required = true) idQuiz: UUID,
+        @RequestBody quizDTO: QuizDTO
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Update result quiz in User",
+        nickname = "updateResultQuizInUser",
+        notes = "Gonna update a quiz in User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/update/result/quiz"],
+        produces = ["application/json"],
+        params = ["username", "idQuiz", "option"],
+        method = [RequestMethod.PUT]
+    )
+    fun updateResultQuiz(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "idQuiz", required = true) idQuiz: UUID,
+        @RequestParam(name = "option", required = true) option: Int
+    ): ResponseEntity<UserDTO>
+
+    @ApiOperation(
+        value = "Delete quiz from user",
+        nickname = "deleteQuizFromUser",
+        notes = "Gonna remove a quiz from User",
+        tags = ["User"],
+        response = UserDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "User", response = UserDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server Error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/users/remove/quiz"],
+        produces = ["application/json"],
+        params = ["username", "idQuiz"],
+        method = [RequestMethod.DELETE]
+    )
+    fun deleteQuiz(
+        @RequestParam(name = "username", required = true) username: String,
+        @RequestParam(name = "idQuiz", required = true) idQuiz: UUID
     ): ResponseEntity<UserDTO>
 }

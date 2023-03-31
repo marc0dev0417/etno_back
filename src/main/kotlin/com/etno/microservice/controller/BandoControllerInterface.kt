@@ -32,7 +32,7 @@ interface BandoControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/bandos"],
+        value = ["/bandos/paginated"],
         produces = ["application/json"],
         params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

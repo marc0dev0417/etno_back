@@ -55,7 +55,7 @@ interface EventControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/events"],
+        value = ["/events/paginated"],
         produces = ["application/json"],
         params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

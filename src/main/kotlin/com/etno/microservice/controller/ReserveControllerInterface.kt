@@ -2,6 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.ReserveDTO
+import com.etno.microservice.model.dto.pagination.ReservePageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -60,4 +61,32 @@ interface ReserveControllerInterface {
         method = [RequestMethod.GET]
     )
     fun getReservesByUsername(@RequestParam(name = "username", required = true) username: String): ResponseEntity<List<ReserveDTO>>
+
+    @ApiOperation(
+        value = "Get reserves by paginated",
+        nickname = "getReservesPaginated",
+        notes = "Will show reserves paginated",
+        tags = ["Reserve"],
+        response = ReserveDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Reserve", response = ReservePageDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/reserves/paginated"],
+        produces = ["application/json"],
+        params = ["username", "pageNum", "elementSize"],
+        method = [RequestMethod.GET]
+    )
+    fun findReservesPaginated(
+        @RequestParam(name = "username") username: String,
+        @RequestParam(defaultValue = "0", name = "pageNum") pageNum: Int,
+        @RequestParam(defaultValue = "0", name = "elementSize") elementSize: Int
+    ): ResponseEntity<ReservePageDTO>
 }

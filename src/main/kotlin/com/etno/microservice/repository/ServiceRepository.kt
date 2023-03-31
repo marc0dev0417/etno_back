@@ -12,5 +12,4 @@ interface ServiceRepository: JpaRepository<Service, UUID> {
     fun findServiceByUsernameAndOwner(username: String, owner: String): Service?
     fun findServiceByUsernameAndCategory(username: String, category: String): List<Service>?
     fun findServicePageableByUsername(username: String, pageable: PageRequest): Page<Service>?
-
 }

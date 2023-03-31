@@ -2,6 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.PlaceDTO
+import com.etno.microservice.model.dto.pagination.PlacePageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -84,4 +85,32 @@ interface PlaceControllerInterface {
         method = [RequestMethod.POST]
     )
     fun savePlace(@RequestBody placeDTO: PlaceDTO): ResponseEntity<PlaceDTO>
+
+    @ApiOperation(
+        value = "Get places by paginated",
+        nickname = "getPlacesPaginated",
+        notes = "Will show places paginated",
+        tags = ["Place"],
+        response = PlaceDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Place", response = PlacePageDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/places/paginated"],
+        produces = ["application/json"],
+        params = ["username", "pageNum", "elementSize"],
+        method = [RequestMethod.GET]
+    )
+    fun findPlacesPaginated(
+        @RequestParam(name = "username") username: String,
+        @RequestParam(defaultValue = "0", name = "pageNum") pageNum: Int,
+        @RequestParam(defaultValue = "0", name = "elementSize") elementSize: Int
+    ): ResponseEntity<PlacePageDTO>
 }

@@ -8,6 +8,8 @@ data class PlaceDTO(
 
     @JsonProperty("username") var username: String ? = null,
 
+    @JsonProperty("imageUrl") var imageUrl: String ? = null,
+
     @JsonProperty("name") val name: String ? = null,
 
     @JsonProperty("latitude") val latitude: Double ? = null,

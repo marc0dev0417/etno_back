@@ -32,8 +32,8 @@ data class Pharmacy(
     @Column(name = "schedule")
     var schedule: String ? = null,
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    var description: String ? = null,
+    @Column(name = "direction")
+    var direction: String ? = null,
 
     @Column(name = "latitude")
     var longitude: Double ? = null,

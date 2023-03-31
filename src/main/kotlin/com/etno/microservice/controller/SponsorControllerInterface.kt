@@ -31,7 +31,7 @@ interface SponsorControllerInterface {
             ]
     )
     @RequestMapping(
-            value = ["/sponsors"],
+            value = ["/sponsors/paginated"],
             produces = ["application/json"],
             params = ["username", "pageNum", "elementSize"],
             method = [RequestMethod.GET]

@@ -1,6 +1,4 @@
 package com.etno.microservice.model.dto.pagination
-
-
 import com.etno.microservice.model.dto.SponsorDTO
 
 data class SponsorPageDTO(

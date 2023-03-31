@@ -14,6 +14,9 @@ data class Place(
     @Column(name = "username")
     var username: String ? = null,
 
+    @Column(name = "imageUrl")
+    var imageUrl: String ? = null,
+
     @Column(name = "name")
     var name: String ? = null,
 

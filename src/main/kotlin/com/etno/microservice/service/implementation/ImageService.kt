@@ -26,9 +26,11 @@ class ImageService(
         val nameSectionPath: String = when(section){
             "evento" -> "events"
             "bando" -> "bandos"
+            "enseres" -> "enseres"
             "anuncio" -> "advertisements"
             "servicio" -> "services"
             "fiesta" -> "festivities"
+            "lugar" -> "place"
             "turismo" -> "tourism"
             "noticia" -> "news"
             "farmacia" -> "pharmacies"
@@ -36,14 +38,20 @@ class ImageService(
             "servicio" -> "services"
             "incidente" -> "incidents"
             "patrocinador" -> "sponsors"
+            "link" -> "links_custom"
             else -> {"NO PATH :("}
         }
         //error(nameSectionPath)
 
         val routeBase = "${Urls.urlBase}images/$nameSectionPath/"
         val converterFile = File("${Urls.sourceImagePath}\\$nameSectionPath\\${multipartFile.originalFilename}")
+        /*
+        var bufferedImage = ImageIO.read(converterFile)
+        val image = bufferedImage.getScaledInstance(1920, 1080, Image.SCALE_DEFAULT)
+        bufferedImage = BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB)
+        bufferedImage.graphics.drawImage(image,0,0,null)
+         */
         converterFile.createNewFile()
-
         val fos = FileOutputStream(converterFile)
         fos.write(multipartFile.bytes)
         fos.close()
@@ -75,6 +83,7 @@ class ImageService(
         val nameSectionPath: String = when(section.lowercase()){
             "evento" -> "events"
             "fiesta" -> "festivities"
+            "enseres" -> "enseres"
             "turismo" -> "tourism"
             "anuncio" -> "advertisements"
             "noticia" -> "news"
@@ -83,6 +92,7 @@ class ImageService(
             "telefono" -> "phones"
             "patrocinador" -> "sponsors"
             "services" -> "services"
+            "link" -> "links_custom"
             else -> {"NO PATH :("}
         }
 

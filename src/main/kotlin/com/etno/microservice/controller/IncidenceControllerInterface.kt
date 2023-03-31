@@ -2,7 +2,7 @@ package com.etno.microservice.controller
 
 import com.etno.microservice.exception.HandleResponse
 import com.etno.microservice.model.dto.IncidentDTO
-import io.swagger.annotations.Api
+import com.etno.microservice.model.dto.pagination.IncidentPageDTO
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -61,4 +61,32 @@ interface IncidenceControllerInterface {
         @RequestParam(name = "username", required = true) username: String,
         @RequestParam(name = "fcmToken", required = true) fcmToken: String
     ): ResponseEntity<List<IncidentDTO>>
+
+    @ApiOperation(
+        value = "Get incidents by paginated",
+        nickname = "getIncidentsPaginated",
+        notes = "Will show incidents paginated",
+        tags = ["Incident"],
+        response = IncidentDTO::class
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(code = 201, message = "Incidence", response = IncidentPageDTO::class),
+            ApiResponse(code = 400, message = "Bad Request", response = HandleResponse::class),
+            ApiResponse(code = 401, message = "Unauthorized", response = HandleResponse::class),
+            ApiResponse(code = 403, message = "Forbidden", response = HandleResponse::class),
+            ApiResponse(code = 500, message = "Server error", response = HandleResponse::class)
+        ]
+    )
+    @RequestMapping(
+        value = ["/incidents/paginated"],
+        produces = ["application/json"],
+        params = ["username", "pageNum", "elementSize"],
+        method = [RequestMethod.GET]
+    )
+    fun findIncidentsPaginated(
+        @RequestParam(name = "username") username: String,
+        @RequestParam(defaultValue = "0", name = "pageNum") pageNum: Int,
+        @RequestParam(defaultValue = "0", name = "elementSize") elementSize: Int
+    ): ResponseEntity<IncidentPageDTO>
 }

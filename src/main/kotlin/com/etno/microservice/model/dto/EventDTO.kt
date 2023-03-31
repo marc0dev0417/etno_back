@@ -36,9 +36,9 @@ data class EventDTO(
 
     @JsonProperty("time") var time: String? = null,
 
-    @JsonProperty("lat") var lat: String? = null,
+    @JsonProperty("lat") var lat: Double? = null,
 
-    @JsonProperty("long") var long: String? = null,
+    @JsonProperty("long") var long: Double? = null,
 
     @JsonProperty("images") var images: MutableList<ImageDTO>? = mutableListOf(),
 

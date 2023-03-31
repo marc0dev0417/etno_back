@@ -2,6 +2,7 @@ package com.etno.microservice.controller.implementation
 
 import com.etno.microservice.controller.IncidenceControllerInterface
 import com.etno.microservice.model.dto.IncidentDTO
+import com.etno.microservice.model.dto.pagination.IncidentPageDTO
 import com.etno.microservice.service.implementation.IncidenceService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -19,5 +20,13 @@ class IncidenceController(
         fcmToken: String
     ): ResponseEntity<List<IncidentDTO>> {
         return ResponseEntity.ok().body(incidenceService.findIncidentByUsernameAndFcmToken(username, fcmToken))
+    }
+
+    override fun findIncidentsPaginated(
+        username: String,
+        pageNum: Int,
+        elementSize: Int
+    ): ResponseEntity<IncidentPageDTO> {
+        return ResponseEntity.ok().body(incidenceService.getIncidentPaginated(username, pageNum, elementSize))
     }
 }

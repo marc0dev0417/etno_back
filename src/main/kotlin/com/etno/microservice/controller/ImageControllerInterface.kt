@@ -133,7 +133,7 @@ interface ImageControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/images"],
+        value = ["/images/paginated"],
         produces = ["application/json"],
         params = ["locality", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

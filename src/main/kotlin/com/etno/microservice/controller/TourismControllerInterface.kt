@@ -32,7 +32,7 @@ interface TourismControllerInterface {
             ]
     )
     @RequestMapping(
-            value = ["/tourism"],
+            value = ["/tourism/paginated"],
             produces = ["application/json"],
             params = ["username", "pageNum", "elementSize"],
             method = [RequestMethod.GET]

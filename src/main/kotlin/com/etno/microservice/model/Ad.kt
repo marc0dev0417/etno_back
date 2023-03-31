@@ -1,7 +1,7 @@
 package com.etno.microservice.model
 
 import org.hibernate.annotations.Type
-import java.util.UUID
+import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -20,7 +20,7 @@ data class Ad(
     @Column(name = "title")
     var title: String ? = null,
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     var description: String ? = null,
 
     @Column(name = "imageUrl")

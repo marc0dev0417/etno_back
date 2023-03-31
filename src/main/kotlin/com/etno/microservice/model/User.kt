@@ -51,5 +51,14 @@ data class User(
     var ads: MutableList<Ad> ? = mutableListOf(),
 
         @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var reserves: MutableList<Reserve> ? = mutableListOf()
+    var reserves: MutableList<Reserve> ? = mutableListOf(),
+
+        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var customLinks: MutableList<CustomLink> ? = mutableListOf(),
+
+        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var places: MutableList<Place> ? = mutableListOf(),
+
+        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var quizzes: MutableList<Quiz> ? = mutableListOf()
 )

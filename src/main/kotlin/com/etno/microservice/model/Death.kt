@@ -1,7 +1,7 @@
 package com.etno.microservice.model
 
 import org.hibernate.annotations.Type
-import java.util.UUID
+import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -23,7 +23,7 @@ data class Death(
     @Column(name = "deathDate")
     var deathDate: String ? = null,
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     var description: String ? = null,
 
     @Column(name = "imageUrl")

@@ -32,7 +32,7 @@ interface PharmacyControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/pharmacies"],
+        value = ["/pharmacies/paginated"],
         produces = ["application/json"],
         params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

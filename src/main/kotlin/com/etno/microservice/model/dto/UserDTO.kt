@@ -32,5 +32,11 @@ data class UserDTO(
 
         @JsonProperty("ads") var ads: MutableList<AdDTO> ? = mutableListOf(),
 
-        @JsonProperty("reserves") var reserves: MutableList<ReserveDTO> ? = mutableListOf()
+        @JsonProperty("reserves") var reserves: MutableList<ReserveDTO> ? = mutableListOf(),
+
+        @JsonProperty("customLinks") var customLinks: MutableList<CustomLinkDTO> ? = mutableListOf(),
+
+        @JsonProperty("places") var places: MutableList<PlaceDTO> ? = mutableListOf(),
+
+        @JsonProperty("quizzes") var quizzes: MutableList<QuizDTO> ? = mutableListOf()
 )

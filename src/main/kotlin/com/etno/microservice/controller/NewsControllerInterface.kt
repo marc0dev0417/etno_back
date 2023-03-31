@@ -32,7 +32,7 @@ interface NewsControllerInterface {
         ]
     )
     @RequestMapping(
-        value = ["/news"],
+        value = ["/news/paginated"],
         produces = ["application/json"],
         params = ["username", "pageNum", "elementSize"],
         method = [RequestMethod.GET]

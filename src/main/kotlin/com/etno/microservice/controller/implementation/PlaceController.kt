@@ -2,6 +2,7 @@ package com.etno.microservice.controller.implementation
 
 import com.etno.microservice.controller.PlaceControllerInterface
 import com.etno.microservice.model.dto.PlaceDTO
+import com.etno.microservice.model.dto.pagination.PlacePageDTO
 import com.etno.microservice.service.implementation.PlaceService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -20,5 +21,9 @@ class PlaceController(
 
     override fun savePlace(placeDTO: PlaceDTO): ResponseEntity<PlaceDTO> {
         return ResponseEntity.ok().body(placeService.savePlace(placeDTO))
+    }
+
+    override fun findPlacesPaginated(username: String, pageNum: Int, elementSize: Int): ResponseEntity<PlacePageDTO> {
+        return ResponseEntity.ok().body(placeService.getPlacesPaginated(username, pageNum, elementSize))
     }
 }

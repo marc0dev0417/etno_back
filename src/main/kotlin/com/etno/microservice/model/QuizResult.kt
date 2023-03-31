@@ -1,0 +1,46 @@
+package com.etno.microservice.model
+
+import org.hibernate.annotations.Type
+import java.util.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.Table
+
+@Entity
+@Table(name = "quiz_results")
+data class QuizResult(
+    @Id
+    @Type(type = "uuid-char")
+    var idQuizResult: UUID? = UUID.randomUUID(),
+
+    @Column(name = "username")
+    var username: String? = null,
+
+    @Column(name = "question")
+    var question: String? = null,
+
+    @Column(name = "answerOne")
+    var answerOne: String ? = null,
+
+    @Column(name = "resultOne")
+    var resultOne: Int ? = null,
+
+    @Column(name = "answerTwo")
+    var answerTwo: String ? = null,
+
+    @Column(name = "resultTwo")
+    var resultTwo: Int ? = null,
+
+    @Column(name = "answerThree")
+    var answerThree: String ? = null,
+
+    @Column(name = "resultThree")
+    var resultThree: Int ? = null,
+
+    @Column(name = "answerFour")
+    var answerFour: String ? = null,
+
+    @Column(name = "resultFour")
+    var resultFour: Int ? = null
+    )

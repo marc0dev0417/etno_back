@@ -3,16 +3,15 @@ package com.etno.microservice.service.implementation.mail
 import com.etno.microservice.model.dto.mail.MailDetailsDTO
 import com.etno.microservice.model.dto.mail.MailDetailsSuccessDTO
 import com.etno.microservice.service.MailServiceInterface
-import com.etno.microservice.util.Urls
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.FileSystemResource
+import org.springframework.mail.MailException
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.io.FileOutputStream
 
 
 @Service
@@ -34,9 +33,9 @@ class MailService(
 
             //Sending the mail ->
             javaMailSender.send(mailMessage)
-            MailDetailsSuccessDTO("Mail has been sent successfully")
+            MailDetailsSuccessDTO("El correo se ha enviado exitosamente")
         }catch (_: Exception){
-            MailDetailsSuccessDTO("Mail has not been sent successfully")
+            MailDetailsSuccessDTO("El correo no se ha podido enviar")
         }
     }
 
@@ -44,13 +43,12 @@ class MailService(
         address: String,
         message: String,
         subject: String,
-        attachment: MultipartFile
+        attachment: String
     ): MailDetailsSuccessDTO? {
         val mimeMessage = javaMailSender.createMimeMessage()
         try {
             val mimeMessageHelper = MimeMessageHelper(mimeMessage, true)
 
-            // Setting multipart as true for attachments to
             mimeMessageHelper.setFrom(username)
             mimeMessageHelper.setTo(address)
             mimeMessageHelper.setText(message)
@@ -58,31 +56,21 @@ class MailService(
                 subject
             )
 
-            // Adding the attachment
-            /*
-            val file = FileSystemResource(
-                File(mailDetailsDTO.attachment!!)
-            )
-             */
-            val converterFile = File("${Urls.sourceImagePath}\\incidents\\${attachment.originalFilename}")
-            converterFile.createNewFile()
+            val pathCut = attachment.substringAfter("8080")
+            val newPath = pathCut.replace("/", "//")
+            val attachmentModifiedPath = "src//main//resources$newPath"
 
-            val fos = FileOutputStream(converterFile)
-            fos.write(attachment.bytes)
-            fos.close()
+            val file = FileSystemResource(
+                File(attachmentModifiedPath)
+            )
 
             mimeMessageHelper.addAttachment(
-                converterFile.name, converterFile
+                file.filename, file
             )
 
-            // Sending the mail
             javaMailSender.send(mimeMessage)
 
-            val file = File("src\\main\\resources\\images\\incidents\\${attachment.name}")
-
-            file.delete()
-
-            return MailDetailsSuccessDTO("Mail has been sent successfully")
-        }catch (_: Exception){ return MailDetailsSuccessDTO("Mail has not been sent successfully") }
+            return MailDetailsSuccessDTO("El correo se ha enviado exitosamente")
+        }catch (e: MailException){ return MailDetailsSuccessDTO("El correo no se ha podido enviar") }
     }
 }

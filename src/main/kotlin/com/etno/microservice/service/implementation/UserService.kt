@@ -44,6 +44,8 @@ class UserService(
     private val reserveRepository: ReserveRepository,
     private val placeRepository: PlaceRepository,
     private val hallRepository: HallRepository,
+    private val quizRepository: QuizRepository,
+    private val customLinkRepository: CustomLinkRepository,
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
     private val jwtTokenUtil: JwtTokenUtil
@@ -124,15 +126,11 @@ class UserService(
 
     override fun addEventInUser(username: String, eventDTO: EventDTO): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemEvent = eventRepository.findEventByTitleAndUsername(eventDTO.title!!, username)
-
-        if(itemEvent == null){
-            eventDTO.username = itemUser?.username
-            eventDTO.seats = eventDTO.capacity
+        eventDTO.username = itemUser?.username
+        eventDTO.seats = eventDTO.capacity
             val itemEventSaved = eventRepository.save(DataConverter.eventFromDTO(eventDTO))
             itemUser?.events?.add(DataConverter.eventFromDTO(DataConverter.eventToDTO(itemEventSaved)))
             userRepository.save(itemUser!!)
-
             /*
             if (fcmTokenRepository.findAll().any { it.username == username }){
                 val restTemplate = RestTemplate()
@@ -141,27 +139,6 @@ class UserService(
                 val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
             }
              */
-
-        }else{
-            val checkIfExistEvent = itemUser?.events?.find { it.title == itemEvent.title }
-            if(checkIfExistEvent == null){
-                eventDTO.username = itemUser?.username
-                eventDTO.seats = eventDTO.capacity
-                itemUser?.events?.add(DataConverter.eventFromDTO(eventDTO))
-                userRepository.save(itemUser!!)
-                /*
-                if (fcmTokenRepository.findAll().any { it.username == username }){
-                    val restTemplate = RestTemplate()
-                    val map: Map<String, String> = mapOf(
-                        "subject" to "Nuevo evento",
-                        "content" to "Evento ${eventDTO.title} disponible",
-                        "username" to "${itemUser.username}")
-
-                    val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
-                }
-                 */
-            }
-        }
         return DataConverter.userToDTO(itemUser)
     }
 
@@ -178,13 +155,11 @@ class UserService(
         return DataConverter.userToDTO(userItem!!)
     }
 
-    override fun deleteEventInUser(username: String, title: String): UserDTO? {
+    override fun deleteEventInUser(username: String, idEvent: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemEvent = eventRepository.findEventByTitleAndUsername(title, username)
-        itemUser?.events?.remove(itemEvent!!)
-
+        itemUser?.events?.removeIf { it.idEvent == idEvent }
         val itemSaved = userRepository.save(itemUser!!)
-        eventRepository.delete(itemEvent!!)
+        eventRepository.deleteById(idEvent)
         return DataConverter.userToDTO(itemSaved)
     }
 
@@ -283,25 +258,41 @@ class UserService(
 
     override fun updatePharmacyInUser(username: String, pharmacyId: UUID, pharmacyDTO: PharmacyDTO): UserDTO? {
         var nowDate: Date
+        val now = LocalDate.now()
+        val lastDay = now.with(lastDayOfYear())
+        val getDayLast = Date.from(lastDay.atStartOfDay(ZoneId.systemDefault()).toInstant())
         var userItem = userRepository.findUserByUsername(username)
         val pharmacyFound = userItem?.pharmacies?.find { it.idPharmacy == pharmacyId }
         if (pharmacyFound != DataConverter.pharmacyFromDTO(pharmacyDTO)){
             pharmacyDTO.idPharmacy = pharmacyId
             pharmacyDTO.username = username
 
-                if(pharmacyDTO.type == "Guardia"){
-                    pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = pharmacyDTO.startDate))
-                    for (index in 1 ..pharmacyDTO.durationDays!!){
-                        nowDate = DataConverter.sumDate(pharmacyDTO.startDate!!, pharmacyDTO.frequencyInDays!! * index)!!
-                        pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = nowDate))
+            if(pharmacyDTO.type == "Guardia"){
+                if(pharmacyDTO.durationDays != 0 || pharmacyDTO.durationDays != 0) {
+                    for (index in 1..pharmacyDTO.durationDays!!) {
+                        nowDate =
+                            DataConverter.sumDate(pharmacyDTO.startDate!!, pharmacyDTO.frequencyInDays!! * index)!!
+                        pharmacyDTO.dates?.add(
+                            PharmacyDateDTO(
+                                idPharmacyDate = UUID.randomUUID(),
+                                username = username,
+                                namePharmacy = pharmacyDTO.name,
+                                date = nowDate
+                            )
+                        )
+                        if (nowDate.after(getDayLast)) {
+                            break
+                        }
                     }
+                    pharmacyDTO.dates?.removeLast()
                     pharmacyDateRepository.saveAll(pharmacyDTO.dates!!.map { p -> DataConverter.pharmacyDateFromDTO(p) })
-                    userItem?.pharmacies?.set(userItem.pharmacies!!.indexOf(pharmacyFound), DataConverter.pharmacyFromDTO(pharmacyDTO))
-                    userItem = userRepository.save(userItem!!)
-                }else{
-                    userItem?.pharmacies?.set(userItem.pharmacies!!.indexOf(pharmacyFound), DataConverter.pharmacyFromDTO(pharmacyDTO))
-                    userItem = userRepository.save(userItem!!)
                 }
+                userItem?.pharmacies?.set(userItem.pharmacies!!.indexOf(pharmacyFound), DataConverter.pharmacyFromDTO(pharmacyDTO))
+                userItem = userRepository.save(userItem!!)
+            }else{
+                userItem?.pharmacies?.set(userItem.pharmacies!!.indexOf(pharmacyFound), DataConverter.pharmacyFromDTO(pharmacyDTO))
+                userItem = userRepository.save(userItem!!)
+            }
         }
         return DataConverter.userToDTO(userItem!!)
     }
@@ -314,39 +305,13 @@ class UserService(
         var itemUser = userRepository.findUserByUsername(username)
         val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(pharmacyDTO.name!!, username)
 
-        if(itemPharmacy == null){
             pharmacyDTO.idPharmacy = UUID.randomUUID()
             pharmacyDTO.username = itemUser?.username
 
             if(pharmacyDTO.type == "Guardia"){
-                pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = pharmacyDTO.startDate))
-                for (index in 1 ..pharmacyDTO.durationDays!!){
-                    nowDate = DataConverter.sumDate(pharmacyDTO.startDate!!, pharmacyDTO.frequencyInDays!! * index)!!
-                    pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = nowDate))
-
-                    if (nowDate.after(getDayLast)){
-                        break
-                    }
-                }
-                pharmacyDTO.dates?.removeLast()
-                pharmacyDateRepository.saveAll(pharmacyDTO.dates!!.map { p -> DataConverter.pharmacyDateFromDTO(p) })
-                itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
-            }else{
-                itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
-            }
-
-           // pharmacyDateRepository.saveAll(listDate)
-            itemUser = userRepository.save(itemUser!!)
-        }else{
-            val checkIfExistPharmacy = itemUser?.pharmacies?.find { it.name == itemPharmacy.name }
-            if(checkIfExistPharmacy == null){
-                pharmacyDTO.idPharmacy = UUID.randomUUID()
-                pharmacyDTO.username = itemUser?.username
-
-                if(pharmacyDTO.type == "Guardia"){
-                    pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = pharmacyDTO.startDate))
+                if(pharmacyDTO.durationDays != 0 || pharmacyDTO.durationDays != 0){
                     for (index in 1 ..pharmacyDTO.durationDays!!){
-                        nowDate = DataConverter.sumDate(Date(), pharmacyDTO.frequencyInDays!! * index)!!
+                        nowDate = DataConverter.sumDate(pharmacyDTO.startDate!!, pharmacyDTO.frequencyInDays!! * index)!!
                         pharmacyDTO.dates?.add(PharmacyDateDTO(idPharmacyDate = UUID.randomUUID(), username = username, namePharmacy = pharmacyDTO.name, date = nowDate))
                         if (nowDate.after(getDayLast)){
                             break
@@ -354,24 +319,20 @@ class UserService(
                     }
                     pharmacyDTO.dates?.removeLast()
                     pharmacyDateRepository.saveAll(pharmacyDTO.dates!!.map { p -> DataConverter.pharmacyDateFromDTO(p) })
-                    itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
-                }else{
-                    itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
                 }
                 itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
-               itemUser = userRepository.save(itemUser!!)
+            }else{
+                itemUser?.pharmacies?.add(DataConverter.pharmacyFromDTO(pharmacyDTO))
             }
-        }
-        return DataConverter.userToDTO(itemUser!!)
+            itemUser = userRepository.save(itemUser!!)
+        return DataConverter.userToDTO(itemUser)
     }
 
-    override fun deletePharmacyInUser(username: String, name: String): UserDTO? {
+    override fun deletePharmacyInUser(username: String, idPharmacy: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemPharmacy = pharmacyRepository.findPharmacyByNameAndUsername(name, username)
-
-        itemUser?.pharmacies?.remove(itemPharmacy)
+        itemUser?.pharmacies?.removeIf { it.idPharmacy == idPharmacy }
         val itemSaved = userRepository.save(itemUser!!)
-        pharmacyRepository.delete(itemPharmacy!!)
+        pharmacyRepository.deleteById(idPharmacy)
         return DataConverter.userToDTO(itemSaved)
     }
 
@@ -412,34 +373,20 @@ class UserService(
 
     override fun addTourismInUser(username: String, tourismDTO: TourismDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
-        val itemTourism = tourismRepository.findTourismByTitleAndUsername(tourismDTO.title!!, username)
 
-        if(itemTourism == null){
-            tourismDTO.idTourism = UUID.randomUUID()
-            tourismDTO.username = username
-            itemUser?.tourism?.add(DataConverter.tourismFromDTO(tourismDTO))
-            itemUser = userRepository.save(itemUser!!)
-        }else{
-            val checkIfExistTourism = itemUser?.tourism?.find { it.title == itemTourism.title }
-            if(checkIfExistTourism == null){
-                tourismDTO.idTourism = UUID.randomUUID()
-                tourismDTO.username = username
-                itemUser?.tourism?.add(DataConverter.tourismFromDTO(tourismDTO))
-              itemUser = userRepository.save(itemUser!!)
-            }
-        }
-        return DataConverter.userToDTO(itemUser!!)
+        tourismDTO.idTourism = UUID.randomUUID()
+        tourismDTO.username = username
+        itemUser?.tourism?.add(DataConverter.tourismFromDTO(tourismDTO))
+        itemUser = userRepository.save(itemUser!!)
+
+        return DataConverter.userToDTO(itemUser)
     }
 
-    override fun deleteTourismInUser(username: String, title: String): UserDTO? {
+    override fun deleteTourismInUser(username: String, idTourism: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemTourism = tourismRepository.findTourismByTitleAndUsername(title, username)
-//        val itemImageDelete = imageRepository.findImageByLink(itemTourism?.imageUrl!!)
-
-        itemUser?.tourism?.remove(itemTourism)
-       // imageRepository.delete(itemImageDelete!!)
+        itemUser?.tourism?.removeIf { it.idTourism == idTourism }
         val itemUserSaved = userRepository.save(itemUser!!)
-        tourismRepository.delete(itemTourism!!)
+        tourismRepository.deleteById(idTourism)
         return DataConverter.userToDTO(itemUserSaved)
     }
 
@@ -499,13 +446,11 @@ class UserService(
         return DataConverter.userToDTO(itemUser!!)
     }
 
-    override fun deleteDeathInUser(username: String, name: String): UserDTO? {
+    override fun deleteDeathInUser(username: String, idDeath: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemDeath = deathRepository.findDeathByUsernameAndName(username, name)
-
-        itemUser?.deaths?.remove(itemDeath)
+        itemUser?.deaths?.removeIf { it.idDeath == idDeath }
         val itemUserSaved = userRepository.save(itemUser!!)
-        deathRepository.delete(itemDeath!!)
+        deathRepository.deleteById(idDeath)
         return DataConverter.userToDTO(itemUserSaved)
     }
 
@@ -546,33 +491,19 @@ class UserService(
 
     override fun addServiceInUser(username: String, serviceDTO: ServiceDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
-        val itemService = serviceRepository.findServiceByUsernameAndOwner(username, serviceDTO.owner!!)
-
-        if(itemService == null){
             serviceDTO.idService = UUID.randomUUID()
             serviceDTO.username = itemUser?.username
             serviceDTO.category = serviceDTO.category
             itemUser?.services?.add(DataConverter.serviceFromDTO(serviceDTO))
             itemUser = userRepository.save(itemUser!!)
-        }else{
-            val checkIfExistService = itemUser?.services?.find { it.owner == itemService.owner }
-            if(checkIfExistService == null){
-                serviceDTO.idService = UUID.randomUUID()
-                serviceDTO.username = itemUser?.username
-                itemUser?.services?.add(DataConverter.serviceFromDTO(serviceDTO))
-                itemUser = userRepository.save(itemUser!!)
-            }
-        }
         return DataConverter.userToDTO(itemUser!!)
     }
 
-    override fun deleteServiceInUser(username: String, owner: String): UserDTO? {
+    override fun deleteServiceInUser(username: String, idService: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemService = serviceRepository.findServiceByUsernameAndOwner(username, owner)
-
-        itemUser?.services?.remove(itemService)
+        itemUser?.services?.removeIf { it.idService == idService }
         val itemSaved = userRepository.save(itemUser!!)
-        serviceRepository.delete(itemService!!)
+        serviceRepository.deleteById(idService)
         return DataConverter.userToDTO(itemSaved)
     }
 
@@ -612,32 +543,19 @@ class UserService(
 
     override fun addNewsInUser(username: String, newsDTO: NewsDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
-        val itemNew = newsRepository.findNewByUsernameAndTitle(username, newsDTO.title!!)
-
-        if(itemNew == null){
             newsDTO.idNew = UUID.randomUUID()
             newsDTO.username = itemUser?.username
             itemUser?.news?.add(DataConverter.newsFromDTO(newsDTO))
             itemUser = userRepository.save(itemUser!!)
-        }else{
-            val checkIfExistPhone = itemUser?.news?.find { it.title == itemNew.title }
-            if(checkIfExistPhone == null){
-                newsDTO.idNew = UUID.randomUUID()
-                newsDTO.username = itemUser?.username
-                itemUser?.news?.add(DataConverter.newsFromDTO(newsDTO))
-                itemUser = userRepository.save(itemUser!!)
-            }
-        }
-        return DataConverter.userToDTO(itemUser!!)
+
+        return DataConverter.userToDTO(itemUser)
     }
 
-    override fun deleteNewsInUser(username: String, title: String): UserDTO? {
+    override fun deleteNewsInUser(username: String, idNews: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemNew = newsRepository.findNewByUsernameAndTitle(username, title)
-
-        itemUser?.news?.remove(itemNew)
+        itemUser?.news?.removeIf { it.idNew == idNews }
         val itemSaved = userRepository.save(itemUser!!)
-        newsRepository.delete(itemNew!!)
+        newsRepository.deleteById(idNews)
         return DataConverter.userToDTO(itemSaved)
     }
 
@@ -664,23 +582,21 @@ class UserService(
 
     override fun addIncidentInUser(username: String, incidentDTO: IncidentDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
-        val itemIncident = incidentRepository.findIncidentByUsernameAndTitle(username, incidentDTO.title!!)
-
-        if(itemIncident == null){
             incidentDTO.idIncidence = UUID.randomUUID()
             incidentDTO.username = username
             itemUser?.incidents?.add(DataConverter.incidenceFromDTO(incidentDTO))
             itemUser = userRepository.save(itemUser!!)
-        }else{
-            val checkIfExistIncident = itemUser?.incidents?.find { it.title == incidentDTO.title && it.fcmToken == incidentDTO.fcmToken }
-            if(checkIfExistIncident == null){
-                incidentDTO.idIncidence = UUID.randomUUID()
-                incidentDTO.username = username
-                itemUser?.incidents?.add(DataConverter.incidenceFromDTO(incidentDTO))
-                itemUser = userRepository.save(itemUser!!)
-            }
+        return DataConverter.userToDTO(itemUser)
+    }
+
+    override fun solveIncidence(username: String, incidentId: UUID, solution: String): UserDTO? {
+        val userItem = userRepository.findUserByUsername(username)
+        userItem?.incidents?.find { it.idIncidence == incidentId }.also {
+            it?.isSolved = true
+            it?.solution = solution
         }
-        return DataConverter.userToDTO(itemUser!!)
+        val userToSaved = userRepository.save(userItem!!)
+        return DataConverter.userToDTO(userToSaved)
     }
 
     override fun updateBandoInUser(username: String, bandoId: UUID, bandoDTO: BandoDTO): UserDTO? {
@@ -698,9 +614,6 @@ class UserService(
 
     override fun addBandoInUser(username: String, bandoDTO: BandoDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
-
-        when(bandoRepository.findBandoByUsernameAndTitle(username, bandoDTO.title!!)){
-            null -> {
                 bandoDTO.idBando = UUID.randomUUID()
                 bandoDTO.username = username
                 itemUser?.bandos?.add(DataConverter.bandoFromDTO(bandoDTO))
@@ -716,41 +629,15 @@ class UserService(
 
                     val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
                 }
-
-            }
-            else -> {
-                val checkIfExistBando = itemUser?.bandos?.find { it.title == bandoDTO.title }
-                if (checkIfExistBando == null){
-                    bandoDTO.idBando = UUID.randomUUID()
-                    bandoDTO.username = username
-                    itemUser?.bandos?.add(DataConverter.bandoFromDTO(bandoDTO))
-                    itemUser = userRepository.save(itemUser!!)
-
-                    if (fcmTokenRepository.findAll().any { it.username == username }){
-                        val restTemplate = RestTemplate()
-                        val map: Map<String, String> = mapOf(
-                            "image" to "${bandoDTO.imageUrl}",
-                            "subject" to "Publicación de Bando",
-                            "content" to "Bando: ${bandoDTO.title}",
-                            "username" to "${itemUser.username}")
-
-                        val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
-                    }
-                }
-            }
-        }
-        return DataConverter.userToDTO(itemUser!!)
+        return DataConverter.userToDTO(itemUser)
     }
 
-    override fun deleteBandoInUser(username: String, title: String): UserDTO? {
+    override fun deleteBandoInUser(username: String, idBando: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemBando = bandoRepository.findBandoByUsernameAndTitle(username, title)
-
-        itemUser?.bandos?.remove(itemBando)
+        itemUser?.bandos?.removeIf { it.idBando == idBando }
         val itemSaved = userRepository.save(itemUser!!)
-        bandoRepository.delete(itemBando!!)
+        bandoRepository.deleteById(idBando)
         return DataConverter.userToDTO(itemSaved)
-
     }
 
     override fun addImageToBandoInUser(username: String, title: String, imageName: String): UserDTO? {
@@ -855,17 +742,12 @@ class UserService(
         return DataConverter.userToDTO(itemUser!!)
     }
 
-    override fun deleteSponsorInUser(username: String, title: String): UserDTO? {
+    override fun deleteSponsorInUser(username: String, idSponsor: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemSponsor = sponsorRepository.findSponsorByUsernameAndTitle(username, title)
 
-        if(itemSponsor?.urlImage != null){
-            val itemImageDelete = imageRepository.findImageByLink(itemSponsor?.urlImage!!)
-            imageRepository.delete(itemImageDelete!!)
-        }
-        itemUser?.sponsors?.remove(itemSponsor)
+        itemUser?.sponsors?.removeIf { it.idSponsor == idSponsor }
         val itemSaved = userRepository.save(itemUser!!)
-        sponsorRepository.delete(itemSponsor!!)
+        sponsorRepository.deleteById(idSponsor)
         return DataConverter.userToDTO(itemSaved)
     }
 
@@ -905,73 +787,41 @@ class UserService(
 
     override fun addAdInUser(username: String, adDTO: AdDTO): UserDTO? {
         var itemUser = userRepository.findUserByUsername(username)
-
-        when(adRepository.findAdByUsernameAndTitle(username, adDTO.title!!)){
-            null -> {
                 adDTO.idAd = UUID.randomUUID()
                 adDTO.username = username
                 itemUser?.ads?.add(DataConverter.adFromDTO(adDTO))
                 itemUser = userRepository.save(itemUser!!)
-            }
-            else -> {
-                val checkIfExistAd = itemUser?.ads?.find { it.title == adDTO.title }
-                if (checkIfExistAd == null){
-                    adDTO.idAd = UUID.randomUUID()
-                    adDTO.username = username
-                    itemUser?.ads?.add(DataConverter.adFromDTO(adDTO))
-                    itemUser = userRepository.save(itemUser!!)
-                }
-            }
-        }
-        return DataConverter.userToDTO(itemUser!!)
+        return DataConverter.userToDTO(itemUser)
     }
 
-    override fun deleteAdInUser(username: String, title: String): UserDTO? {
+    override fun deleteAdInUser(username: String, idAd: UUID): UserDTO? {
         val itemUser = userRepository.findUserByUsername(username)
-        val itemAd = adRepository.findAdByUsernameAndTitle(username, title)
-
-        itemUser?.ads?.remove(itemAd)
+        itemUser?.ads?.removeIf { it.idAd == idAd }
         val itemSaved = userRepository.save(itemUser!!)
-        adRepository.delete(itemAd!!)
+        adRepository.deleteById(idAd)
         return DataConverter.userToDTO(itemSaved)
     }
 
     override fun addReserveInUser(
         username: String,
         reserveDTO: ReserveDTO,
-        placeName: String,
-        hallName: String
+        idPlace: UUID,
+        idHall: UUID
     ): UserDTO? {
         var userItem = userRepository.findUserByUsername(username)
-        val hallItem = hallRepository.findHallByUsernameAndName(username, hallName)
-        val placeItem = placeRepository.findPlaceByUsernameAndName(username, placeName)
+        val hallItem = hallRepository.findHallByUsernameAndIdHall(username, idHall)
+        val placeItem = placeRepository.findPlaceByUsernameAndIdPlace(username, idPlace)
 
-        when(reserveRepository.findReserveByUsernameAndName(username, reserveDTO.name!!)){
-            null -> {
-                reserveDTO.idReserve = UUID.randomUUID()
-                reserveDTO.username = username
-                reserveDTO.place = DataConverter.placeToDTO(placeItem!!)
-                reserveDTO.place!!.halls?.add(DataConverter.hallToDTO(hallItem!!))
-                reserveDTO.hall = hallItem?.name
-                reserveDTO.isReserved = false
-                userItem?.reserves?.add(DataConverter.reserveFromDTO(reserveDTO))
-                userItem = userRepository.save(userItem!!)
-            }
-            else -> {
-                val checkIfExistReserve = userItem?.reserves?.find { it.name == reserveDTO.name }
-                if (checkIfExistReserve == null) {
-                    reserveDTO.idReserve = UUID.randomUUID()
-                    reserveDTO.username = username
-                    reserveDTO.place = DataConverter.placeToDTO(placeItem!!)
-                    reserveDTO.place!!.halls?.add(DataConverter.hallToDTO(hallItem!!))
-                    reserveDTO.hall = hallItem?.name
-                    reserveDTO.isReserved = false
-                    userItem?.reserves?.add(DataConverter.reserveFromDTO(reserveDTO))
-                    userItem = userRepository.save(userItem!!)
-                }
-            }
-        }
-        return DataConverter.userToDTO(userItem!!)
+        reserveDTO.idReserve = UUID.randomUUID()
+        reserveDTO.username = username
+        reserveDTO.place = DataConverter.placeToDTO(placeItem!!)
+        reserveDTO.place!!.halls?.add(DataConverter.hallToDTO(hallItem!!))
+        reserveDTO.hall = hallItem?.name
+        reserveDTO.isReserved = false
+        userItem?.reserves?.add(DataConverter.reserveFromDTO(reserveDTO))
+        userItem = userRepository.save(userItem!!)
+
+        return DataConverter.userToDTO(userItem)
     }
 
     override fun addReserveDataUser(username: String, reserveName: String, reserveUserDTO: ReserveUserDTO): UserDTO? {
@@ -980,10 +830,20 @@ class UserService(
 
         if (reserveItem?.reserveUsers!!.isEmpty()){
             reserveUserDTO.idReserveUser = UUID.randomUUID()
-            reserveItem.reserveUsers?.add(DataConverter.reserveUserFromDTO(reserveUserDTO))
-             userItem = userRepository.save(userItem!!)
+            userItem?.reserves?.find { it.name == reserveName }?.reserveUsers?.add(DataConverter.reserveUserFromDTO(reserveUserDTO))
+           // reserveItem.reserveUsers?.add(DataConverter.reserveUserFromDTO(reserveUserDTO))
+           userItem = userRepository.save(userItem!!)
         }
         return DataConverter.userToDTO(userItem!!)
+    }
+
+    override fun deleteReserveFromUser(username: String, idReserve: UUID): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemReserve = reserveRepository.findReserveByUsernameAndIdReserve(username, idReserve)
+        itemUser?.reserves?.remove(itemReserve)
+        val itemSaved = userRepository.save(itemUser!!)
+        reserveRepository.delete(itemReserve!!)
+        return DataConverter.userToDTO(itemSaved)
     }
 
     override fun confirmReserve(username: String, idReserve: UUID): UserDTO? {
@@ -994,11 +854,143 @@ class UserService(
             if (it?.reserveUsers!!.isNotEmpty()){
                 it.reserveUsers!![0].also { reserveUser ->
                     reserveUser.isReserved = true
-                    reserveUser.place = it.place
                 }
             }
         }
         val userToSave = userRepository.save(userItem!!)
         return DataConverter.userToDTO(userToSave)
+    }
+
+    override fun addPlaceInUser(username: String, placeDTO: PlaceDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+                    placeDTO.idPlace = UUID.randomUUID()
+                    placeDTO.username = username
+                    userItem?.places?.add(DataConverter.placeFromDTO(placeDTO))
+                    userItem = userRepository.save(userItem!!)
+        return DataConverter.userToDTO(userItem)
+    }
+
+    override fun deletePlaceFromUser(username: String, idReserve: UUID): UserDTO? {
+        val itemUser = userRepository.findUserByUsername(username)
+        val itemPlace = placeRepository.findPlaceByUsernameAndIdPlace(username, idReserve)
+
+        if(itemPlace?.imageUrl != null){
+            val itemImageDelete = imageRepository.findImageByLink(itemPlace.imageUrl!!)
+            imageRepository.delete(itemImageDelete!!)
+        }
+
+        itemUser?.places?.remove(itemPlace)
+        val itemSaved = userRepository.save(itemUser!!)
+        placeRepository.delete(itemPlace!!)
+        return DataConverter.userToDTO(itemSaved)
+    }
+
+    override fun updatePlaceInUser(username: String, placeId: UUID, placeDTO: PlaceDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val placeFound = userItem?.places?.find { it.idPlace == placeId }
+        if (placeFound != DataConverter.placeFromDTO(placeDTO)){
+            placeDTO.idPlace = placeId
+            placeDTO.username = username
+
+            userItem?.places?.set(userItem.places!!.indexOf(placeFound!!), DataConverter.placeFromDTO(placeDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
+
+    override fun getSectionDetails(username: String): SectionDetailsDTO? {
+        val userItem = userRepository.findUserByUsername(username)
+        val gallery = imageRepository.findImagesByLocality(username)
+        return SectionDetailsDTO(
+            eventQuantity = userItem?.events?.size,
+            tourismQuantity = userItem?.tourism?.size,
+            pharmacyQuantity = userItem?.pharmacies?.size,
+            serviceQuantity = userItem?.services?.size,
+            newsQuantity = userItem?.news?.size,
+            bandoQuantity = userItem?.bandos?.size,
+            adQuantity = userItem?.ads?.size,
+            galleryQuantity = gallery?.size,
+            deathQuantity = userItem?.deaths?.size,
+            linkQuantity = userItem?.links?.size,
+            sponsorQuantity = userItem?.sponsors?.size,
+            incidentQuantity = userItem?.incidents?.size,
+            reserveQuantity = userItem?.reserves?.size
+        )
+    }
+
+    override fun addLinkCustomInUser(username: String, customLinkDTO: CustomLinkDTO): UserDTO? {
+        val userItem = userRepository.findUserByUsername(username)
+        customLinkDTO.idCustomLink = UUID.randomUUID()
+        customLinkDTO.username = username
+        userItem?.customLinks?.add(DataConverter.customLinkFromDTO(customLinkDTO))
+        val userToSave = userRepository.save(userItem!!)
+        return DataConverter.userToDTO(userToSave)
+    }
+
+    override fun updateLinkCustomInUser(username: String, idCustomLink: UUID, customLinkDTO: CustomLinkDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val customLinkFound = userItem?.customLinks?.find {it.idCustomLink == idCustomLink  }
+        if (customLinkFound != DataConverter.customLinkFromDTO(customLinkDTO)) {
+            customLinkDTO.idCustomLink = idCustomLink
+            customLinkDTO.username = username
+            userItem?.customLinks?.set(userItem.customLinks!!.indexOf(customLinkFound!!), DataConverter.customLinkFromDTO(customLinkDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
+
+    override fun deleteLinkCustomInUser(username: String, idCustomLink: UUID): UserDTO? {
+        val userItem = userRepository.findUserByUsername(username)
+        userItem?.customLinks?.removeIf { it.idCustomLink == idCustomLink }
+        val userSaved = userRepository.save(userItem!!)
+        customLinkRepository.deleteById(idCustomLink)
+        return DataConverter.userToDTO(userSaved)
+    }
+
+    override fun addQuizInUser(username: String, quizDTO: QuizDTO): UserDTO? {
+        val userItem = userRepository.findUserByUsername(username)
+        quizDTO.idQuiz = UUID.randomUUID()
+        quizDTO.username = username
+        quizDTO.resultOne = 0
+        quizDTO.resultTwo = 0
+        quizDTO.resultThree = 0
+        quizDTO.resultFour = 0
+        userItem?.quizzes?.add(DataConverter.quizFromDTO(quizDTO))
+        val userToSave = userRepository.save(userItem!!)
+        return DataConverter.userToDTO(userToSave)
+    }
+
+    override fun updateQuizInUser(username: String, idQuiz: UUID, quizDTO: QuizDTO): UserDTO? {
+        var userItem = userRepository.findUserByUsername(username)
+        val quizFound = userItem?.quizzes?.find {it.idQuiz == idQuiz  }
+        if (quizFound != DataConverter.quizFromDTO(quizDTO)) {
+            quizDTO.idQuiz = idQuiz
+            quizDTO.username = username
+            userItem?.quizzes?.set(userItem.quizzes!!.indexOf(quizFound!!), DataConverter.quizFromDTO(quizDTO))
+            userItem = userRepository.save(userItem!!)
+        }
+        return DataConverter.userToDTO(userItem!!)
+    }
+
+    override fun updateResultQuizInUser(username: String, idQuiz: UUID, option: Int): UserDTO? {
+        val userItem = userRepository.findUserByUsername(username)
+         userItem?.quizzes?.find { it.idQuiz == idQuiz }.also { quiz ->
+             when(option){
+                 1 ->  quiz!!.resultOne = (quiz.resultOne!! + 1)
+                 2 ->  quiz!!.resultTwo = (quiz.resultTwo!! + 1)
+                 3 ->  quiz!!.resultThree = (quiz.resultThree!! + 1)
+                 4 ->  quiz!!.resultFour = (quiz.resultFour!! + 1)
+             }
+         }
+        val userSaved = userRepository.save(userItem!!)
+        return DataConverter.userToDTO(userSaved)
+    }
+
+    override fun deleteQuizFromUser(username: String, idQuiz: UUID): UserDTO? {
+        val userItem = userRepository.findUserByUsername(username)
+        userItem?.quizzes?.removeIf { it.idQuiz == idQuiz }
+        val userSaved = userRepository.save(userItem!!)
+        quizRepository.deleteById(idQuiz)
+        return DataConverter.userToDTO(userSaved)
     }
 }
