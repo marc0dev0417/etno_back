@@ -626,7 +626,6 @@ class UserService(
                         "subject" to "Publicación de Bando",
                         "content" to "Bando: ${bandoDTO.title}",
                         "username" to "${itemUser.username}")
-
                     val response: ResponseEntity<Void> = restTemplate.postForEntity(Urls.urlSendNotification, map, Void::class.java)
                 }
         return DataConverter.userToDTO(itemUser)
